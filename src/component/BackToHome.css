@@ -20,3 +20,24 @@
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 16px rgba(31, 200, 219, 0.2);
 }
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .back-to-home-btn {
+    top: 12px;
+    right: 12px;
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .back-to-home-btn {
+    top: 8px;
+    right: 8px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+  }
+}

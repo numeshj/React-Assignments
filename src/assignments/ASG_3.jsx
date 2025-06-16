@@ -28,6 +28,13 @@ export default function ASG_3() {
       <h1 className="assignment-title">Assignment-3</h1>
       <hr />
       <br />
+      <ol>
+        {numbers.map((num, index) => (
+          <li key={index}>{num}</li>
+        ))}
+      </ol>
+      <br />
+      <br />
       <label>Enter the Number : </label>
       <input
         className="input-number"
@@ -36,13 +43,6 @@ export default function ASG_3() {
         onChange={(e) => setInputValue(e.target.value)}
       />
       <button onClick={addNumber}>Add</button>
-      <br />
-      <br />
-      <ol>
-        {numbers.map((num, index) => (
-          <li key={index}>{num}</li>
-        ))}
-      </ol>
       <br />
       <br />
       <label> TOtal :{total}</label>
