@@ -22,6 +22,7 @@ export default function ASG_4() {
     const updatedList = numbers.filter((_, index) => index !== indexToRemove);
     setNumbers(updatedList);
     console.log("updated List :", updatedList);
+    console.log("Deleted Index :",indexToRemove)
   };
 
   return (
@@ -36,8 +37,7 @@ export default function ASG_4() {
             <span>{num}</span>
             <button
               className="delete-button"
-              onClick={() => deleteNumber(index)}
-            >
+              onClick={() => deleteNumber(index)}>
               Delete
             </button>
           </li>
