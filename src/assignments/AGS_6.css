@@ -1,0 +1,73 @@
+/* Labels */
+.label {
+  display: block;
+  font-weight: 500;
+  margin: 10px 0 5px;
+}
+
+/* Inputs */
+input {
+  padding: 8px;
+  width: 250px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Add Button */
+.btn-add {
+  padding: 10px 20px;
+  background-color: #007bff79;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-add:hover {
+  background-color: #0056b3;
+}
+
+/* Delete Button */
+.btn-delete {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background-color: #ac3e49;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-delete:hover {
+  background-color: #a71d2a;
+}
+
+/* List Styling */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 16px;
+  background-color: #574747;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+/* Style Preview Box */
+div[style] {
+  margin-top: 20px;
+  min-height: 50px;
+  text-align: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
