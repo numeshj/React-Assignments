@@ -59,7 +59,6 @@ export default function ASG_4() {
       >
         Add
       </button>
-      <label></label>
       <br />
       <br />
     </>

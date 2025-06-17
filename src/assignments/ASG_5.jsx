@@ -22,19 +22,34 @@ export default function ASG_5() {
     const updatedList = numbers.filter((_, index) => index !== indexToRemove);
     setNumbers(updatedList);
     console.log("updated List :", updatedList);
-    console.log("Deleted Index :",indexToRemove)
+    console.log("Deleted Index :", indexToRemove);
   };
 
   const sortAscending = () => {
-    const sortedList = [...numbers].sort((a, b) => a -b)
-    setNumbers(sortedList)
-  }
+    const sortedList = [...numbers].sort((a, b) => a - b);
+    setNumbers(sortedList);
+  };
 
   const sortDescending = () => {
-    const sortedList = [...numbers].sort((a, b) => b-a)
-    setNumbers(sortedList)
+    const sortedList = [...numbers].sort((a, b) => b - a);
+    setNumbers(sortedList);
+  };
 
-  }
+  const moveUp = (index) => {
+    if (index === 0) return;
+    const newList = ([...numbers][(newList[index - 1], newList[index])] = [
+      newList[index],
+      newList[index - 1],
+    ]);
+    setNumbers(newList);
+  };
+
+  const moveDown = (index) => {
+    if (index === numbers.length - 1) return;
+    const newList = [...numbers];
+    [newList[index + 1], newList[index]] = [newList[index], newList[index + 1]];
+    setNumbers(newList);
+  };
 
   return (
     <>
@@ -42,8 +57,12 @@ export default function ASG_5() {
       <h1 className="assignment-title">Assignment-5</h1>
       <hr />
       <br />
-      <button className="btn-top" onClick={sortAscending}>Sort Ascending</button>
-      <button className="btn-top" onClick={sortDescending}>Sort Descending</button>
+      <button className="btn-top" onClick={sortAscending}>
+        Sort Ascending
+      </button>
+      <button className="btn-top" onClick={sortDescending}>
+        Sort Descending
+      </button>
 
       <ul className="number-list">
         {numbers.map((num, index) => (
@@ -51,8 +70,24 @@ export default function ASG_5() {
             <span>{num}</span>
             <button
               className="delete-button"
-              onClick={() => deleteNumber(index)}>
+              onClick={() => deleteNumber(index)}
+            >
               Delete
+            </button>
+            <button
+              className="btn-move"
+              onClick={() => moveUp(index)}
+              disabled={index === 0}
+            >
+              Move Up ⬆️{" "}
+            </button>
+            <button
+              className="btn-move"
+              onClick={() => moveDown(index)}
+              disabled={index === numbers.length - 1}
+            >
+              {" "}
+              Move Down ⬇️{" "}
             </button>
           </li>
         ))}
