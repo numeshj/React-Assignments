@@ -37,13 +37,10 @@ export default function ASG_5() {
 
   const moveUp = (index) => {
     if (index === 0) return;
-    const newList = ([...numbers][(newList[index - 1], newList[index])] = [
-      newList[index],
-      newList[index - 1],
-    ]);
+    const newList = [...numbers];
+    [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
     setNumbers(newList);
   };
-
   const moveDown = (index) => {
     if (index === numbers.length - 1) return;
     const newList = [...numbers];
@@ -57,10 +54,18 @@ export default function ASG_5() {
       <h1 className="assignment-title">Assignment-5</h1>
       <hr />
       <br />
-      <button className="btn-top" onClick={sortAscending}>
+      <button
+        className="btn-top"
+        onClick={sortAscending}
+        hidden={numbers.length === 0}
+      >
         Sort Ascending
       </button>
-      <button className="btn-top" onClick={sortDescending}>
+      <button
+        className="btn-top"
+        onClick={sortDescending}
+        hidden={numbers.length === 0}
+      >
         Sort Descending
       </button>
 
