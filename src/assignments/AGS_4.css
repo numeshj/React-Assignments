@@ -1,3 +1,26 @@
+.btn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* space between buttons */
+  margin-top: 16px;
+}
+
+.btn-top {
+  font-size: 12px;
+  padding: 6px 18px;
+  background: #303133;
+  color: #c1daeb;
+  border: 1px solid #64676b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-top:hover {
+  background: #062e55;
+  color: #1976d2;
+}
+
 .number-list {
   list-style-type: none;  
   padding: 0;
