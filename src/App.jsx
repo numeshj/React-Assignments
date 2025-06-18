@@ -31,7 +31,7 @@ function App() {
       <button className="asg-btn" onClick={() => navigate("/asg-8")}>
         ASG_8
       </button>
-      <button className="asg-btn" onClick={() => navigate("/asg-9")}>
+      {/* <button className="asg-btn" onClick={() => navigate("/asg-9")}>
         ASG_9
       </button>
       <button className="asg-btn" onClick={() => navigate("/asg-10")}>
@@ -42,7 +42,7 @@ function App() {
       </button>
       <button className="asg-btn" onClick={() => navigate("/asg-12")}>
         ASG_12
-      </button>
+      </button> */}
     </div>
   );
 }
