@@ -15,8 +15,8 @@ export default function ASG_8() {
           "https://apis.dnjs.lk/objects/colors.php"
         );
         setColor(response.data);
+        console.log("Original Array : ", response.data)
         setFilteredColors(response.data);
-        console.log("Data : ", response.data);
       } catch (err) {
         console.log("Error when fetch Data : ", err);
       }
@@ -30,6 +30,7 @@ export default function ASG_8() {
       c.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredColors(filtered);
+    console.log("Filtered List : ",filtered)
   };
 
   return (
