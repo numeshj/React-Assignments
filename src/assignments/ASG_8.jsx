@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function ASG_8() {
   const [color, setColor] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredColors, setFilteredColors] = useState([]);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function ASG_8() {
           "https://apis.dnjs.lk/objects/colors.php"
         );
         setColor(response.data);
-        console.log("Original Array : ", response.data)
+        console.log("Original Array : ", response.data);
         setFilteredColors(response.data);
       } catch (err) {
         console.log("Error when fetch Data : ", err);
@@ -26,11 +26,11 @@ export default function ASG_8() {
   }, []);
 
   const handleSearch = () => {
-    const filtered = color.filter(c => 
+    const filtered = color.filter((c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredColors(filtered);
-    console.log("Filtered List : ",filtered)
+    console.log("Filtered List : ", filtered);
   };
 
   return (
@@ -52,6 +52,17 @@ export default function ASG_8() {
         {filteredColors.map((item, index) => (
           <li key={index}>
             {item.name} - {item.code}
+            <samn
+              style={{
+                display: "inline-block",
+                width: "16px",
+                height: "16px",
+                backgroundColor: item.code,
+                borderRadius: "4px",
+                marginRight: "8px",
+                verticalAlign: "middle",
+              }}
+            ></samn>
           </li>
         ))}
       </ul>
