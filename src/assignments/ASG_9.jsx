@@ -1,6 +1,7 @@
 import BackToHome from "../component/BackToHome";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "./AGS_9.css";
 
 export default function ASG_9() {
   const [color, setColor] = useState([]);
@@ -37,7 +38,7 @@ export default function ASG_9() {
     );
     setFilteredColors(filtered);
     setCurrentPage(1);
-    console.log("Filtered List : ", filtered)
+    // console.log("Filtered List : ", filtered)
   };
 
   return (
@@ -49,34 +50,29 @@ export default function ASG_9() {
       <h2>Colors</h2>
       <label>Search: </label>
       <input
+        className="asg9-search-input"
         placeholder="Enter the color"
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <button onClick={handleSearch}>Search</button>
+      <button className="asg9-search-btn" onClick={handleSearch}>Search</button>
 
-      <ul>
+      <ul className="asg9-color-list">
         {currentItems.map((item, index) => (
-          <li key={index}>
+          <li className="asg9-color-item" key={index}>
             <span
-              style={{
-                display: "inline-block",
-                width: "16px",
-                height: "16px",
-                backgroundColor: item.code,
-                borderRadius: "4px",
-                marginRight: "8px",
-                verticalAlign: "middle",
-              }}
+              className="asg9-color-box"
+              style={{ backgroundColor: item.code }}
             ></span>
             {item.name} - {item.code}
           </li>
         ))}
       </ul>
 
-      <div style={{ marginTop: "1rem" }}>
+      <div className="asg9-pagination">
         <button
+          className="asg9-page-btn"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentpage === 1}
         >
@@ -96,12 +92,9 @@ export default function ASG_9() {
             (_, i) => startPage + i
           ).map((num) => (
             <button
+              className={`asg9-page-btn${currentpage === num ? " asg9-page-btn-active" : ""}`}
               key={num}
               onClick={() => setCurrentPage(num)}
-              style={{
-                fontWeight: currentpage === num ? "bold" : "normal",
-                margin: "0 4px",
-              }}
             >
               {num}
             </button>
@@ -109,6 +102,7 @@ export default function ASG_9() {
         })()}
 
         <button
+          className="asg9-page-btn"
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
@@ -116,6 +110,23 @@ export default function ASG_9() {
         >
           Next
         </button>
+      </div>
+
+      <div className="asg9-items-per-page">
+        <label htmlFor="itemsPerPage">Items per page: </label>
+        <select
+          id="itemsPerPage"
+          value={itemsPerPage}
+          onChange={(e) => {
+            setItemsPerPage(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+        >
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+        </select>
       </div>
     </>
   );
