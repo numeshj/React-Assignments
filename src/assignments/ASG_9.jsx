@@ -6,8 +6,14 @@ export default function ASG_9() {
   const [color, setColor] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredColors, setFilteredColors] = useState([]);
-  const [page, setPage] = useState();
-  const [limit, setLimit] = useState();
+
+  const [currentpage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const indexOfLastItem = currentpage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredColors.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredColors.length / itemsPerPage);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +22,6 @@ export default function ASG_9() {
           "https://apis.dnjs.lk/objects/colors.php"
         );
         setColor(response.data);
-        console.log("Original Array : ", response.data);
         setFilteredColors(response.data);
       } catch (err) {
         console.log("Error when fetch Data : ", err);
@@ -31,7 +36,8 @@ export default function ASG_9() {
       c.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredColors(filtered);
-    console.log("Filtered List : ", filtered);
+    setCurrentPage(1);
+    console.log("Filtered List : ", filtered)
   };
 
   return (
@@ -49,10 +55,10 @@ export default function ASG_9() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button onClick={handleSearch}>Search</button>
+
       <ul>
-        {filteredColors.map((item, index) => (
+        {currentItems.map((item, index) => (
           <li key={index}>
-            {item.name} - {item.code}
             <span
               style={{
                 display: "inline-block",
@@ -64,9 +70,53 @@ export default function ASG_9() {
                 verticalAlign: "middle",
               }}
             ></span>
+            {item.name} - {item.code}
           </li>
         ))}
       </ul>
+
+      <div style={{ marginTop: "1rem" }}>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentpage === 1}
+        >
+          Previous
+        </button>
+
+        {(() => {
+          let startPage = Math.max(currentpage - 1, 1);
+          let endPage = Math.min(startPage + 2, totalPages);
+
+          if (endPage - startPage < 2) {
+            startPage = Math.max(endPage - 2, 1);
+          }
+
+          return Array.from(
+            { length: endPage - startPage + 1 },
+            (_, i) => startPage + i
+          ).map((num) => (
+            <button
+              key={num}
+              onClick={() => setCurrentPage(num)}
+              style={{
+                fontWeight: currentpage === num ? "bold" : "normal",
+                margin: "0 4px",
+              }}
+            >
+              {num}
+            </button>
+          ));
+        })()}
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentpage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </>
   );
 }
