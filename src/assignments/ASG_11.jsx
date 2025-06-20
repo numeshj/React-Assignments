@@ -11,6 +11,7 @@ export default function ASG_11() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [user, setUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
@@ -112,8 +113,20 @@ export default function ASG_11() {
                 onChange={handleInput}
                 value={post.password}
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
               />
+              <div className="asg10-checkbox-row">
+                <input
+                  type="checkbox"
+                  id="showPassword"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                  className="asg10-checkbox"
+                />
+                <label htmlFor="showPassword" className="asg10-checkbox-label">
+                  Show Password
+                </label>
+              </div>
               <button
                 className="btn-login"
                 type="submit"
@@ -122,13 +135,15 @@ export default function ASG_11() {
                 Submit
               </button>
             </>
-          )}         
+          )}
 
           {success && (
             <div>
-              <button className="btn-logout"
+              <button
+                className="btn-logout"
                 type="button"
-                onClick={handleLogout}>
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             </div>
