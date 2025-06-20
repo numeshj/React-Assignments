@@ -27,13 +27,14 @@
   color: #33691e;
 }
 
+/* --- Login Container --- */
 .asg10-login-container {
   max-width: 400px;
   margin: 40px auto;
   padding: 32px 24px;
-  background: #5d5e5f;
+  background: #23272f;
   border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10);
 }
 
 .asg10-login-container h2 {
@@ -42,33 +43,36 @@
   color: #b9cfe6;
 }
 
+/* --- Labels & Inputs --- */
 .asg10-label {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
-  color: #333;
+  color: #b9cfe6;
 }
 
 .asg10-input {
   width: 90%;
   padding: 8px 12px;
   margin-bottom: 16px;
-  border: 1px solid #cfd8dc;
+  border: 1px solid #3a4252;
   border-radius: 6px;
   font-size: 1rem;
-  background: #aaa4a4;
+  background: #2e3440;
+  color: #e0e6ed;
   transition: border 0.2s;
 }
 
 .asg10-input:focus {
-  border: 1.5px solid #1976d2;
+  border: 1.5px solid #8bc00f;
   outline: none;
 }
 
+/* --- Buttons --- */
 .btn-login {
   width: 100%;
   padding: 10px 0;
-  background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%);
+  background: linear-gradient(90deg, #8bc00f 0%, #1976d2 100%);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -80,11 +84,17 @@
   margin-top: 8px;
 }
 
-.btn-logout{
-    width: 100%;
+.btn-login:disabled {
+  background: #3a4252;
+  color: #b0bec5;
+  cursor: not-allowed;
+}
+
+.btn-logout {
+  width: 100%;
   padding: 10px 0;
-  background: linear-gradient(90deg, #19d257 0%, #64b5f6 100%);
-  color: #1c441a;
+  background: linear-gradient(90deg, #1976d2 0%, #8bc00f 100%);
+  color: #fff;
   border: none;
   border-radius: 6px;
   font-size: 1.1rem;
@@ -95,15 +105,11 @@
   margin-top: 8px;
 }
 
-.btn-login:disabled {
-  background: #b0bec5;
-  cursor: not-allowed;
-}
-
+/* --- Error & Success --- */
 .asg10-error {
-  color: #eb5858b2;
-  background: #464545d0;
-  border: 1px solid #756d6e;
+  color: #ffb4b4;
+  background: #2e1a1a;
+  border: 1px solid #b23b3b;
   border-radius: 6px;
   padding: 10px 12px;
   margin-bottom: 16px;
@@ -113,9 +119,9 @@
 }
 
 .asg10-success {
-  color: #092b1a;
-  background: #8bc00f79;
-  border: 1px solid #756d6e;
+  color: #eaffd0;
+  background: #2e3a1a;
+  border: 1px solid #8bc00f;
   border-radius: 6px;
   padding: 10px 12px;
   margin-bottom: 16px;
@@ -130,23 +136,24 @@
   text-align: center;
 }
 
+/* --- User Profile --- */
 .user-profile {
   margin: 24px 0 12px 0;
   padding: 16px 12px;
-  background: #47494d;
-  border: 1px solid #242527;
+  background: #23272f;
+  border: 1px solid #3a4252;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
 }
 .user-profile h3 {
   margin: 0 0 8px 0;
-  color: #bfd5ec;
+  color: #8bc00f;
   font-size: 1.2rem;
 }
 .user-profile p {
   margin: 0 0 10px 0;
-  color: #a1a3aa;
+  color: #b9cfe6;
   font-size: 1rem;
 }
 .user-profile img {
@@ -155,6 +162,6 @@
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #1976d2;
+  border: 2px solid #8bc00f;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
 }
