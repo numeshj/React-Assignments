@@ -1,0 +1,87 @@
+.response-box {
+  margin-top: 24px;
+  padding: 16px 12px;
+  background: #f1f8e9;
+  border: 1px solid #c5e1a5;
+  border-radius: 8px;
+  font-family: monospace;
+  color: #33691e;
+  font-size: 1rem;
+  word-break: break-word;
+  box-shadow: 0 1px 4px rgba(76, 175, 80, 0.07);
+}
+
+.response-box h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: #33691e;
+}
+
+.response-box pre {
+  margin: 0;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #33691e;
+}
+
+
+.asg10-login-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #5d5e5f;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.asg10-login-container h2 {
+  text-align: center;
+  margin-bottom: 18px;
+  color: #b9cfe6;
+}
+
+.asg10-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.asg10-input {
+  width: 90%;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #aaa4a4;
+  transition: border 0.2s;
+}
+
+.asg10-input:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 10px 0;
+  background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  margin-top: 8px;
+}
+
+.btn-login:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
