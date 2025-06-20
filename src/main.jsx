@@ -30,9 +30,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="/asg-7" element={<ASG_7 />} />
         <Route path="/asg-8" element={<ASG_8 />} />
         <Route path="/asg-9" element={<ASG_9 />} />
-        {/* <Route path="/asg-10" element={<ASG_10 />} />
+        <Route path="/asg-10" element={<ASG_10 />} />
         <Route path="/asg-11" element={<ASG_11 />} />
-        <Route path="/asg-12" element={<ASG_12 />} /> */}
+        <Route path="/asg-12" element={<ASG_12 />} />
       </Routes>
     </HashRouter>
   </StrictMode>

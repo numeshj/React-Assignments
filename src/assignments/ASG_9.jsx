@@ -110,6 +110,7 @@ export default function ASG_9() {
         >
           Next
         </button>
+        <label className="lb-page">{`${currentpage} of ${totalPages}`}</label>
       </div>
 
       <div className="asg9-items-per-page">

@@ -34,10 +34,10 @@ function App() {
       <button className="asg-btn" onClick={() => navigate("/asg-9")}>
         ASG_9
       </button>
-      {/* <button className="asg-btn" onClick={() => navigate("/asg-10")}>
+      <button className="asg-btn" onClick={() => navigate("/asg-10")}>
         ASG_10
       </button>
-      <button className="asg-btn" onClick={() => navigate("/asg-11")}>
+      {/* <button className="asg-btn" onClick={() => navigate("/asg-11")}>
         ASG_11
       </button>
       <button className="asg-btn" onClick={() => navigate("/asg-12")}>
