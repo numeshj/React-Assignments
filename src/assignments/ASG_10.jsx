@@ -10,6 +10,7 @@ export default function ASG_10() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
@@ -17,22 +18,25 @@ export default function ASG_10() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setError(""); 
+    setError("");
+    setSuccess("");
     const params = new URLSearchParams();
     params.append("email", post.email);
     params.append("password", post.password);
     axios
-      .post("https://auth.dnjs.lk/api/login", params, {
+      .post("https://auth.dnjs.lk/api/login", {email : post.email, password : post.password}, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
         console.log(response);
-        setError(""); 
+        setError("");
+        setSuccess("Login successful!");
       })
       .catch((error) => {
         console.log(error);
+        setSuccess("");
         setError(error.response?.data?.message || "Login failed");
       });
   };
@@ -47,6 +51,9 @@ export default function ASG_10() {
         <form onSubmit={handleSubmit}>
           <h2>Login :</h2>
           {error && <div className="asg10-error">{error}</div>}
+          {success && (
+            <pre className="asg10-success">{success}</pre>
+          )}
           <label className="asg10-label">Email :</label>
           <input
             className="asg10-input"

@@ -27,14 +27,13 @@
   color: #33691e;
 }
 
-
 .asg10-login-container {
   max-width: 400px;
   margin: 40px auto;
   padding: 32px 24px;
   background: #5d5e5f;
   border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
 }
 
 .asg10-login-container h2 {
@@ -96,4 +95,23 @@
   font-size: 1rem;
   text-align: center;
   font-weight: 500;
+}
+
+.asg10-success {
+  color: #092b1a;
+  background: #8bc00f79;
+  border: 1px solid #756d6e;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-weight: 500;
+  font-weight: bold;
+  min-height: 32px;
+  word-break: break-word;
+  text-align: center;
 }
