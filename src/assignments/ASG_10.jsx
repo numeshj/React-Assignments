@@ -1,5 +1,4 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/AGS_3.css";
 import "../assignments/AGS_10.css";
 import { useState } from "react";
 import axios from "axios";
@@ -20,9 +19,6 @@ export default function ASG_10() {
     event.preventDefault();
     setError("");
     setSuccess("");
-    const params = new URLSearchParams();
-    params.append("email", post.email);
-    params.append("password", post.password);
     axios
       .post("https://auth.dnjs.lk/api/login", {email : post.email, password : post.password}, {
         headers: {
