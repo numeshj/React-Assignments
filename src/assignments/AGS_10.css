@@ -85,3 +85,15 @@
   background: #b0bec5;
   cursor: not-allowed;
 }
+
+.asg10-error {
+  color: #eb5858b2;
+  background: #464545d0;
+  border: 1px solid #756d6e;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+}

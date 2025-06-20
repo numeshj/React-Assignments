@@ -46,7 +46,7 @@ export default function ASG_10() {
       <div className="asg10-login-container">
         <form onSubmit={handleSubmit}>
           <h2>Login :</h2>
-          {error && <div className="asg10-error" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+          {error && <div className="asg10-error">{error}</div>}
           <label className="asg10-label">Email :</label>
           <input
             className="asg10-input"
