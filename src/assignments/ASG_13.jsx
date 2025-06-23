@@ -15,14 +15,40 @@ export default function ASG_13() {
   const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [logged, setLogged] = useState(false);
 
   useEffect(() => {
     const token = getStoredToken();
     if (token) {
-      fetchUserDetails();
-      setSuccess("You are already logged in.");
+      axios
+        .get("https://auth.dnjs.lk/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUser(response.data);
+          setSuccess("You are already logged in.");
+          setLogged(true);
+        })
+        .catch((error) => {
+          localStorage.removeItem("authToken");
+          sessionStorage.removeItem("authToken");
+          setUser(null);
+          setSuccess("");
+          setLogged(false);
+        });
+    } else {
+      setLogged(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess("") , 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const getStoredToken = () => {
     return (
@@ -31,7 +57,7 @@ export default function ASG_13() {
   };
 
   const fetchUserDetails = () => {
-    const token = getStoredToken(); // get from storage
+    const token = getStoredToken(); 
     if (!token) return;
 
     axios
@@ -46,6 +72,11 @@ export default function ASG_13() {
       })
       .catch((error) => {
         console.error("Failed to fetch user : ", error);
+        
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
+        setUser(null);
+        setSuccess("");
       });
   };
 
@@ -68,32 +99,67 @@ export default function ASG_13() {
         }
       )
       .then((response) => {
-        console.log(response);
+        console.log("Login response data:", response.data);
         const token = response.data.access_token;
         if (keepLoggedIn) {
           localStorage.setItem("authToken", token);
         } else {
           sessionStorage.setItem("authToken", token);
         }
-
         fetchUserDetails();
         setError("");
         setSuccess("You have logged!");
+        setLogged(true);
       })
       .catch((error) => {
         console.log(error);
         setSuccess("");
         setError(error.response?.data?.message || "Login failed");
+        setLogged(false);
       });
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    sessionStorage.removeItem("authToken");
-    setUser(null);
-    setSuccess("");
-    setError("");
-    setPost({ email: "", password: "" });
+    const token = getStoredToken();
+    if (!token) {
+      
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
+      setUser(null);
+      setSuccess("You are logged out.");
+      setError("");
+      setLogged(false);
+      setPost({ email: "", password: "" });
+      return;
+    }
+
+    axios
+      .post(
+        "https://auth.dnjs.lk/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Logged out:", response.data);
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
+        setUser(null);
+        setSuccess("You are logged out.");
+        setError("");
+        setLogged(false);
+        setPost({ email: "", password: "" });
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        setError("Logout failed. Please try again.");
+        setSuccess("");
+        setLogged(false);
+        setPost({ email: "", password: "" });
+      });
   };
 
   return (
@@ -103,7 +169,7 @@ export default function ASG_13() {
       <hr />
       <br />
       <div className="asg10-login-container">
-        {!user ? (
+        {!logged ? (
           <LoginScreen
             post={post}
             error={error}
@@ -114,14 +180,16 @@ export default function ASG_13() {
             setKeepLoggedIn={setKeepLoggedIn}
             handleInput={handleInput}
             handleSubmit={handleSubmit}
+            setLogged={setLogged}
           />
-        ) : (
+        ) : user ? (
           <ProfileScreen
             user={user}
             success={success}
             handleLogout={handleLogout}
+            setLogged={setLogged}
           />
-        )}
+        ) : null}
       </div>
     </>
   );
