@@ -3,7 +3,7 @@ import "../assignments/AGS_10.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ASG_12() {
+export default function ASG_13() {
   const [post, setPost] = useState({
     email: "",
     password: "",
@@ -97,7 +97,7 @@ export default function ASG_12() {
   return (
     <>
       <BackToHome />
-      <h1 className="assignment-title">Assignment-12</h1>
+      <h1 className="assignment-title">Assignment-13</h1>
       <hr />
       <br />
       <div className="asg10-login-container">

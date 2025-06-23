@@ -191,3 +191,10 @@
   user-select: none;
   margin: 0;
 }
+
+.asg10-checkbox-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
