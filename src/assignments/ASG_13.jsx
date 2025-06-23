@@ -1,7 +1,9 @@
 import BackToHome from "../component/BackToHome";
 import "../assignments/AGS_10.css";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import axios from "axios";
+import LoginScreen from "../component/LoginScreen";
+import ProfileScreen from "../component/ProfileScreen";
 
 export default function ASG_13() {
   const [post, setPost] = useState({
@@ -21,6 +23,31 @@ export default function ASG_13() {
       setSuccess("You are already logged in.");
     }
   }, []);
+
+  const getStoredToken = () => {
+    return (
+      localStorage.getItem("authToken") || sessionStorage.getItem("authToken")
+    );
+  };
+
+  const fetchUserDetails = () => {
+    const token = getStoredToken(); // get from storage
+    if (!token) return;
+
+    axios
+      .get("https://auth.dnjs.lk/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("User Data : ", response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch user : ", error);
+      });
+  };
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
@@ -60,31 +87,6 @@ export default function ASG_13() {
       });
   };
 
-  const getStoredToken = () => {
-    return (
-      localStorage.getItem("authToken") || sessionStorage.getItem("authToken")
-    );
-  };
-
-  const fetchUserDetails = () => {
-    const token = getStoredToken(); // get from storage
-    if (!token) return;
-
-    axios
-      .get("https://auth.dnjs.lk/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("User Data : ", response.data);
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch user : ", error);
-      });
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     sessionStorage.removeItem("authToken");
@@ -97,92 +99,29 @@ export default function ASG_13() {
   return (
     <>
       <BackToHome />
-      <h1 className="assignment-title">Assignment-13</h1>
+      <h1 className="assignment-title">Assignment - 13</h1>
       <hr />
       <br />
       <div className="asg10-login-container">
-        <form onSubmit={handleSubmit}>
-          <h2>Login :</h2>
-          {error && <div className="asg10-error">{error}</div>}
-          {success && <pre className="asg10-success">{success}</pre>}
-
-          {user && (
-            <div className="user-profile">
-              <h3>{user.name}</h3>
-              <p>{user.description}</p>
-              {user.avatar && (
-                <img
-                  src={user.avatar}
-                  alt="Profile"
-                  style={{ width: "100px", borderRadius: "50%" }}
-                />
-              )}
-            </div>
-          )}
-
-          {!success && (
-            <>
-              <label className="asg10-label">Email :</label>
-              <input
-                className="asg10-input"
-                placeholder="Enter the email"
-                onChange={handleInput}
-                value={post.email}
-                name="email"
-              />
-              <label className="asg10-label">Password :</label>
-              <input
-                className="asg10-input"
-                placeholder="Enter the password"
-                onChange={handleInput}
-                value={post.password}
-                name="password"
-                type={showPassword ? "text" : "password"}
-              />
-              <div className="asg10-checkbox-row">
-                <input
-                  type="checkbox"
-                  id="showPassword"
-                  checked={showPassword}
-                  onChange={() => setShowPassword(!showPassword)}
-                  className="asg10-checkbox"
-                />
-                <label htmlFor="showPassword" className="asg10-checkbox-label">
-                  Show Password
-                </label>
-                <input
-                  type="checkbox"
-                  id="keepLoggedIn"
-                  checked={keepLoggedIn}
-                  onChange={() => setKeepLoggedIn(!keepLoggedIn)}
-                  className="asg10-checkbox"
-                />
-                <label htmlFor="keepLoggedIn" className="asg10-checkbox-label">
-                  Keep me logged in
-                </label>
-              </div>
-              <button
-                className="btn-login"
-                type="submit"
-                disabled={!post.email || !post.password}
-              >
-                Submit
-              </button>
-            </>
-          )}
-
-          {success && (
-            <div>
-              <button
-                className="btn-logout"
-                type="button"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </form>
+        {!user ? (
+          <LoginScreen
+            post={post}
+            error={error}
+            success={success}
+            showPassword={showPassword}
+            keepLoggedIn={keepLoggedIn}
+            setShowPassword={setShowPassword}
+            setKeepLoggedIn={setKeepLoggedIn}
+            handleInput={handleInput}
+            handleSubmit={handleSubmit}
+          />
+        ) : (
+          <ProfileScreen
+            user={user}
+            success={success}
+            handleLogout={handleLogout}
+          />
+        )}
       </div>
     </>
   );
