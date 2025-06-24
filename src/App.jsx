@@ -52,6 +52,9 @@ function App() {
        <button className="asg-btn" onClick={() => navigate("/asg-15")}>
         ASG_15
       </button>
+      <button className="asg-btn" onClick={() => navigate("/asg-16")}>
+        ASG_16
+      </button>
     </div>
   );
 }

@@ -58,12 +58,14 @@
   box-shadow: none;
 }
 
-/* Container to pin buttons to top-left */
+/* Container to align buttons to the left side of the page with some space */
 .asg-btn-container {
-  position: fixed;
-  top: 24px;
-  left: 24px;
-  z-index: 100;
+  position: static;
+  margin: 32px 0 0 32px; /* top, right, bottom, left */
+  max-width: 200px;
+  padding-top: 24px;
+  text-align: left;
+  /* Aligns the button list to the left */
 }
 
 .asg-btn:hover {
