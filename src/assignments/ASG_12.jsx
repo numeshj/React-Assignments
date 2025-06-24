@@ -24,6 +24,7 @@ export default function ASG_12() {
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
+    setError("");
   };
 
   const handleSubmit = (event) => {

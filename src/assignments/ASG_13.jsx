@@ -45,7 +45,7 @@ export default function ASG_13() {
 
   useEffect(() => {
     if (success) {
-      const timer = setTimeout(() => setSuccess("") , 5000);
+      const timer = setTimeout(() => setSuccess(""), 5000);
       return () => clearTimeout(timer);
     }
   }, [success]);
@@ -57,7 +57,7 @@ export default function ASG_13() {
   };
 
   const fetchUserDetails = () => {
-    const token = getStoredToken(); 
+    const token = getStoredToken();
     if (!token) return;
 
     axios
@@ -72,7 +72,7 @@ export default function ASG_13() {
       })
       .catch((error) => {
         console.error("Failed to fetch user : ", error);
-        
+
         localStorage.removeItem("authToken");
         sessionStorage.removeItem("authToken");
         setUser(null);
@@ -122,7 +122,6 @@ export default function ASG_13() {
   const handleLogout = () => {
     const token = getStoredToken();
     if (!token) {
-      
       localStorage.removeItem("authToken");
       sessionStorage.removeItem("authToken");
       setUser(null);
