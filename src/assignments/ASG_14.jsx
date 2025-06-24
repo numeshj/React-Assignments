@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import axios from "axios";
 import LoginScreen from "../component/LoginScreen";
 import ProfileScreen from "../component/ProfileScreen";
+import Swal from "sweetalert2";
 
 export default function ASG_14() {
   const [post, setPost] = useState({
@@ -82,7 +83,7 @@ export default function ASG_14() {
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
-    setError(""); 
+    setError("");
   };
 
   const handleSubmit = (event) => {
@@ -162,6 +163,45 @@ export default function ASG_14() {
       });
   };
 
+  const handleProfileUpdate = (name, description) => {
+    const token = getStoredToken();
+    if (!token) {
+      return;
+    }
+
+    axios
+      .put(
+        "https://auth.dnjs.lk/api/user",
+        { name, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Profile Updated Successfully");
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Your profile was updated successfully!",
+          showConfirmButton: true,
+          timer: 5000,
+        });
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.log("Update Failed", error);
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "Failed to update profile.",
+          showConfirmButton: true,
+        });
+      });
+  };
+
   return (
     <>
       <BackToHome />
@@ -188,6 +228,7 @@ export default function ASG_14() {
             success={success}
             handleLogout={handleLogout}
             setLogged={setLogged}
+            handleProfileUpdate={handleProfileUpdate}
           />
         ) : null}
       </div>

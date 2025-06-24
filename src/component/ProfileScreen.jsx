@@ -1,6 +1,9 @@
-import { use } from "react";
+import { useState } from "react";
 
-export default function ProfileScreen({ user, success, handleLogout }) {
+export default function ProfileScreen({ user, success, handleLogout, handleProfileUpdate }) {
+  const [name, setName] = useState(user.name);
+  const [description, setDescription] = useState(user.description);
+
   return (
     <>
       {success && <pre className="asg10-success">{success}</pre>}
@@ -15,6 +18,27 @@ export default function ProfileScreen({ user, success, handleLogout }) {
             style={{ width: "100px", borderRadius: "50%" }}
           />
         )}
+      </div>
+      <div>
+        <label> Name : </label>
+        <input
+          placeholder="enter the name"
+          className="asg10-input"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <label>Description : </label>
+        <input
+          placeholder="enter the description"
+          className="asg10-input"
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button className="btn-save" onClick={() => handleProfileUpdate(name, description)}>
+          Save Profile
+        </button>
       </div>
 
       <button className="btn-logout" type="button" onClick={handleLogout}>
