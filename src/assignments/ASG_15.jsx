@@ -236,6 +236,7 @@ export default function ASG_15() {
           showConfirmButton: true
         });
         setAvatarUploadMesssage("");
+        setAvatarFile(null); 
         fetchUserDetails();
       })
       .catch((error) => {

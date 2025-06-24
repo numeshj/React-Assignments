@@ -13,7 +13,7 @@ export default function ProfileScreen({
 }) {
   const [name, setName] = useState(user.name);
   const [description, setDescription] = useState(user.description);
- 
+
   return (
     <>
       {success && <pre className="asg10-success">{success}</pre>}
@@ -29,41 +29,69 @@ export default function ProfileScreen({
           />
         )}
       </div>
-      <div>
-        <label> Name : </label>
-        <input
-          placeholder="enter the name"
-          className="asg10-input"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label>Description : </label>
-        <input
-          placeholder="enter the description"
-          className="asg10-input"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button
-          className="btn-save"
-          onClick={() => handleProfileUpdate(name, description)}
-        >
-          Save Profile
-        </button>
+      <div className="profile-edit-row">
+        <div className="profile-edit-fields">
+          <label> Name : </label>
+          <input
+            placeholder="enter the name"
+            className="asg10-input"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label>Description : </label>
+          <input
+            placeholder="enter the description"
+            className="asg10-input"
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="profile-edit-actions">
+          <button
+            className="btn-save"
+            onClick={() => handleProfileUpdate(name, description)}
+          >
+            Save Profile
+          </button>
+        </div>
       </div>
-      <div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setAvatarFile(e.target.files[0])}
-        />
-        <button type="button" onClick={handleAvatarUpload}>
+      <div className="profile-upload-row">
+        <div className="profile-upload-left">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAvatarFile(e.target.files[0])}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div className="profile-upload-right">
+          {avatarFile && (
+            <div className="avatar-preview-box">
+              <img
+                src={URL.createObjectURL(avatarFile)}
+                alt="Selected Preview"
+                className="avatar-preview-img"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="profile-upload-action-row">
+        <button
+          className="btn-upload"
+          type="button"
+          onClick={handleAvatarUpload}
+        >
           Upload Profile Picture
         </button>
         {avatarUploadMessage && (
-          <div className="asg10-error">{avatarUploadMessage}</div>
+          <div
+            className="asg10-error avatar-upload-message"
+          >
+            {avatarUploadMessage}
+          </div>
         )}
       </div>
 

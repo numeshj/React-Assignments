@@ -106,6 +106,111 @@
   margin-top: 8px;
 }
 
+/* --- Profile Edit & Avatar Upload --- */
+.btn-save,
+.btn-upload {
+  display: inline-block;
+  background: linear-gradient(90deg, #7ed6df 0%, #70a1ff 100%);
+  color: #23272f;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 1.5em;
+  font-size: 1em;
+  font-weight: 600;
+  margin: 0.5em 0.5em 0.5em 0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px #0002;
+}
+
+.btn-save:hover,
+.btn-upload:hover {
+  background: linear-gradient(90deg, #70a1ff 0%, #7ed6df 100%);
+  color: #fff;
+}
+
+input[type='file'] {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #b2bec3;
+}
+
+.avatar-preview-box {
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #232b36;
+  border-radius: 8px;
+  padding: 4px;
+  border: 1.5px solid #8bc00f;
+  min-width: 64px;
+  min-height: 64px;
+}
+
+.avatar-preview-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #8bc00f;
+}
+
+.avatar-upload-message {
+  text-align: center;
+}
+
+.profile-upload-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+.profile-upload-left, .profile-upload-right {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-upload-left {
+  justify-content: flex-start;
+}
+.profile-upload-right {
+  justify-content: flex-end;
+}
+.profile-upload-action-row {
+  margin-bottom: 18px;
+}
+.profile-upload-action-row .btn-upload {
+  display: block;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .asg10-login-container {
+    padding: 1.2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .user-profile {
+    padding: 0.7em 0.3em;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-upload-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .profile-upload-left, .profile-upload-right {
+    justify-content: center;
+  }
+  .avatar-preview-box {
+    margin-left: 0;
+    margin-top: 8px;
+    align-self: flex-start;
+  }
+}
+
 /* --- Error & Success --- */
 .asg10-error {
   color: #ffb4b4;
