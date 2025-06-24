@@ -17,6 +17,8 @@ export default function ASG_15() {
   const [showPassword, setShowPassword] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [logged, setLogged] = useState(false);
+   const [avatarFile, setAvatarFile] = useState(null);
+   const [avatarUploadMessage, setAvatarUploadMesssage] = useState ("")
 
   useEffect(() => {
     const token = getStoredToken();
@@ -202,6 +204,52 @@ export default function ASG_15() {
       });
   };
 
+  const handleAvatarUpload = () => {
+    setAvatarUploadMesssage("");
+
+    if (!avatarFile) {
+      Swal.fire({
+        icon: "warning",
+        title: "No File Selected",
+        text: "Please select an image file.",
+        showConfirmButton: true
+      });
+      return;
+    }
+
+    const token = getStoredToken();
+    const formData = new FormData();
+    formData.append("avatar", avatarFile);
+
+    axios
+      .post("https://auth.dnjs.lk/api/avatar", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        Swal.fire({
+          icon: "success",
+          title: "Profile Picture Uploaded",
+          text: "Profile picture uploaded successfully.",
+          showConfirmButton: true
+        });
+        setAvatarUploadMesssage("");
+        fetchUserDetails();
+      })
+      .catch((error) => {
+        console.error("Avatar upload failed : ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Upload Failed",
+          text: "Failed to upload avatar.",
+          showConfirmButton: true
+        });
+        setAvatarUploadMesssage("Failed to upload avatar.");
+      });
+  };
+
   return (
     <>
       <BackToHome />
@@ -229,6 +277,10 @@ export default function ASG_15() {
             handleLogout={handleLogout}
             setLogged={setLogged}
             handleProfileUpdate={handleProfileUpdate}
+            avatarFile={avatarFile}
+            setAvatarFile={setAvatarFile}
+            handleAvatarUpload={handleAvatarUpload}
+            avatarUploadMessage={avatarUploadMessage}
           />
         ) : null}
       </div>

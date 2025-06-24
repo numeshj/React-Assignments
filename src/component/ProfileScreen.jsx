@@ -1,9 +1,19 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
-export default function ProfileScreen({ user, success, handleLogout, handleProfileUpdate }) {
+export default function ProfileScreen({
+  user,
+  success,
+  handleLogout,
+  handleProfileUpdate,
+  avatarFile,
+  setAvatarFile,
+  handleAvatarUpload,
+  avatarUploadMessage,
+}) {
   const [name, setName] = useState(user.name);
   const [description, setDescription] = useState(user.description);
-
+ 
   return (
     <>
       {success && <pre className="asg10-success">{success}</pre>}
@@ -36,9 +46,25 @@ export default function ProfileScreen({ user, success, handleLogout, handleProfi
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button className="btn-save" onClick={() => handleProfileUpdate(name, description)}>
+        <button
+          className="btn-save"
+          onClick={() => handleProfileUpdate(name, description)}
+        >
           Save Profile
         </button>
+      </div>
+      <div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setAvatarFile(e.target.files[0])}
+        />
+        <button type="button" onClick={handleAvatarUpload}>
+          Upload Profile Picture
+        </button>
+        {avatarUploadMessage && (
+          <div className="asg10-error">{avatarUploadMessage}</div>
+        )}
       </div>
 
       <button className="btn-logout" type="button" onClick={handleLogout}>
