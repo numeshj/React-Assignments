@@ -1,5 +1,5 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/AGS_10.css";
+import "../assignments/AGS_16.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoginScreen from "../component/LoginScreen";

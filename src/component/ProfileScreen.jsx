@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getStoredToken } from "../utility/helper";
+import "../assignments/AGS_10.css";
 
-export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
+export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) {
   const [mode, setMode] = useState("summary");
   const [name, setName] = useState(user.name);
   const [description, setDescription] = useState(user.description);
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarUploadMessage, setAvatarUploadMessage] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [verifyPassword, setVerifyPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [passwords, setPasswords] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     setName(user.name);
@@ -51,7 +53,6 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
 
   // Avatar upload
   const handleAvatarUpload = () => {
-    setAvatarUploadMessage("");
     if (!avatarFile) {
       Swal.fire({
         icon: "warning",
@@ -75,7 +76,6 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
           text: "Profile picture uploaded successfully.",
           showConfirmButton: true,
         });
-        setAvatarUploadMessage("");
         setAvatarFile(null);
         onUserUpdate(response.data);
       })
@@ -86,7 +86,6 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
           text: "Failed to upload avatar.",
           showConfirmButton: true,
         });
-        setAvatarUploadMessage("Failed to upload avatar.");
       });
   };
 
@@ -114,7 +113,6 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
               "Your profile picture has been removed.",
               "success"
             );
-            setAvatarFile(null);
             onUserUpdate(response.data);
           })
           .catch(() => {
@@ -151,28 +149,24 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
 
   // Change password
   const handleChangePassword = async () => {
-    setPasswordError("");
-    if (!currentPassword || !newPassword || !verifyPassword) {
-      setPasswordError("All password fields are required.");
+    if (!passwords.current || !passwords.new || !passwords.confirm) {
       return;
     }
-    if (newPassword !== verifyPassword) {
-      setPasswordError("New password and re-entered password do not match.");
+    if (passwords.new !== passwords.confirm) {
       return;
     }
-    const validationMsg = validatePassword(newPassword);
+    const validationMsg = validatePassword(passwords.new);
     if (validationMsg) {
-      setPasswordError(validationMsg);
       return;
     }
     try {
       const token = getStoredToken();
-      const response = await axios.put(
+      await axios.put(
         "https://auth.dnjs.lk/api/password",
         {
-          old_password: currentPassword,
-          new_password: newPassword,
-          new_password_confirmation: verifyPassword,
+          old_password: passwords.current,
+          new_password: passwords.new,
+          new_password_confirmation: passwords.confirm,
         },
         {
           headers: {
@@ -187,27 +181,80 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
         text: "Your password has been changed successfully!",
         showConfirmButton: true,
       });
-      setCurrentPassword("");
-      setNewPassword("");
-      setVerifyPassword("");
+      setPasswords({ current: "", new: "", confirm: "" });
     } catch (err) {
-      setPasswordError(
-        err.response?.data?.message ||
-          "Failed to change password. Please try again."
+      Swal.fire({
+        icon: "error",
+        title: "Change Password Failed",
+        text: "Failed to change password. Please try again.",
+        showConfirmButton: true,
+      });
+    }
+  };
+
+  // Change email
+  const handleEmailChange = async () => {
+    if (!email) {
+      Swal.fire({
+        icon: "warning",
+        title: "No Email Entered",
+        text: "Please enter a new email address.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+    const token = getStoredToken();
+    if (!token) return;
+    try {
+      await axios.put(
+        "https://auth.dnjs.lk/api/email",
+        { email },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+      Swal.fire({
+        icon: "success",
+        title: "Verification Sent",
+        text: "A verification link has been sent to your new email.",
+        showConfirmButton: true,
+      });
+      setEmail("");
+      setMode("summary");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Change Email Failed",
+        text: "Failed to change email. Please try again.",
+        showConfirmButton: true,
+      });
     }
   };
 
   // Navigation helpers
-  const goHome = () => (window.location.href = "/");
+  const handleGoHome = () => {
+    window.location.href = "/";
+  };
 
-  // Main content switcher
-  let content;
+  // Right column illustration (always present)
+  const rightColumn = (
+    <div className="profile-right">
+      <div className="profile-illustration-bg">
+        <img
+          src="./public/image_R.png"
+          alt="Illustration"
+          className="profile-illustration-img"
+        />
+      </div>
+    </div>
+  );
+
+  // Left column content by mode
+  let leftColumn;
   if (mode === "summary") {
-    content = (
-      <>
+    leftColumn = (
+      <div className="profile-left">
         <div className="profile-logo">
-          <span className="profile-logo-icon icon-network" /> DNJS Web Application Network
+          <span className="profile-logo-icon icon-network" />
+          <span className="profile-logo-text">DNJS Web Application Network</span>
         </div>
         <div className="profile-heading">Account Manager</div>
         <div className="profile-subtext">You can update your details here</div>
@@ -220,19 +267,24 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
         <div className="profile-email">{user.email}</div>
         <div className="profile-title">{user.description}</div>
         <div className="profile-btn-row">
-          <button className="btn-edit" onClick={() => setMode("edit-menu")}> <span className="btn-icon icon-edit" /> Edit Profile</button>
-          <button className="btn-logout-outline" onClick={onLogout}> <span className="btn-icon icon-logout" /> Logout</button>
+          <button className="btn-edit" onClick={() => setMode("edit-menu")}>
+            <span className="btn-icon icon-edit" /> Edit Profile
+          </button>
+          <button className="btn-logout-outline" onClick={onLogout}>
+            <span className="btn-icon icon-logout" /> Logout
+          </button>
         </div>
-        <button className="homepage-btn" onClick={goHome}>
+        <button className="homepage-btn" onClick={handleGoHome}>
           Go to Homepage
         </button>
-      </>
+      </div>
     );
   } else if (mode === "edit-menu") {
-    content = (
-      <>
+    leftColumn = (
+      <div className="profile-left">
         <div className="profile-logo">
-          <span className="profile-logo-icon icon-network" /> DNJS Web Application Network
+          <span className="profile-logo-icon icon-network" />
+          <span className="profile-logo-text">DNJS Web Application Network</span>
         </div>
         <div className="profile-heading">Edit Profile</div>
         <div className="profile-subtext">
@@ -267,11 +319,11 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
         <button className="btn-primary btn-fullwidth" onClick={() => setMode("summary")}>
           Go Back
         </button>
-      </>
+      </div>
     );
   } else if (mode === "edit-info") {
-    content = (
-      <>
+    leftColumn = (
+      <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
           <span className="profile-logo-text">DNJS Web Application Network</span>
@@ -285,7 +337,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={user.name}
+              placeholder="Name"
             />
             <span className="input-icon input-icon-absolute input-icon-person" />
           </div>
@@ -295,7 +347,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Intern—Software Engineer"
+              placeholder="Description"
             />
             <span className="input-icon input-icon-absolute input-icon-info" />
           </div>
@@ -317,11 +369,11 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
             Save Details
           </button>
         </div>
-      </>
+      </div>
     );
   } else if (mode === "edit-avatar") {
-    content = (
-      <>
+    leftColumn = (
+      <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
           <span className="profile-logo-text">DNJS Web Application Network</span>
@@ -351,105 +403,94 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate }) {
             <span className="btn-icon-svg icon-upload" />
             Upload
           </button>
-          <button className="btn-logout-outline btn-outline-red" onClick={() => handleAvatarRemove()}>
+          <button className="btn-logout-outline btn-outline-red" onClick={handleAvatarRemove}>
             <span className="btn-icon-svg icon-remove" />
             Remove
           </button>
         </div>
         <button className="btn-primary btn-fullwidth btn-small" onClick={() => setMode("edit-menu")}>Close</button>
-      </>
+      </div>
     );
   } else if (mode === "edit-password") {
-    content = (
-      <>
-        <div className="profile-logo">
-          <span className="profile-logo-icon icon-network" /> DNJS Web Application
-          Network
+    leftColumn = (
+      <div className="profile-left">
+        <div className="profile-logo profile-logo-margin">
+          <span className="profile-logo-icon icon-network" />
+          <span className="profile-logo-text">DNJS Web Application Network</span>
         </div>
-        <div className="profile-heading">Change Password</div>
-        <div className="profile-subtext">Make your account safe and secure</div>
-        <div className="profile-password-row">
-          <div className="input-icon-row">
-            <span className="input-icon icon-password" />
+        <div className="profile-heading profile-heading-small">Change Password</div>
+        <div className="profile-subtext profile-subtext-small">Make your account safe and secure</div>
+        <div className="profile-edit-fields">
+          <div className="input-icon-row input-icon-inside input-row-margin">
             <input
-              className="asg10-input"
+              className="asg10-input input-with-icon"
               type="password"
+              value={passwords.current}
+              onChange={e => setPasswords({ ...passwords, current: e.target.value })}
               placeholder="Current Password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
             />
+            <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
-          <div className="input-icon-row">
-            <span className="input-icon icon-password" />
+          <div className="input-icon-row input-icon-inside input-row-margin">
             <input
-              className="asg10-input"
+              className="asg10-input input-with-icon"
               type="password"
+              value={passwords.new}
+              onChange={e => setPasswords({ ...passwords, new: e.target.value })}
               placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
             />
+            <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
-          <div className="input-icon-row">
-            <span className="input-icon icon-password" />
+          <div className="input-icon-row input-icon-inside">
             <input
-              className="asg10-input"
+              className="asg10-input input-with-icon"
               type="password"
+              value={passwords.confirm}
+              onChange={e => setPasswords({ ...passwords, confirm: e.target.value })}
               placeholder="Confirm New Password"
-              value={verifyPassword}
-              onChange={(e) => setVerifyPassword(e.target.value)}
             />
+            <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
-          <div className="profile-btn-row">
-            <button
-              className="btn-primary"
-              onClick={() => setMode("edit-menu")}
-            >
-              Close
-            </button>
-            <button className="btn-primary" onClick={handleChangePassword}>
-              Change Password
-            </button>
-          </div>
-          {passwordError && (
-            <div className="asg10-error" style={{ marginTop: 8 }}>
-              {passwordError}
-            </div>
-          )}
         </div>
-      </>
+        <div className="profile-btn-row profile-btn-row-small">
+          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")}>Close</button>
+          <button className="btn-primary btn-small" onClick={handleChangePassword}>Change Password</button>
+        </div>
+      </div>
     );
   } else if (mode === "edit-email") {
-    content = (
-      <>
-        <div className="profile-logo">
-          <span className="profile-logo-icon icon-network" /> DNJS Web Application Network
+    leftColumn = (
+      <div className="profile-left">
+        <div className="profile-logo profile-logo-margin">
+          <span className="profile-logo-icon icon-network" />
+          <span className="profile-logo-text">DNJS Web Application Network</span>
         </div>
-        <div className="profile-heading">Change Email</div>
-        <div className="profile-subtext">Update your email address</div>
+        <div className="profile-heading profile-heading-small">Change Email</div>
+        <div className="profile-subtext profile-subtext-small">We will send a verification link to your new email</div>
         <div className="profile-edit-fields">
-          <div className="input-icon-row">
-            <span className="input-icon icon-email" />
-            <input className="asg10-input" type="email" placeholder="New Email" />
+          <div className="input-icon-row input-icon-inside">
+            <input
+              className="asg10-input input-with-icon"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="New Email"
+            />
+            <span className="input-icon input-icon-absolute input-icon-mail" />
           </div>
         </div>
-        <div className="profile-btn-row">
-          <button
-            className="btn-primary"
-            onClick={() => setMode("edit-menu")}
-          >
-            Close
-          </button>
-          <button className="btn-primary">Change Email</button>
+        <div className="profile-btn-row profile-btn-row-small">
+          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")}>Close</button>
+          <button className="btn-primary btn-small" onClick={handleEmailChange}>Send verification link</button>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <div className="profile-left">{content}</div>
-      </div>
+    <div className="profile-card">
+      {leftColumn}
+      {rightColumn}
     </div>
   );
 }
