@@ -98,12 +98,57 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 1.1rem;
+  font-size: 1.0rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
   margin-top: 8px;
+}
+
+/* --- Custom Edit and Logout Buttons for Profile Card --- */
+.btn-edit,
+.btn-logout-outline {
+  background: #f7faff;
+  color: #0061FF;
+  border: 2px solid #0061FF;
+  padding: 4px 12px 4px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  min-width: 110px;
+  min-height: 32px;
+  justify-content: center;
+}
+.btn-edit {
+  background: #f7faff;
+  color: #0061FF;
+  border-color: #0061FF;
+}
+.btn-edit:hover {
+  background: #eaf2ff;
+  color: #003a99;
+  border-color: #003a99;
+}
+.btn-logout-outline {
+  background: #fff;
+  color: #d50000;
+  border-color: #d50000;
+}
+.btn-logout-outline:hover {
+  background: #fff5f5;
+  color: #a30000;
+  border-color: #a30000;
+}
+.btn-icon {
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
 }
 
 /* --- Profile Edit & Avatar Upload --- */

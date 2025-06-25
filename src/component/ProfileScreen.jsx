@@ -42,13 +42,13 @@ export default function ProfileScreen({
         <div className="profile-title">Intern—Software Engineer</div>
         <div className="profile-btn-row">
           <button
-            className="btn-primary"
+            className="btn-edit"
             onClick={() => setMode("edit-menu")}
           >
-            Edit Profile
+            <span className="btn-icon">✏️</span> Edit Profile
           </button>
-          <button className="btn-outline" onClick={handleLogout}>
-            Logout
+          <button className="btn-logout-outline" onClick={handleLogout}>
+            <span className="btn-icon">⎋</span> Logout
           </button>
         </div>
         <button className="homepage-btn" onClick={goHome}>
