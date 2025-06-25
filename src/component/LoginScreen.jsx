@@ -1,20 +1,51 @@
-export default function LoginScreen({
-  post,
-  error,
-  success,
-  showPassword,
-  keepLoggedIn,
-  setShowPassword,
-  setKeepLoggedIn,
-  handleInput,
-  handleSubmit,
-}) {
+import { useState } from "react";
+import axios from "axios";
+
+export default function LoginScreen({ onLoginSuccess, success }) {
+  const [post, setPost] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+
+  const handleInput = (event) => {
+    setPost({ ...post, [event.target.name]: event.target.value });
+    setError("");
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setError("");
+    if (!post.email || !post.password) return;
+    axios
+      .post(
+        "https://auth.dnjs.lk/api/login",
+        { email: post.email, password: post.password },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then((response) => {
+        const token = response.data.access_token;
+        // Fetch user details after login
+        axios
+          .get("https://auth.dnjs.lk/api/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((userRes) => {
+            onLoginSuccess(userRes.data, token, keepLoggedIn);
+          })
+          .catch(() => {
+            setError("Failed to fetch user details after login.");
+          });
+      })
+      .catch((error) => {
+        setError(error.response?.data?.message || "Login failed");
+      });
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <h2>Login :</h2>
       {error && <div className="asg10-error">{error}</div>}
       {success && <pre className="asg10-success">{success}</pre>}
-
       <label className="asg10-label">Email :</label>
       <input
         className="asg10-input"
