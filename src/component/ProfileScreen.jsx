@@ -259,7 +259,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
         <div className="profile-heading">Account Manager</div>
         <div className="profile-subtext">You can update your details here</div>
         <img
-          src={user.avatar || "/default-profile.svg"}
+          src={user.avatar || "./default-profile.svg"}
           alt="Profile"
           className="profile-pic"
         />
