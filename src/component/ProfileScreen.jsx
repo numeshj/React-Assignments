@@ -23,6 +23,7 @@ export default function ProfileScreen({
   const [email, setEmail] = useState("");
   const [localLoading, setLocalLoading] = useState(false); // local loading for logout
   const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     setName(user.name);
@@ -291,19 +292,19 @@ export default function ProfileScreen({
       setEmail("");
       setMode("summary");
     } catch (err) {
-      let message = "Failed to change email. Please try again.";
-      if (err?.response?.data?.message) {
-        message = err.response.data.message;
-      } else if (err?.response?.data?.error?.message) {
-        message = err.response.data.error.message;
-      } else if (err?.response?.data?.error) {
-        message = err.response.data.error;
+      const res = err?.response?.data;
+      let message = "Failed to change the email.";
+
+      if (res?.error?.message) {
+        message = res.error.message;
       }
+
+      setEmailError(message);
+
       Swal.fire({
         icon: "error",
-        title: "Change Email Failed",
+        title: "Change email failed",
         text: message,
-        showConfirmButton: true,
       });
     }
   };
