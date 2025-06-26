@@ -4,7 +4,13 @@ import Swal from "sweetalert2";
 import { getStoredToken } from "../utility/helper";
 import "../assignments/AGS_10.css";
 
-export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, loading = false, disabled = false }) {
+export default function ProfileScreen({
+  user,
+  onUserUpdate,
+  loading = false,
+  disabled = false,
+  onLoggedOut, // <-- add this prop for parent notification
+}) {
   const [mode, setMode] = useState("summary");
   const [name, setName] = useState(user.name);
   const [description, setDescription] = useState(user.description);
@@ -15,6 +21,8 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
     confirm: "",
   });
   const [email, setEmail] = useState("");
+  const [localLoading, setLocalLoading] = useState(false); // local loading for logout
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     setName(user.name);
@@ -119,11 +127,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
             onUserUpdate(response.data);
           })
           .catch(() => {
-            Swal.fire(
-              "Failed",
-              "Failed to remove profile picture.",
-              "error"
-            );
+            Swal.fire("Failed", "Failed to remove profile picture.", "error");
           });
       }
     });
@@ -137,8 +141,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
     const upperRegex = /[A-Z]/;
     if (password.length < 8)
       return "Password must be at least 8 characters long.";
-    if (password.length > 40)
-      return "Password must not exceed 40 characters.";
+    if (password.length > 40) return "Password must not exceed 40 characters.";
     if (!numberRegex.test(password))
       return "Password must contain at least one numeric character.";
     if (!specialCharRegex.test(password))
@@ -153,16 +156,24 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
   // Change password
   const handleChangePassword = async () => {
     if (loading || disabled) return;
+
+    // Basic checks
     if (!passwords.current || !passwords.new || !passwords.confirm) {
+      setPasswordError("All password fields are required.");
       return;
     }
+
     if (passwords.new !== passwords.confirm) {
+      setPasswordError("New password and confirmation do not match.");
       return;
     }
+
     const validationMsg = validatePassword(passwords.new);
     if (validationMsg) {
+      setPasswordError(validationMsg);
       return;
     }
+
     try {
       const token = getStoredToken();
       await axios.put(
@@ -179,22 +190,68 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
           },
         }
       );
+
       Swal.fire({
         icon: "success",
         title: "Password Changed",
-        text: "Your password has been changed successfully!",
-        showConfirmButton: true,
+        text: "Your password was changed successfully!",
       });
+
       setPasswords({ current: "", new: "", confirm: "" });
+      setPasswordError("");
     } catch (err) {
-      console.error("Password Change failed.",err)
+      const res = err?.response?.data;
+
+      let message = "Failed to change password.";
+      if (res?.errors?.old_password) {
+        message = res.errors.old_password[0];
+      } else if (res?.message) {
+        message = res.message;
+      }
+
+      setPasswordError(message);
+
       Swal.fire({
         icon: "error",
         title: "Change Password Failed",
-        text: "Failed to change password. Please try again.",
-        showConfirmButton: true,
+        text: message,
       });
     }
+  };
+
+  // Logout logic (self-contained)
+  const handleLogout = () => {
+    if (loading || disabled || localLoading) return;
+    setLocalLoading(true);
+    const token = getStoredToken();
+    if (!token) {
+      localStorage.removeItem("authToken");
+      sessionStorage.removeItem("authToken");
+      if (onLoggedOut) onLoggedOut();
+      setLocalLoading(false);
+      return;
+    }
+    axios
+      .post(
+        "https://auth.dnjs.lk/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
+        if (onLoggedOut) onLoggedOut();
+      })
+      .catch(() => {
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
+        if (onLoggedOut) onLoggedOut();
+      })
+      .finally(() => setLocalLoading(false));
   };
 
   // Change email
@@ -210,10 +267,18 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       return;
     }
     const token = getStoredToken();
-    if (!token) return;
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Authenticated",
+        text: "You are not logged in. Please log in again.",
+        showConfirmButton: true,
+      });
+      return;
+    }
     try {
-      await axios.put(
-        "https://auth.dnjs.lk/api/email",
+      await axios.post(
+        `https://auth.dnjs.lk/api/email?token=${token}`,
         { email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -226,10 +291,18 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       setEmail("");
       setMode("summary");
     } catch (err) {
+      let message = "Failed to change email. Please try again.";
+      if (err?.response?.data?.message) {
+        message = err.response.data.message;
+      } else if (err?.response?.data?.error?.message) {
+        message = err.response.data.error.message;
+      } else if (err?.response?.data?.error) {
+        message = err.response.data.error;
+      }
       Swal.fire({
         icon: "error",
         title: "Change Email Failed",
-        text: "Failed to change email. Please try again.",
+        text: message,
         showConfirmButton: true,
       });
     }
@@ -246,7 +319,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
     <div className="profile-right">
       <div className="profile-illustration-bg">
         <img
-          src="./public/image_R.png"
+          src="./image_R.png"
           alt="Illustration"
           className="profile-illustration-img"
         />
@@ -261,7 +334,9 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
         <div className="profile-heading">Account Manager</div>
         <div className="profile-subtext">You can update your details here</div>
@@ -274,14 +349,26 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
         <div className="profile-email">{user.email}</div>
         <div className="profile-title">{user.description}</div>
         <div className="profile-btn-row">
-          <button className="btn-edit" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>
+          <button
+            className="btn-edit"
+            onClick={() => setMode("edit-menu")}
+            disabled={loading || disabled}
+          >
             <span className="btn-icon icon-edit" /> Edit Profile
           </button>
-          <button className="btn-logout-outline" onClick={onLogout} disabled={loading || disabled}>
+          <button
+            className="btn-logout-outline"
+            onClick={handleLogout}
+            disabled={loading || disabled || localLoading}
+          >
             <span className="btn-icon icon-logout" /> Logout
           </button>
         </div>
-        <button className="homepage-btn" onClick={handleGoHome} disabled={loading || disabled}>
+        <button
+          className="homepage-btn"
+          onClick={handleGoHome}
+          disabled={loading || disabled}
+        >
           Go to Homepage
         </button>
       </div>
@@ -291,7 +378,9 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
         <div className="profile-heading">Edit Profile</div>
         <div className="profile-subtext">
@@ -327,8 +416,11 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
             Change Email
           </button>
         </div>
-        <button className="btn-primary btn-fullwidth" onClick={() => setMode("summary")}
-          disabled={loading || disabled}>
+        <button
+          className="btn-primary btn-fullwidth"
+          onClick={() => setMode("summary")}
+          disabled={loading || disabled}
+        >
           Go Back
         </button>
       </div>
@@ -338,10 +430,16 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
-        <div className="profile-heading profile-heading-small">Name and Description</div>
-        <div className="profile-subtext profile-subtext-small">Your name and a short description about you</div>
+        <div className="profile-heading profile-heading-small">
+          Name and Description
+        </div>
+        <div className="profile-subtext profile-subtext-small">
+          Your name and a short description about you
+        </div>
         <div className="profile-edit-fields">
           <div className="input-icon-row input-icon-inside input-row-margin">
             <input
@@ -392,14 +490,24 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
-        <div className="profile-heading profile-heading-small">Update Avatar</div>
-        <div className="profile-subtext profile-subtext-small">Display image for your profile</div>
+        <div className="profile-heading profile-heading-small">
+          Update Avatar
+        </div>
+        <div className="profile-subtext profile-subtext-small">
+          Display image for your profile
+        </div>
         <div className="avatar-center avatar-center-margin">
           <label htmlFor="avatar-upload-input" className="avatar-upload-label">
             <img
-              src={avatarFile ? URL.createObjectURL(avatarFile) : (user.avatar || "/default-profile.svg")}
+              src={
+                avatarFile
+                  ? URL.createObjectURL(avatarFile)
+                  : user.avatar || "/default-profile.svg"
+              }
               alt="Profile"
               className="profile-pic-small"
             />
@@ -408,25 +516,39 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
               type="file"
               accept="image/*"
               className="avatar-upload-input"
-              onChange={e => {
-                if (e.target.files && e.target.files[0]) setAvatarFile(e.target.files[0]);
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0])
+                  setAvatarFile(e.target.files[0]);
               }}
               disabled={loading || disabled}
             />
           </label>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-outline-blue" onClick={handleAvatarUpload} disabled={loading || disabled}>
+          <button
+            className="btn-primary btn-outline-blue"
+            onClick={handleAvatarUpload}
+            disabled={loading || disabled}
+          >
             <span className="btn-icon-svg icon-upload" />
             Upload
           </button>
-          <button className="btn-logout-outline btn-outline-red" onClick={handleAvatarRemove} disabled={loading || disabled}>
+          <button
+            className="btn-logout-outline btn-outline-red"
+            onClick={handleAvatarRemove}
+            disabled={loading || disabled}
+          >
             <span className="btn-icon-svg icon-remove" />
             Remove
           </button>
         </div>
-        <button className="btn-primary btn-fullwidth btn-small" onClick={() => setMode("edit-menu")}
-          disabled={loading || disabled}>Close</button>
+        <button
+          className="btn-primary btn-fullwidth btn-small"
+          onClick={() => setMode("edit-menu")}
+          disabled={loading || disabled}
+        >
+          Close
+        </button>
       </div>
     );
   } else if (mode === "edit-password") {
@@ -434,17 +556,33 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
-        <div className="profile-heading profile-heading-small">Change Password</div>
-        <div className="profile-subtext profile-subtext-small">Make your account safe and secure</div>
+        <div className="profile-heading profile-heading-small">
+          Change Password
+        </div>
+        <div className="profile-subtext profile-subtext-small">
+          Make your account safe and secure
+        </div>
+        {/* Password error message */}
+        {passwordError && (
+          <div style={{ color: "red", fontWeight: "bold" }}>
+            {passwordError}
+          </div>
+        )}
         <div className="profile-edit-fields">
           <div className="input-icon-row input-icon-inside input-row-margin">
             <input
               className="asg10-input input-with-icon"
               type="password"
+              autoComplete="current-password"
               value={passwords.current}
-              onChange={e => setPasswords({ ...passwords, current: e.target.value })}
+              onChange={(e) => {
+                setPasswords({ ...passwords, current: e.target.value });
+                setPasswordError("");
+              }}
               placeholder="Current Password"
               disabled={loading || disabled}
             />
@@ -454,8 +592,12 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
             <input
               className="asg10-input input-with-icon"
               type="password"
+              autoComplete="new-password"
               value={passwords.new}
-              onChange={e => setPasswords({ ...passwords, new: e.target.value })}
+              onChange={(e) => {
+                setPasswords({ ...passwords, new: e.target.value });
+                setPasswordError("");
+              }}
               placeholder="New Password"
               disabled={loading || disabled}
             />
@@ -465,8 +607,12 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
             <input
               className="asg10-input input-with-icon"
               type="password"
+              autoComplete="new-password"
               value={passwords.confirm}
-              onChange={e => setPasswords({ ...passwords, confirm: e.target.value })}
+              onChange={(e) => {
+                setPasswords({ ...passwords, confirm: e.target.value });
+                setPasswordError("");
+              }}
               placeholder="Confirm New Password"
               disabled={loading || disabled}
             />
@@ -474,8 +620,20 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
           </div>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>Close</button>
-          <button className="btn-primary btn-small" onClick={handleChangePassword} disabled={loading || disabled}>Change Password</button>
+          <button
+            className="btn-primary btn-small"
+            onClick={() => setMode("edit-menu")}
+            disabled={loading || disabled}
+          >
+            Close
+          </button>
+          <button
+            className="btn-primary btn-small"
+            onClick={handleChangePassword}
+            disabled={loading || disabled}
+          >
+            Change Password
+          </button>
         </div>
       </div>
     );
@@ -484,17 +642,23 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       <div className="profile-left">
         <div className="profile-logo profile-logo-margin">
           <span className="profile-logo-icon icon-network" />
-          <span className="profile-logo-text">DNJS Web Application Network</span>
+          <span className="profile-logo-text">
+            DNJS Web Application Network
+          </span>
         </div>
-        <div className="profile-heading profile-heading-small">Change Email</div>
-        <div className="profile-subtext profile-subtext-small">We will send a verification link to your new email</div>
+        <div className="profile-heading profile-heading-small">
+          Change Email
+        </div>
+        <div className="profile-subtext profile-subtext-small">
+          We will send a verification link to your new email
+        </div>
         <div className="profile-edit-fields">
           <div className="input-icon-row input-icon-inside">
             <input
               className="asg10-input input-with-icon"
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="New Email"
               disabled={loading || disabled}
             />
@@ -502,8 +666,20 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
           </div>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>Close</button>
-          <button className="btn-primary btn-small" onClick={handleEmailChange} disabled={loading || disabled}>Send verification link</button>
+          <button
+            className="btn-primary btn-small"
+            onClick={() => setMode("edit-menu")}
+            disabled={loading || disabled}
+          >
+            Close
+          </button>
+          <button
+            className="btn-primary btn-small"
+            onClick={handleEmailChange}
+            disabled={loading || disabled}
+          >
+            Send verification link
+          </button>
         </div>
       </div>
     );

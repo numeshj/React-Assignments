@@ -67,47 +67,16 @@ export default function ASG_16() {
     setLoading(false);
   };
 
-  // Called by ProfileScreen or LoginScreen on logout
-  const handleLogout = () => {
-    const token = getStoredToken();
-    setLoading(true);
-    if (!token) {
-      localStorage.removeItem("authToken");
-      sessionStorage.removeItem("authToken");
-      setUser(null);
-      setSuccess("You are logged out.");
-      setLogged(false);
-      setLoading(false);
-      return;
-    }
-    axios
-      .post(
-        "https://auth.dnjs.lk/api/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then(() => {
-        localStorage.removeItem("authToken");
-        sessionStorage.removeItem("authToken");
-        setUser(null);
-        setSuccess("You are logged out.");
-        setLogged(false);
-      })
-      .catch(() => {
-        setUser(null);
-        setSuccess("You are logged out.");
-        setLogged(false);
-      })
-      .finally(() => setLoading(false));
-  };
-
   // Called by ProfileScreen after profile update
   const handleUserUpdate = (newUser) => {
     setUser(newUser);
+  };
+
+  // Called by ProfileScreen or LoginScreen on logout
+  const handleLoggedOut = () => {
+    setUser(null);
+    setSuccess("You are logged out.");
+    setLogged(false);
   };
 
   return (
@@ -127,10 +96,10 @@ export default function ASG_16() {
         ) : user ? (
           <ProfileScreen
             user={user}
-            onLogout={handleLogout}
             onUserUpdate={handleUserUpdate}
             loading={loading}
             disabled={loading}
+            onLoggedOut={handleLoggedOut}
           />
         ) : null}
       </div>
