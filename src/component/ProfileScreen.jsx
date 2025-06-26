@@ -187,6 +187,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, lo
       });
       setPasswords({ current: "", new: "", confirm: "" });
     } catch (err) {
+      console.error("Password Change failed.",err)
       Swal.fire({
         icon: "error",
         title: "Change Password Failed",
