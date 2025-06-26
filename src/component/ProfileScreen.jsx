@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { getStoredToken } from "../utility/helper";
 import "../assignments/AGS_10.css";
 
-export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) {
+export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome, loading = false, disabled = false }) {
   const [mode, setMode] = useState("summary");
   const [name, setName] = useState(user.name);
   const [description, setDescription] = useState(user.description);
@@ -23,6 +23,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Profile update
   const handleProfileUpdate = (name, description) => {
+    if (loading || disabled) return;
     const token = getStoredToken();
     if (!token) return;
     axios
@@ -53,6 +54,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Avatar upload
   const handleAvatarUpload = () => {
+    if (loading || disabled) return;
     if (!avatarFile) {
       Swal.fire({
         icon: "warning",
@@ -91,6 +93,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Avatar remove
   const handleAvatarRemove = () => {
+    if (loading || disabled) return;
     const token = getStoredToken();
     if (!token) return;
     Swal.fire({
@@ -149,6 +152,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Change password
   const handleChangePassword = async () => {
+    if (loading || disabled) return;
     if (!passwords.current || !passwords.new || !passwords.confirm) {
       return;
     }
@@ -194,6 +198,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Change email
   const handleEmailChange = async () => {
+    if (loading || disabled) return;
     if (!email) {
       Swal.fire({
         icon: "warning",
@@ -231,6 +236,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
 
   // Navigation helpers
   const handleGoHome = () => {
+    if (loading || disabled) return;
     window.location.href = "/";
   };
 
@@ -267,14 +273,14 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
         <div className="profile-email">{user.email}</div>
         <div className="profile-title">{user.description}</div>
         <div className="profile-btn-row">
-          <button className="btn-edit" onClick={() => setMode("edit-menu")}>
+          <button className="btn-edit" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>
             <span className="btn-icon icon-edit" /> Edit Profile
           </button>
-          <button className="btn-logout-outline" onClick={onLogout}>
+          <button className="btn-logout-outline" onClick={onLogout} disabled={loading || disabled}>
             <span className="btn-icon icon-logout" /> Logout
           </button>
         </div>
-        <button className="homepage-btn" onClick={handleGoHome}>
+        <button className="homepage-btn" onClick={handleGoHome} disabled={loading || disabled}>
           Go to Homepage
         </button>
       </div>
@@ -294,29 +300,34 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
           <button
             className="profile-link"
             onClick={() => setMode("edit-info")}
+            disabled={loading || disabled}
           >
             Update Name and Description
           </button>
           <button
             className="profile-link"
             onClick={() => setMode("edit-avatar")}
+            disabled={loading || disabled}
           >
             Update or Remove Avatar
           </button>
           <button
             className="profile-link"
             onClick={() => setMode("edit-password")}
+            disabled={loading || disabled}
           >
             Change Password
           </button>
           <button
             className="profile-link"
             onClick={() => setMode("edit-email")}
+            disabled={loading || disabled}
           >
             Change Email
           </button>
         </div>
-        <button className="btn-primary btn-fullwidth" onClick={() => setMode("summary")}>
+        <button className="btn-primary btn-fullwidth" onClick={() => setMode("summary")}
+          disabled={loading || disabled}>
           Go Back
         </button>
       </div>
@@ -338,6 +349,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Name"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-person" />
           </div>
@@ -348,6 +360,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-info" />
           </div>
@@ -356,6 +369,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
           <button
             className="btn-primary btn-small"
             onClick={() => setMode("edit-menu")}
+            disabled={loading || disabled}
           >
             Close
           </button>
@@ -365,6 +379,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               handleProfileUpdate(name, description);
               setMode("summary");
             }}
+            disabled={loading || disabled}
           >
             Save Details
           </button>
@@ -395,20 +410,22 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               onChange={e => {
                 if (e.target.files && e.target.files[0]) setAvatarFile(e.target.files[0]);
               }}
+              disabled={loading || disabled}
             />
           </label>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-outline-blue" onClick={handleAvatarUpload}>
+          <button className="btn-primary btn-outline-blue" onClick={handleAvatarUpload} disabled={loading || disabled}>
             <span className="btn-icon-svg icon-upload" />
             Upload
           </button>
-          <button className="btn-logout-outline btn-outline-red" onClick={handleAvatarRemove}>
+          <button className="btn-logout-outline btn-outline-red" onClick={handleAvatarRemove} disabled={loading || disabled}>
             <span className="btn-icon-svg icon-remove" />
             Remove
           </button>
         </div>
-        <button className="btn-primary btn-fullwidth btn-small" onClick={() => setMode("edit-menu")}>Close</button>
+        <button className="btn-primary btn-fullwidth btn-small" onClick={() => setMode("edit-menu")}
+          disabled={loading || disabled}>Close</button>
       </div>
     );
   } else if (mode === "edit-password") {
@@ -428,6 +445,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={passwords.current}
               onChange={e => setPasswords({ ...passwords, current: e.target.value })}
               placeholder="Current Password"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
@@ -438,6 +456,7 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={passwords.new}
               onChange={e => setPasswords({ ...passwords, new: e.target.value })}
               placeholder="New Password"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
@@ -448,13 +467,14 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={passwords.confirm}
               onChange={e => setPasswords({ ...passwords, confirm: e.target.value })}
               placeholder="Confirm New Password"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")}>Close</button>
-          <button className="btn-primary btn-small" onClick={handleChangePassword}>Change Password</button>
+          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>Close</button>
+          <button className="btn-primary btn-small" onClick={handleChangePassword} disabled={loading || disabled}>Change Password</button>
         </div>
       </div>
     );
@@ -475,13 +495,14 @@ export default function ProfileScreen({ user, onLogout, onUserUpdate, goHome }) 
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="New Email"
+              disabled={loading || disabled}
             />
             <span className="input-icon input-icon-absolute input-icon-mail" />
           </div>
         </div>
         <div className="profile-btn-row profile-btn-row-small">
-          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")}>Close</button>
-          <button className="btn-primary btn-small" onClick={handleEmailChange}>Send verification link</button>
+          <button className="btn-primary btn-small" onClick={() => setMode("edit-menu")} disabled={loading || disabled}>Close</button>
+          <button className="btn-primary btn-small" onClick={handleEmailChange} disabled={loading || disabled}>Send verification link</button>
         </div>
       </div>
     );

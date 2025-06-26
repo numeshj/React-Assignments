@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function LoginScreen({ onLoginSuccess, success }) {
+export default function LoginScreen({ onLoginSuccess, success, loading = false, disabled = false }) {
   const [post, setPost] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +16,7 @@ export default function LoginScreen({ onLoginSuccess, success }) {
     event.preventDefault();
     setError("");
     if (!post.email || !post.password) return;
+    if (loading || disabled) return;
     axios
       .post(
         "https://auth.dnjs.lk/api/login",
@@ -48,20 +49,22 @@ export default function LoginScreen({ onLoginSuccess, success }) {
       {success && <pre className="asg10-success">{success}</pre>}
       <label className="asg10-label">Email :</label>
       <input
-        className="asg10-input"
+        className="asg10-login-input"
         placeholder="Enter the email"
         onChange={handleInput}
         value={post.email}
         name="email"
+        disabled={loading || disabled}
       />
       <label className="asg10-label">Password :</label>
       <input
-        className="asg10-input"
+        className="asg10-login-input"
         placeholder="Enter the password"
         onChange={handleInput}
         value={post.password}
         name="password"
         type={showPassword ? "text" : "password"}
+        disabled={loading || disabled}
       />
       <div className="asg10-checkbox-row">
         <input
@@ -70,6 +73,7 @@ export default function LoginScreen({ onLoginSuccess, success }) {
           checked={showPassword}
           onChange={() => setShowPassword(!showPassword)}
           className="asg10-checkbox"
+          disabled={loading || disabled}
         />
         <label htmlFor="showPassword" className="asg10-checkbox-label">
           Show Password
@@ -80,6 +84,7 @@ export default function LoginScreen({ onLoginSuccess, success }) {
           checked={keepLoggedIn}
           onChange={() => setKeepLoggedIn(!keepLoggedIn)}
           className="asg10-checkbox"
+          disabled={loading || disabled}
         />
         <label htmlFor="keepLoggedIn" className="asg10-checkbox-label">
           Keep me logged in
@@ -88,9 +93,9 @@ export default function LoginScreen({ onLoginSuccess, success }) {
       <button
         className="btn-login"
         type="submit"
-        disabled={!post.email || !post.password}
+        disabled={!post.email || !post.password || loading || disabled}
       >
-        Submit
+        {loading || disabled ? "Loading..." : "Submit"}
       </button>
     </form>
   );

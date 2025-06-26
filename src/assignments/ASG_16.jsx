@@ -10,10 +10,12 @@ export default function ASG_16() {
   const [user, setUser] = useState(null);
   const [logged, setLogged] = useState(false);
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = getStoredToken();
     if (token) {
+      setLoading(true);
       axios
         .get("https://auth.dnjs.lk/api/user", {
           headers: {
@@ -31,7 +33,8 @@ export default function ASG_16() {
           setUser(null);
           setSuccess("");
           setLogged(false);
-        });
+        })
+        .finally(() => setLoading(false));
     } else {
       setLogged(false);
     }
@@ -52,6 +55,7 @@ export default function ASG_16() {
 
   // Called by LoginScreen on successful login
   const handleLoginSuccess = (user, token, keepLoggedIn) => {
+    setLoading(true);
     if (keepLoggedIn) {
       localStorage.setItem("authToken", token);
     } else {
@@ -60,17 +64,20 @@ export default function ASG_16() {
     setUser(user);
     setLogged(true);
     setSuccess("You have logged in!");
+    setLoading(false);
   };
 
   // Called by ProfileScreen or LoginScreen on logout
   const handleLogout = () => {
     const token = getStoredToken();
+    setLoading(true);
     if (!token) {
       localStorage.removeItem("authToken");
       sessionStorage.removeItem("authToken");
       setUser(null);
       setSuccess("You are logged out.");
       setLogged(false);
+      setLoading(false);
       return;
     }
     axios
@@ -94,7 +101,8 @@ export default function ASG_16() {
         setUser(null);
         setSuccess("You are logged out.");
         setLogged(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   // Called by ProfileScreen after profile update
@@ -104,7 +112,7 @@ export default function ASG_16() {
 
   return (
     <>
-      <BackToHome />
+      <BackToHome disabled={loading} />
       <h1 className="assignment-title">Assignment - 16</h1>
       <hr />
       <br />
@@ -113,12 +121,16 @@ export default function ASG_16() {
           <LoginScreen
             onLoginSuccess={handleLoginSuccess}
             success={success}
+            loading={loading}
+            disabled={loading}
           />
         ) : user ? (
           <ProfileScreen
             user={user}
             onLogout={handleLogout}
             onUserUpdate={handleUserUpdate}
+            loading={loading}
+            disabled={loading}
           />
         ) : null}
       </div>
