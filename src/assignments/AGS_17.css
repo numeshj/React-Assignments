@@ -49,8 +49,8 @@
   display: block;
   width: 100%;
   padding: 12px 0;
-  margin: 18px 0 24px 0;
-  background: linear-gradient(90deg, #ff5e62 0%, #1976d2 100%);
+  margin: 18px 2 24px 1;
+  background: linear-gradient(90deg, #2e2e2e 0%, #f3f7fa 100%);
   color: #fff;
   font-size: 1.1rem;
   font-weight: 600;
@@ -61,7 +61,7 @@
   transition: background 0.2s, box-shadow 0.2s;
 }
 .color-mixer-btn:hover {
-  background: linear-gradient(90deg, #ff3c41 0%, #0d47a1 100%);
+  background: linear-gradient(90deg, #f3f7fa 0%, #2e2e2e 100%);
   box-shadow: 0 4px 16px 0 rgba(25, 118, 210, 0.13);
 }
 

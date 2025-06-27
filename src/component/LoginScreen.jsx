@@ -6,39 +6,61 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [successMsg, setSuccess] = useState("");
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
     setError("");
+    setSuccess("");
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setError("");
+    setSuccess("");
     if (!post.email || !post.password) return;
     if (loading || disabled) return;
     axios
       .post(
         "https://auth.dnjs.lk/api/login",
         { email: post.email, password: post.password },
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       )
       .then((response) => {
         const token = response.data.access_token;
-        // Fetch user details after login
-        axios
-          .get("https://auth.dnjs.lk/api/user", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((userRes) => {
-            onLoginSuccess(userRes.data, token, keepLoggedIn);
-          })
-          .catch(() => {
-            setError("Failed to fetch user details after login.");
-          });
+        if (keepLoggedIn) {
+          localStorage.setItem("authToken", token);
+        } else {
+          sessionStorage.setItem("authToken", token);
+        }
+        fetchUserDetails(token);
+        setError("");
+        setSuccess("You have logged!");
       })
       .catch((error) => {
-        setError(error.response?.data?.message || "Login failed");
+        setSuccess("");
+        console.log("Error : ", error)
+        setError(error.response?.data?.error?.message || "Login failed");
+      });
+  };
+
+  const fetchUserDetails = (token) => {
+    if (!token) return;
+    axios
+      .get("https://auth.dnjs.lk/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (onLoginSuccess) onLoginSuccess(response.data, token, keepLoggedIn);
+      })
+      .catch((error) => {
+        setError("Failed to fetch user details after login.");
       });
   };
 
@@ -46,7 +68,7 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
     <form onSubmit={handleSubmit}>
       <h2>Login :</h2>
       {error && <div className="asg10-error">{error}</div>}
-      {success && <pre className="asg10-success">{success}</pre>}
+      {successMsg && <pre className="asg10-success">{successMsg}</pre>}
       <label className="asg10-label">Email :</label>
       <input
         className="asg10-login-input"

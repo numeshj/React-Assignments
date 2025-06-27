@@ -9,7 +9,7 @@ export default function ProfileScreen({
   onUserUpdate,
   loading = false,
   disabled = false,
-  onLoggedOut, // <-- add this prop for parent notification
+  onLoggedOut, 
 }) {
   const [mode, setMode] = useState("summary");
   const [name, setName] = useState(user.name);
@@ -21,7 +21,7 @@ export default function ProfileScreen({
     confirm: "",
   });
   const [email, setEmail] = useState("");
-  const [localLoading, setLocalLoading] = useState(false); // local loading for logout
+  const [localLoading, setLocalLoading] = useState(false); 
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -201,22 +201,10 @@ export default function ProfileScreen({
       setPasswords({ current: "", new: "", confirm: "" });
       setPasswordError("");
     } catch (err) {
+      console.log(err)
       const res = err?.response?.data;
-
-      let message = "Failed to change password.";
-      if (res?.errors?.old_password) {
-        message = res.errors.old_password[0];
-      } else if (res?.message) {
-        message = res.message;
-      }
-
-      setPasswordError(message);
-
-      Swal.fire({
-        icon: "error",
-        title: "Change Password Failed",
-        text: message,
-      });
+      
+      setPasswordError(err.response?.data?.error?.message || "Failed to change the password");
     }
   };
 
@@ -567,12 +555,7 @@ export default function ProfileScreen({
         <div className="profile-subtext profile-subtext-small">
           Make your account safe and secure
         </div>
-        {/* Password error message */}
-        {passwordError && (
-          <div style={{ color: "red", fontWeight: "bold" }}>
-            {passwordError}
-          </div>
-        )}
+        
         <div className="profile-edit-fields">
           <div className="input-icon-row input-icon-inside input-row-margin">
             <input
@@ -620,7 +603,14 @@ export default function ProfileScreen({
             <span className="input-icon input-icon-absolute input-icon-lock" />
           </div>
         </div>
+        {/* Password error message */}
+        {passwordError && (
+          <div style={{ color: "red", fontWeight: "bold" }}>
+            {passwordError}
+          </div>
+        )}
         <div className="profile-btn-row profile-btn-row-small">
+          
           <button
             className="btn-primary btn-small"
             onClick={() => setMode("edit-menu")}

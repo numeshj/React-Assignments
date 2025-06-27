@@ -1,0 +1,281 @@
+/* AGS_18.css - Professional Gaming Interface for Color Clicker */
+
+.color-game-container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 32px 28px 28px 28px;
+  background: #181c24;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18), 0 1.5px 6px 0 rgba(0,0,0,0.13);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #fff;
+}
+
+.color-game-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #ffeb3b;
+  margin-bottom: 18px;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px #000;
+}
+
+.color-game-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 18px;
+  min-height: 70px;
+}
+
+.color-game-block {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  margin: 0 3px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+  border: 2.5px solid #fff;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.color-game-block.red {
+  background: linear-gradient(135deg, #ff3c41 60%, #b71c1c 100%);
+  border-color: #ffebee;
+}
+.color-game-block.blue {
+  background: linear-gradient(135deg, #1976d2 60%, #0d47a1 100%);
+  border-color: #e3f2fd;
+}
+
+.color-game-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 24px 0 10px 0;
+}
+
+.color-game-btn {
+  min-width: 110px;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.13);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+  outline: none;
+}
+.color-game-btn.red {
+  background: linear-gradient(90deg, #ff3c41 0%, #b71c1c 100%);
+  color: #fff;
+}
+.color-game-btn.blue {
+  background: linear-gradient(90deg, #1976d2 0%, #0d47a1 100%);
+  color: #fff;
+}
+.color-game-btn:active {
+  transform: scale(0.97);
+}
+.color-game-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.color-game-score {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffeb3b;
+  margin-top: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 4px #000;
+}
+
+.color-game-over {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff3c41;
+  margin-top: 24px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px #000;
+}
+
+/* Professional, modern color clicker game styles */
+.color-clicker-container {
+  max-width: 480px;
+  margin: 40px auto;
+  background: #181c24;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.18);
+  padding: 32px 24px 40px 24px;
+  position: relative;
+  min-height: 480px;
+}
+.assignment-title {
+  color: #fff;
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.score-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+.score-label {
+  margin-right: 8px;
+  color: #b3b3b3;
+}
+.score-value {
+  color: #ffd700;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.color-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin: 0 auto 12px auto;
+  min-height: 60px;
+}
+.color-block {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  border: 2px solid #222;
+  transition: transform 0.1s;
+}
+.color-block-red {
+  background: linear-gradient(135deg, #ff4b2b 60%, #ff416c 100%);
+}
+.color-block-blue {
+  background: linear-gradient(135deg, #1e90ff 60%, #00c6fb 100%);
+}
+.button-panel {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 10px;
+}
+.color-btn {
+  min-width: 90px;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background 0.2s, transform 0.1s;
+}
+.color-btn-red {
+  background: linear-gradient(135deg, #ff4b2b 60%, #ff416c 100%);
+}
+.color-btn-blue {
+  background: linear-gradient(135deg, #1e90ff 60%, #00c6fb 100%);
+}
+.color-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.start-panel {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 0 0;
+}
+.start-btn {
+  background: linear-gradient(135deg, #43e97b 60%, #38f9d7 100%);
+  color: #222;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 36px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background 0.2s, transform 0.1s;
+}
+.start-btn:hover {
+  background: linear-gradient(135deg, #38f9d7 60%, #43e97b 100%);
+}
+.game-over-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(24,28,36,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.game-over-content {
+  background: #23283a;
+  border-radius: 16px;
+  padding: 40px 32px 32px 32px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.22);
+  text-align: center;
+}
+.game-over-content h2 {
+  color: #ff4b2b;
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+.final-score {
+  color: #ffd700;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.restart-btn {
+  margin-top: 18px;
+  background: linear-gradient(135deg, #43e97b 60%, #38f9d7 100%);
+  color: #222;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background 0.2s, transform 0.1s;
+}
+.restart-btn:hover {
+  background: linear-gradient(135deg, #38f9d7 60%, #43e97b 100%);
+}
+
+@media (max-width: 600px) {
+  .color-game-container {
+    padding: 12px 2vw 18px 2vw;
+    max-width: 99vw;
+  }
+  .color-game-block {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .color-game-btn {
+    min-width: 80px;
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+}
