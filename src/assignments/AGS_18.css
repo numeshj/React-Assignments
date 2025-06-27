@@ -220,14 +220,23 @@
   background: linear-gradient(135deg, #38f9d7 60%, #43e97b 100%);
 }
 .game-over-modal {
-  position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(24,28,36,0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 32px 28px 28px 28px;
+  background: #181c24;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18), 0 1.5px 6px 0 rgba(0,0,0,0.13);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #fff;
 }
+
+
+
 .game-over-content {
   background: #23283a;
   border-radius: 16px;
@@ -260,6 +269,16 @@
 }
 .restart-btn:hover {
   background: linear-gradient(135deg, #38f9d7 60%, #43e97b 100%);
+}
+.score-icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  vertical-align: middle;
 }
 
 @media (max-width: 600px) {
