@@ -140,6 +140,9 @@ export default function ASG_18() {
             <p>
               Your final score: <span className="final-score">{score}</span>
             </p>
+            <button className="restart-btn" onClick={handleRestart}>
+              Restart
+            </button>
           </div>
         </div>
       )}
