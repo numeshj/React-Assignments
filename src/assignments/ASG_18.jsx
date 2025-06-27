@@ -3,7 +3,7 @@ import "../assignments/AGS_3.css";
 import { useState } from "react";
 import ColorMixer from "../component/ColorMixer";
 
-export default function ASG_17() {
+export default function ASG_3() {
   
   
 
@@ -13,7 +13,7 @@ export default function ASG_17() {
       <h1 className="assignment-title">Assignment-17</h1>
       <hr />
       <br />
-      <ColorMixer/>
+      
       
     </>
   );
