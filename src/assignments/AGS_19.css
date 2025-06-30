@@ -119,3 +119,51 @@
     padding: 10px 0 10px 12px;
   }
 }
+
+.review-section {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #383535;
+}
+
+.review-navigation {
+  margin-top: 15px;
+}
+
+.review-navigation button {
+  margin-right: 10px;
+  padding: 5px 15px;
+  font-weight: bold;
+}
+
+.review-answer {
+  margin-bottom: 5px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  background: #23283a;
+  color: #fff;
+  border: 1.5px solid transparent;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+.review-answer-correct {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #43e97b;
+  font-weight: 700;
+}
+.review-answer-selected {
+  background: #ffebee;
+  color: #c62828;
+  border-color: #ff4b2b;
+  font-weight: 700;
+}
+.review-answer-correct-selected {
+  background: #fffde7;
+  color: #ffd600;
+  border-color: #ffd600;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px #ffd60033;
+}

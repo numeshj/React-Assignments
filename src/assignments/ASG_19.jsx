@@ -14,7 +14,7 @@ export default function ASG_19() {
       .get("https://apis.dnjs.lk/objects/quiz.php")
       .then((response) => {
         setQuestions(response.data);
-        console.log("Fetched questions:", response.data); // for checking structure
+        console.log("Fetched questions:", response);
       })
       .catch((error) => {
         console.error("Error fetching quiz data", error);
@@ -22,7 +22,6 @@ export default function ASG_19() {
   }, []);
 
   const handleAnswerClick = (selectedKey) => {
-    // For your API, correct answer is in 'correct', not 'correct_answer'
     const correctKey = questions[currentIndex].correct;
     console.log("Selected answer:", selectedKey);
     console.log("Correct answer:", correctKey);
