@@ -34,7 +34,7 @@ export default function ASG_18() {
       const timer = setTimeout(() => {
         setShowGameOver(false);
         setStarted(false);
-      }, 2000);
+      }, 15000);
       return () => clearTimeout(timer);
     }
   }, [gameOver, showGameOver]);
