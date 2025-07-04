@@ -3,15 +3,15 @@ import "../assignments/ASG_22.css";
 import { useRef, useState } from "react";
 
 export default function ASG_22() {
-  const [imageSrc, setImageSrc] = useState(null); // <-- add this line!
+  const [imageSrc, setImageSrc] = useState(null);
   const [blur, setBlur] = useState(0);
-  const [brightness, setBrightness] = useState(100); // 100% = normal
-  const [contrast, setContrast] = useState(100); // 100% = normal
+  const [brightness, setBrightness] = useState(100); 
+  const [contrast, setContrast] = useState(100); 
   const [grayscale, setGrayscale] = useState(0);
-  const [hueRotate, setHueRotate] = useState(0); // fixed typo
+  const [hueRotate, setHueRotate] = useState(0); 
   const [invert, setInvert] = useState(0);
-  const [opacity, setOpacity] = useState(100); // 100% = normal
-  const [saturate, setSaturate] = useState(100); // 100% = normal
+  const [opacity, setOpacity] = useState(100); 
+  const [saturate, setSaturate] = useState(100); 
   const [sepia, setSepia] = useState(0);
 
   const fileInputRef = useRef(null);
