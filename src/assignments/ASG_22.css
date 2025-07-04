@@ -1,0 +1,108 @@
+.image-filter-container {
+  max-width: 480px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
+  text-align: center;
+}
+
+.image-filter-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #2d3748;
+}
+
+.upload-btn-label {
+  display: inline-block;
+  margin-bottom: 18px;
+}
+
+.upload-btn-label button {
+  background: linear-gradient(90deg, #4f8cff 0%, #38b2ac 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+}
+.upload-btn-label button:hover {
+  background: linear-gradient(90deg, #38b2ac 0%, #4f8cff 100%);
+}
+
+.filtered-image {
+  display: block;
+  margin: 0 auto 24px auto;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(56,178,172,0.08);
+  max-width: 100%;
+  max-height: 400px;
+  background: #f7fafc;
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  margin-top: 18px;
+}
+
+.filter-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.08rem;
+  color: #2d3748;
+}
+
+.filter-slider-row label {
+  min-width: 100px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.btn-reset { 
+    background: linear-gradient(90deg,#ee8a8a 0%, #b27d38 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(229,62,62,0.08);
+}
+.btn-reset:hover {
+    background: linear-gradient(10deg, #ee8a8a, #f84109);
+}
+
+input[type="range"] {
+  flex: 1;
+  accent-color: #4f8cff;
+  height: 3px;
+  margin: 0 8px;
+}
+
+@media (max-width: 600px) {
+  .image-filter-container {
+    padding: 16px 4px 18px 4px;
+  }
+  .filtered-image {
+    max-height: 180px;
+  }
+  .filter-slider-row label {
+    min-width: 70px;
+    font-size: 0.98rem;
+  }
+}
+
