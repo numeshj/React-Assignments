@@ -68,9 +68,11 @@ export default function ASG_23() {
             className="ocr-upload"
             disabled={loading}
           />
-          <button className="ocr-clear-btn" onClick={handleClear} disabled={loading}>
-            Clear
-          </button>
+          {image && (
+            <button className="ocr-clear-btn" onClick={handleClear} disabled={loading}>
+              Clear
+            </button>
+          )}
         </div>
         {image && (
           <img
