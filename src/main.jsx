@@ -25,6 +25,7 @@ import ASG_19 from "./assignments/ASG_19.jsx";
 import ASG_20 from "./assignments/ASG_20.jsx";
 import ASG_21 from "./assignments/ASG_21.jsx";
 import ASG_22 from "./assignments/ASG_22.jsx";
+import ASG_23 from "./assignments/ASG_23.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -53,6 +54,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/asg-20" element={<ASG_20 />} />
         <Route path="/asg-21" element={<ASG_21 />} />
         <Route path="/asg-22" element={<ASG_22 />} />
+        <Route path="/asg-23" element={<ASG_23 />} />
       </Routes>
     </HashRouter>
   </StrictMode>
