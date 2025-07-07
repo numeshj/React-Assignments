@@ -1,14 +1,14 @@
-
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createWorker } from "tesseract.js";
 import BackToHome from "../component/BackToHome";
 import "./ASG_23.css";
 
-export default function ASG_23() {
+function ASG_23() {
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const workerRef = useRef(null);
 
   const handleClear = () => {
     setImage(null);
@@ -16,6 +16,12 @@ export default function ASG_23() {
     setProgress(0);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (!workerRef.current) {
+      workerRef.current = createWorker();
+    }
+  }, []);
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -27,23 +33,17 @@ export default function ASG_23() {
     setProgress(0);
     setText("");
 
-    
-    const logger = (m) => {
-      if (m.status && m.progress != null) {
-        setProgress(Math.round(m.progress * 100));
-      }
-    };
-
     try {
-      const worker = await createWorker("eng", 1, {
-        logger, 
-      });
-
+      let worker = workerRef.current;
+      if (typeof worker.then === "function") {
+        worker = await worker;
+        workerRef.current = worker;
+      }
       const {
         data: { text: resultText },
       } = await worker.recognize(file);
       setText(resultText);
-      await worker.terminate();
+      setProgress(100);
     } catch (err) {
       console.error(err);
       setText("OCR failed: " + err.message);
@@ -69,26 +69,31 @@ export default function ASG_23() {
             disabled={loading}
           />
           {image && (
-            <button className="ocr-clear-btn" onClick={handleClear} disabled={loading}>
+            <button
+              className="ocr-clear-btn"
+              onClick={handleClear}
+              disabled={loading}
+            >
               Clear
             </button>
           )}
         </div>
         {image && (
-          <img
-            src={image}
-            alt="Uploaded"
-            className="ocr-image-preview"
-          />
+          <img src={image} alt="Uploaded" className="ocr-image-preview" />
         )}
 
         {loading && (
           <div className="ocr-progress-section">
-            <p className="ocr-progress-text">Reading text from image... {progress}%</p>
+            <p className="ocr-progress-text">Reading text from image...</p>
             <div className="ocr-progress-bar-bg">
               <div
-                className="ocr-progress-bar"
-                style={{ width: `${progress}%` }}
+                className={`ocr-progress-bar${
+                  progress === 100 ? "" : " ocr-progress-bar-animated"
+                }`}
+                style={{
+                  width: progress === 100 ? "100%" : "100%",
+                  animation: progress === 100 ? "none" : undefined,
+                }}
               ></div>
             </div>
           </div>
@@ -108,3 +113,5 @@ export default function ASG_23() {
     </>
   );
 }
+
+export default ASG_23;
