@@ -7,6 +7,9 @@ function ASG_25() {
   return (
     <>
       <BackToHome />
+      <h1 className="assignment-title">Assignment-25</h1>
+      <hr />
+      <br />
       <div className="asg25-container">
         <h1 className="asg25-title">CSS 3D Transforms Demo</h1>
 
