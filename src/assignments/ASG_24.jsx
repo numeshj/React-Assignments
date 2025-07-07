@@ -11,7 +11,7 @@ function ASG_24() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [strokeWidth, setStrokeWidth] = useState(3);
-  const [strokeColor, setStrokeColor] = useState('#000000');
+  const [strokeColor, setStrokeColor] = useState("#000000");
 
   const handleClearCanvas = () => {
     const canvas = canvasRef.current;
@@ -58,22 +58,18 @@ function ASG_24() {
     isDrawingRef.current = false;
   };
 
-  // Simple function to preprocess canvas for better OCR
   const preprocessCanvas = (canvas) => {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    
-    // Scale up 2x for better recognition
+    const tempCanvas = document.createElement("canvas");
+    const tempCtx = tempCanvas.getContext("2d");
+
     tempCanvas.width = canvas.width * 2;
     tempCanvas.height = canvas.height * 2;
-    
-    // White background
-    tempCtx.fillStyle = 'white';
+
+    tempCtx.fillStyle = "white";
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    
-    // Draw scaled image
+
     tempCtx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
-    
+
     return tempCanvas;
   };
 
@@ -95,18 +91,14 @@ function ASG_24() {
         return;
       }
 
-      // Simple preprocessing
       const processedCanvas = preprocessCanvas(canvas);
-      
-      // Convert to blob
-      const blob = await new Promise((resolve) => 
+
+      const blob = await new Promise((resolve) =>
         processedCanvas.toBlob(resolve, "image/png")
       );
 
-      // Simple OCR recognition
       const result = await worker.recognize(blob);
       setText(result.data.text.trim());
-      
     } catch (err) {
       console.error(err);
       setText("OCR Failed: " + err.message);
@@ -114,7 +106,6 @@ function ASG_24() {
 
     setLoading(false);
   };
-
 
   return (
     <>
@@ -124,11 +115,11 @@ function ASG_24() {
       <br />
       <div className="ocr-container">
         <h2 className="ocr-title">OCR Reader</h2>
-        
+
         {/* Drawing Controls */}
         <div className="drawing-controls">
           <label className="control-label">
-            Stroke Width: 
+            Stroke Width:
             <input
               type="range"
               min="1"
@@ -139,9 +130,9 @@ function ASG_24() {
             />
             <span className="stroke-value">{strokeWidth}px</span>
           </label>
-          
+
           <label className="control-label">
-            Drawing Color: 
+            Drawing Color:
             <input
               type="color"
               value={strokeColor}
@@ -150,15 +141,17 @@ function ASG_24() {
             />
             <span className="color-value">{strokeColor}</span>
           </label>
-          
+
           {/* Quick Color Presets */}
           <div className="color-presets">
             <span className="preset-label">Quick Colors:</span>
             <div className="preset-colors">
-              {['#000000', '#FF0000', '#00FF00', '#0000FF'].map(color => (
+              {["#000000", "#FF0000", "#00FF00", "#0000FF"].map((color) => (
                 <button
                   key={color}
-                  className={`color-preset ${strokeColor === color ? 'active' : ''}`}
+                  className={`color-preset ${
+                    strokeColor === color ? "active" : ""
+                  }`}
                   style={{ backgroundColor: color }}
                   onClick={() => setStrokeColor(color)}
                   title={color}
