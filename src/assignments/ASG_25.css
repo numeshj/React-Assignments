@@ -61,7 +61,7 @@
 }
 
 .rotateY:hover {
-  transform: rotateY(180deg) scale(1.05);
+  transform: rotateY(-180deg) scale(1.05);
   box-shadow: 0 16px 32px rgba(78, 205, 196, 0.4);
 }
 

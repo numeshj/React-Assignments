@@ -64,13 +64,13 @@ function App() {
       <button className="asg-btn" onClick={() => navigate("/asg-19")}>
         ASG_19
       </button>
-       <button className="asg-btn" onClick={() => navigate("/asg-20")}>
+      <button className="asg-btn" onClick={() => navigate("/asg-20")}>
         ASG_20
       </button>
       <button className="asg-btn" onClick={() => navigate("/asg-21")}>
         ASG_21
       </button>
-       <button className="asg-btn" onClick={() => navigate("/asg-22")}>
+      <button className="asg-btn" onClick={() => navigate("/asg-22")}>
         ASG_22
       </button>
       <button className="asg-btn" onClick={() => navigate("/asg-23")}>
@@ -79,8 +79,11 @@ function App() {
       <button className="asg-btn" onClick={() => navigate("/asg-24")}>
         ASG_24
       </button>
-            <button className="asg-btn" onClick={() => navigate("/asg-25")}>
+      <button className="asg-btn" onClick={() => navigate("/asg-25")}>
         ASG_25
+      </button>
+      <button className="asg-btn" onClick={() => navigate("/asg-26")}>
+        ASG_26
       </button>
     </div>
   );

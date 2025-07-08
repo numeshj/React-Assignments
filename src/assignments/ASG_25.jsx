@@ -11,7 +11,7 @@ function ASG_25() {
       <hr />
       <br />
       <div className="asg25-container">
-        <h1 className="asg25-title">CSS 3D Transforms Demo</h1>
+        <h1 className="asg25-title">CSS 3D Transforms</h1>
 
         <div className="card-container">
           <div className="card rotateX">rotateX(45deg)</div>
