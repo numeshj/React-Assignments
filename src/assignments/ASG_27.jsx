@@ -1,53 +1,58 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./ASG_27.css";
 import BackToHome from "../component/BackToHome";
 
 export default function ASG_27() {
   const containerRef = useRef(null);
-  const dragTarget = useRef(null);
-  const startMousePos = useRef({ x: 0, y: 0 });
-  const startElemPos = useRef({ x: 0, y: 0 });
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const dragElem = useRef(null);
+  const elemStartX = useRef(0);
+  const elemStartY = useRef(0);
 
   useEffect(() => {
     const container = containerRef.current;
 
-    const handleMouseDown = (e) => {
-      const target = e.target.closest(".draggable");
+    const handleMouseDown = (event) => {
+      const target = event.target.closest(".draggable");
 
       if (!target || !container.contains(target)) return;
 
-      dragTarget.current = target;
+      dragElem.current = target;
 
+      startX.current = event.clientX;
+      startY.current = event.clientY;
+
+      const rect = target.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
-      const elemRect = target.getBoundingClientRect();
 
-      startMousePos.current = { x: e.clientX, y: e.clientY };
-      startElemPos.current = {
-        x: elemRect.left - containerRect.left,
-        y: elemRect.top - containerRect.top,
-      };
+      elemStartX.current = rect.left - containerRect.left;
+      elemStartY.current = rect.top - containerRect.top;
 
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
 
-      e.preventDefault(); 
+      event.preventDefault();
     };
 
-    const handleMouseMove = (e) => {
-      if (!dragTarget.current) return;
+    const handleMouseMove = (event) => {
+      if (!dragElem.current) return;
 
-      const deltaX = e.clientX - startMousePos.current.x;
-      const deltaY = e.clientY - startMousePos.current.y;
+      const currentX = event.clientX;
+      const currentY = event.clientY;
 
-      const newX = startElemPos.current.x + deltaX;
-      const newY = startElemPos.current.y + deltaY;
+      const deltaX = currentX - startX.current;
+      const deltaY = currentY - startY.current;
 
-      dragTarget.current.style.left = `${newX}px`;
-      dragTarget.current.style.top = `${newY}px`;
+      const newLeft = elemStartX.current + deltaX;
+      const newTop = elemStartY.current + deltaY;
+
+      dragElem.current.style.left = `${newLeft}px`;
+      dragElem.current.style.top = `${newTop}px`;
     };
 
     const handleMouseUp = () => {
-      dragTarget.current = null;
+      dragElem.current = null;
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
