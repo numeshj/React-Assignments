@@ -2,11 +2,11 @@ import BackToHome from "../component/BackToHome";
 import "../assignments/AGS_3.css";
 import { useState } from "react";
 
-export default function ASG_27() {
+export default function ASG_28() {
   return (
     <>
       <BackToHome />
-      <h2 className="assignment-title">Assignment-27</h2>
+      <h1 className="assignment-title">Assignment-28</h1>
       <hr />
       <br />
     </>
