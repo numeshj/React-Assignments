@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Routes, Route, HashRouter } from "react-router-dom"; // <-- Add Routes and Route
+import { Routes, Route, HashRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import ASG_1 from "./assignments/ASG_1.jsx";
@@ -30,6 +30,7 @@ import ASG_24 from "./assignments/ASG_24.jsx";
 import ASG_25 from "./assignments/ASG_25.jsx";
 import ASG_26 from "./assignments/ASG_26.jsx";
 import ASG_27 from "./assignments/ASG_27.jsx";
+import ASG_28 from "./assignments/ASG_28.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -63,6 +64,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/asg-25" element={<ASG_25 />} />
         <Route path="/asg-26" element={<ASG_26 />} />
         <Route path="/asg-27" element={<ASG_27 />} />
+        <Route path="/asg-28" element={<ASG_28 />} />
       </Routes>
     </HashRouter>
   </StrictMode>
