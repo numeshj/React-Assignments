@@ -34,22 +34,24 @@ export default function ASG_6() {
       <h1 className="assignment-title">Assignment-6</h1>
       <hr />
       <br />
-      <label className="label">CSS Property : </label>
+      <label className="asg6-label">CSS Property : </label>
       <input
+        className="asg6-input"
         placeholder="enter the css property (e.g. color)"
         value={property}
         onChange={(e) => setProperty(e.target.value)}
       ></input>
       <br />
-      <label className="label">CSS Value :</label>
+      <label className="asg6-label">CSS Value :</label>
       <input
+        className="asg6-input"
         placeholder="enter the css value (e.g. red)"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       ></input>
       <br />
       <br />
-      <button className="btn-add" onClick={addStyle}>
+      <button className="asg6-btn-add" onClick={addStyle}>
         Add
       </button>
       <br />
@@ -58,13 +60,16 @@ export default function ASG_6() {
       {/* List rules */}
       <div>
         <h2>CSS Rules :</h2>
-        <ul>
+        <ul className="asg6-list">
           {style.map((item, index) => (
-            <li key={index}>
+            <li className="asg6-list-item" key={index}>
               <span>
                 {item.name} : {item.value}
               </span>
-              <button className="btn-delete" onClick={() => deleteStyle(index)}>
+              <button
+                className="asg6-btn-delete"
+                onClick={() => deleteStyle(index)}
+              >
                 Delete
               </button>
             </li>
@@ -73,7 +78,10 @@ export default function ASG_6() {
 
         {/*Apply style*/}
         <h3>Style Preview :</h3>
-        <div style={{ ...cssObj, padding: "10px", border: "1px solid #ccc" }}>
+        <div
+          className="asg6-preview"
+          style={{ ...cssObj, padding: "10px", border: "1px solid #ccc" }}
+        >
           Sample Text
         </div>
       </div>

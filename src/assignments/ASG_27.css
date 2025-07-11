@@ -1,9 +1,9 @@
-.body {
+.asg27-body {
   margin: 0;
   overflow: hidden;
 }
 
-.container {
+.asg27-container {
   width: 100vw;
   height: 100vh;
   background-color: rgb(53, 49, 49);
@@ -11,7 +11,7 @@
   cursor: default;
 }
 
-.draggable {
+.asg27-draggable {
   width: 200px;
   height: 200px;
   background-color: #28a5f7;
@@ -19,9 +19,8 @@
   left: 10px;
   border-radius: 20px;
   cursor: grab;
-  box-shadow: 5px 05px 10px rgba(27, 27, 27, 0.397);
+  box-shadow: 5px 5px 10px rgba(27, 27, 27, 0.397);
   position: absolute;
-  background-image: url("data:image/svg+xml,<svg version='1.1' viewBox='0 0 16 16' width='200' height='200' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='fill: rgb(255, 255, 255); opacity: 0.8; transform: rotate(135deg) scale(0.7, 0.7);'><g> <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'></path></g></svg>");
   background-image: url("data:image/svg+xml,<svg version='1.1' viewBox='0 0 16 16' width='200' height='200' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='fill: rgb(255, 255, 255); opacity: 0.8; transform: rotate(135deg) scale(0.7, 0.7);'><g> <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'></path></g></svg>");
   background-repeat: no-repeat;
   background-position: center 70%;
@@ -29,5 +28,9 @@
   text-align: center;
   font-weight: bold;
   padding-top: 20px;
-  font-weight: 500;
+  user-select: none;
+}
+
+.asg27-draggable:active {
+  cursor: grabbing;
 }

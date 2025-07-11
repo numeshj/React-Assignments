@@ -39,14 +39,14 @@ export default function ASG_27() {
       <hr />
       <br />
       <div
-        className="container"
+        className="asg27-container"
         onMouseDown={onMouseDown}
         onMouseMove={onmousemove}
         onMouseUp={onMouseUp}
       >
         <div
-          className="draggable"
-          style={{ left: position.x, top: position.y }}
+          className="asg27-draggable"
+          style={{ left: position.x + "px", top: position.y + "px" }}
         >
           Drag Me!
         </div>

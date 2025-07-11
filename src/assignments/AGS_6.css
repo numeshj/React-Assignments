@@ -1,12 +1,12 @@
 /* Labels */
-.label {
+.asg6-label {
   display: block;
   font-weight: 500;
   margin: 10px 0 5px;
 }
 
 /* Inputs */
-input {
+.asg6-input {
   padding: 8px;
   width: 250px;
   font-size: 14px;
@@ -16,7 +16,7 @@ input {
 }
 
 /* Add Button */
-.btn-add {
+.asg6-btn-add {
   padding: 10px 20px;
   background-color: #007bff79;
   border: none;
@@ -26,12 +26,12 @@ input {
   font-weight: 600;
 }
 
-.btn-add:hover {
+.asg6-btn-add:hover {
   background-color: #0056b3;
 }
 
 /* Delete Button */
-.btn-delete {
+.asg6-btn-delete {
   margin-left: 10px;
   padding: 6px 12px;
   background-color: #ac3e49;
@@ -42,17 +42,17 @@ input {
   font-weight: 500;
 }
 
-.btn-delete:hover {
+.asg6-btn-delete:hover {
   background-color: #a71d2a;
 }
 
 /* List Styling */
-ul {
+.asg6-list {
   list-style-type: none;
   padding-left: 0;
 }
 
-li {
+.asg6-list-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,7 +64,7 @@ li {
 }
 
 /* Style Preview Box */
-div[style] {
+.asg6-preview {
   margin-top: 20px;
   min-height: 50px;
   text-align: center;
