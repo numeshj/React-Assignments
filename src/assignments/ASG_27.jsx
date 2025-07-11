@@ -8,10 +8,11 @@ export default function ASG_27() {
   const [down, setDown] = useState(false);
 
   const onMouseDown = (event) => {
+    if (event.target.className !== "draggable") return;
     setDown(true);
     setOrigin({
-      x: event.clientX,
-      y: event.clientX,
+      x: event.clientX - position.x,
+      y: event.clientY - position.y,
     });
   };
 
@@ -21,7 +22,10 @@ export default function ASG_27() {
     const defX = event.clientX - origin.x;
     const defY = event.clientY - origin.y;
 
-    console.log(defX, defY)
+    setPosition({
+      x: defX,
+      y: defY,
+    });
   };
 
   const onMouseUp = () => {
