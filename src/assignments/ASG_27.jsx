@@ -4,65 +4,58 @@ import BackToHome from "../component/BackToHome";
 
 export default function ASG_27() {
   const containerRef = useRef(null);
-  const startX = useRef(0);
-  const startY = useRef(0);
-  const dragElem = useRef(null);
-  const elemStartX = useRef(0);
-  const elemStartY = useRef(0);
 
   useEffect(() => {
     const container = containerRef.current;
+    let dragElement = null;
+    let startX = 0;
+    let startY = 0;
+    let elemStartX = 0;
+    let elemStartY = 0;
 
-    const handleMouseDown = (event) => {
-      const target = event.target.closest(".draggable");
+    const handleMouseDown = (e) => {
+      if (e.target.className.includes("draggable")) {
+        dragElement = e.target;
+      } else if (e.target.closest(".draggable")) {
+        dragElement = e.target.closest(".draggable");
+      }
 
-      if (!target || !container.contains(target)) return;
+      if (!dragElement) return;
 
-      dragElem.current = target;
+      startX = e.clientX;
+      startY = e.clientY;
 
-      startX.current = event.clientX;
-      startY.current = event.clientY;
+      const style = dragElement.style;
+      elemStartX = parseInt(style.left) || 300; 
+      elemStartY = parseInt(style.top) || 200; 
 
-      const rect = target.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      elemStartX.current = rect.left - containerRect.left;
-      elemStartY.current = rect.top - containerRect.top;
-
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-
-      event.preventDefault();
+      e.preventDefault();
     };
 
-    const handleMouseMove = (event) => {
-      if (!dragElem.current) return;
+    const handleMouseMove = (e) => {
+      if (!dragElement) return;
 
-      const currentX = event.clientX;
-      const currentY = event.clientY;
+      const newX = elemStartX + (e.clientX - startX);
+      const newY = elemStartY + (e.clientY - startY);
 
-      const deltaX = currentX - startX.current;
-      const deltaY = currentY - startY.current;
-
-      const newLeft = elemStartX.current + deltaX;
-      const newTop = elemStartY.current + deltaY;
-
-      dragElem.current.style.left = `${newLeft}px`;
-      dragElem.current.style.top = `${newTop}px`;
+      dragElement.style.left = newX + "px";
+      dragElement.style.top = newY + "px";
     };
 
     const handleMouseUp = () => {
-      dragElem.current = null;
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      dragElement = null;
     };
 
-    container.addEventListener("mousedown", handleMouseDown);
+    container.onmousedown = handleMouseDown;
+    container.onmousemove = handleMouseMove;
+    container.onmouseup = handleMouseUp;
+    container.onmouseleave = handleMouseUp;
 
     return () => {
-      container.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      container.onmousedown = null;
+      container.onmousemove = null;
+      container.onmouseup = null;
+      container.onmouseleave = null;
     };
   }, []);
 
@@ -81,3 +74,4 @@ export default function ASG_27() {
     </>
   );
 }
+
