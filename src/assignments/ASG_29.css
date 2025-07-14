@@ -44,15 +44,8 @@
   border-radius: 8px;
 }
 
-.asg29-upload {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.asg29-button {
+/* Button styles for file input and webcam buttons */
+input[type="file"] {
   padding: 12px 24px;
   font-size: 16px;
   background: #564caf;
@@ -63,11 +56,27 @@
   transition: background-color 0.3s ease;
 }
 
-.asg29-button:hover:not(:disabled) {
+input[type="file"]:hover {
   background: #313877;
 }
 
-.asg29-button:disabled {
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background: #564caf;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 10px;
+}
+
+button:hover {
+  background: #313877;
+}
+
+button:disabled {
   background: #cccccc;
   cursor: not-allowed;
 }

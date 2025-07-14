@@ -18,9 +18,9 @@ export default function ASG_29() {
   };
 
   const drawLandmarks = (canvas, landmarks, scaleX, scaleY) => {
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    ctx.strokeStyle = '#ff0000';
-    ctx.fillStyle = '#ff0000';
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.strokeStyle = "#ff0000";
+    ctx.fillStyle = "#ff0000";
     ctx.lineWidth = 1;
 
     // Draw landmark points
@@ -43,7 +43,7 @@ export default function ASG_29() {
       if (points.length > 0) {
         ctx.beginPath();
         ctx.moveTo(points[0].x * scaleX, points[0].y * scaleY);
-        points.forEach(point => {
+        points.forEach((point) => {
           ctx.lineTo(point.x * scaleX, point.y * scaleY);
         });
         if (closePath) ctx.closePath();
@@ -68,10 +68,10 @@ export default function ASG_29() {
     img.onload = async () => {
       const canvas = document.getElementById("face-canvas");
       const landmarkCanvas = document.getElementById("landmark-canvas");
-      
+
       canvas.width = img.width;
       canvas.height = img.height;
-      
+
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
       ctx.drawImage(img, 0, 0);
 
@@ -82,28 +82,33 @@ export default function ASG_29() {
       setTimeout(() => {
         const displayedWidth = canvas.offsetWidth;
         const displayedHeight = canvas.offsetHeight;
-        
+
         landmarkCanvas.width = displayedWidth;
         landmarkCanvas.height = displayedHeight;
-        landmarkCanvas.style.width = displayedWidth + 'px';
-        landmarkCanvas.style.height = displayedHeight + 'px';
-        
+        landmarkCanvas.style.width = displayedWidth + "px";
+        landmarkCanvas.style.height = displayedHeight + "px";
+
         const scaleX = displayedWidth / img.width;
         const scaleY = displayedHeight / img.height;
 
-        const landmarkCtx = landmarkCanvas.getContext('2d');
-        landmarkCtx.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
+        const landmarkCtx = landmarkCanvas.getContext("2d");
+        landmarkCtx.clearRect(
+          0,
+          0,
+          landmarkCanvas.width,
+          landmarkCanvas.height
+        );
 
-        const boxes = detections.map(detection => {
+        const boxes = detections.map((detection) => {
           const box = detection.detection.box;
-          
+
           drawLandmarks(landmarkCanvas, detection.landmarks, scaleX, scaleY);
-          
+
           return {
             x: box.x * scaleX,
             y: box.y * scaleY,
             width: box.width * scaleX,
-            height: box.height * scaleY
+            height: box.height * scaleY,
           };
         });
 
@@ -113,7 +118,9 @@ export default function ASG_29() {
   };
 
   const startVideo = async () => {
-    const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const videoStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+    });
     setStream(videoStream);
     setVideoActive(true);
   };
@@ -133,22 +140,24 @@ export default function ASG_29() {
 
       landmarkCanvas.width = videoRect.width;
       landmarkCanvas.height = videoRect.height;
-      landmarkCanvas.style.width = videoRect.width + 'px';
-      landmarkCanvas.style.height = videoRect.height + 'px';
+      landmarkCanvas.style.width = videoRect.width + "px";
+      landmarkCanvas.style.height = videoRect.height + "px";
 
-      const landmarkCtx = landmarkCanvas.getContext('2d', { willReadFrequently: true });
+      const landmarkCtx = landmarkCanvas.getContext("2d", {
+        willReadFrequently: true,
+      });
       landmarkCtx.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
 
-      const boxes = detections.map(detection => {
+      const boxes = detections.map((detection) => {
         const box = detection.detection.box;
-        
+
         drawLandmarks(landmarkCanvas, detection.landmarks, scaleX, scaleY);
-        
+
         return {
           x: box.x * scaleX,
           y: box.y * scaleY,
           width: box.width * scaleX,
-          height: box.height * scaleY
+          height: box.height * scaleY,
         };
       });
 
@@ -165,7 +174,7 @@ export default function ASG_29() {
     setImage(null);
     setVideoActive(false);
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
     }
     setStream(null);
   };
@@ -175,7 +184,9 @@ export default function ASG_29() {
       try {
         await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
         await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-        console.log("TinyFaceDetector and FaceLandmark models loaded successfully");
+        console.log(
+          "TinyFaceDetector and FaceLandmark models loaded successfully"
+        );
       } catch (error) {
         console.error("Error loading models:", error);
       }
@@ -201,44 +212,56 @@ export default function ASG_29() {
       <div className="asg29-container">
         <input type="file" accept="image/*" onChange={handleUpload} />
         <button onClick={startVideo}>Start Webcam</button>
-        <button onClick={handleReset}>Reset</button>
+        {(image || videoActive) && <button onClick={handleReset}>Reset</button>}
 
-        {image && (
-          <div className="face-container">
-            <canvas id="face-canvas" className="canvas-image" />
-            <canvas id="landmark-canvas" className="landmark-overlay" />
-            {boxes.map((box, index) => (
-              <div
-                key={index}
-                className="face-box"
-                style={{
-                  top: `${box.y}px`,
-                  left: `${box.x}px`,
-                  width: `${box.width}px`,
-                  height: `${box.height}px`
-                }}
-              />
-            ))}
-          </div>
-        )}
+        {(image || videoActive) && (
+          <>
+            {image && (
+              <div className="face-container">
+                <canvas id="face-canvas" className="canvas-image" />
+                <canvas id="landmark-canvas" className="landmark-overlay" />
+                {boxes.map((box, index) => (
+                  <div
+                    key={index}
+                    className="face-box"
+                    style={{
+                      top: `${box.y}px`,
+                      left: `${box.x}px`,
+                      width: `${box.width}px`,
+                      height: `${box.height}px`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
-        {videoActive && (
-          <div className="face-container">
-            <video id="video" autoPlay className="canvas-image" style={{ width: "100%" }} />
-            <canvas id="video-landmark-canvas" className="landmark-overlay" />
-            {boxes.map((box, index) => (
-              <div
-                key={index}
-                className="face-box"
-                style={{
-                  top: `${box.y}px`,
-                  left: `${box.x}px`,
-                  width: `${box.width}px`,
-                  height: `${box.height}px`
-                }}
-              />
-            ))}
-          </div>
+            {videoActive && (
+              <div className="face-container">
+                <video
+                  id="video"
+                  autoPlay
+                  className="canvas-image"
+                  style={{ width: "100%" }}
+                />
+                <canvas
+                  id="video-landmark-canvas"
+                  className="landmark-overlay"
+                />
+                {boxes.map((box, index) => (
+                  <div
+                    key={index}
+                    className="face-box"
+                    style={{
+                      top: `${box.y}px`,
+                      left: `${box.x}px`,
+                      width: `${box.width}px`,
+                      height: `${box.height}px`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
