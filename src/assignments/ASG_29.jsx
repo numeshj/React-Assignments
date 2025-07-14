@@ -23,14 +23,12 @@ export default function ASG_29() {
     ctx.fillStyle = "#ff0000";
     ctx.lineWidth = 1;
 
-    // Draw landmark points
     landmarks.positions.forEach((point) => {
       ctx.beginPath();
       ctx.arc(point.x * scaleX, point.y * scaleY, 1, 0, 1 * Math.PI);
       ctx.fill();
     });
 
-    // Draw face outline
     const jaw = landmarks.getJawOutline();
     const nose = landmarks.getNose();
     const mouth = landmarks.getMouth();
@@ -50,8 +48,7 @@ export default function ASG_29() {
         ctx.stroke();
       }
     };
-
-    // Draw all facial features
+    
     drawPath(jaw);
     drawPath(nose);
     drawPath(mouth, true);
