@@ -70,8 +70,10 @@
 
 .asg29-canvas-2 {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  gap: 15px;
   min-height: 200px;
   width: 100%;
   background: #1a1d24;
@@ -82,9 +84,31 @@
 }
 
 .canvas-image-2 {
-  max-width: 100%;
-  max-height: 200px;
+  max-width: 150px;
+  max-height: 150px;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid #4a53ac;
+}
+
+.asg29-reset-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.asg29-reset {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.asg29-reset:hover {
+  background-color: #d32f2f;
 }
