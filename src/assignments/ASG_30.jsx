@@ -1,9 +1,9 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/ASG_29.css";
+import "../assignments/ASG_30.css";
 import { useState, useEffect } from "react";
 import * as faceapi from "face-api.js";
 
-export default function ASG_29() {
+export default function ASG_30() {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [videoActive, setVideoActive] = useState(false);
@@ -211,8 +211,7 @@ export default function ASG_29() {
     }
   };
 
-  const 
-  detectImageFaces = async (imageURL) => {
+  const detectImageFaces = async (imageURL) => {
     const img = new Image();
     img.src = imageURL;
 
@@ -429,9 +428,9 @@ export default function ASG_29() {
   return (
     <>
       <BackToHome />
-      <h1 className="assignment-title">Assignment-29</h1>
+      <h1 className="assignment-title">Assignment-30</h1>
       <hr />
-      <div className="asg29-container">
+      <div className="asg30-container">
         <input
           type="file"
           accept="image/*, video/*"
