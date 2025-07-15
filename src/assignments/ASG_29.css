@@ -60,6 +60,12 @@ input[type="file"]:hover {
   background: #313877;
 }
 
+input[type="file"]:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 button {
   padding: 12px 24px;
   font-size: 16px;

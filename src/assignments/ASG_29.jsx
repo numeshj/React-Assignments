@@ -434,14 +434,20 @@ export default function ASG_29() {
         <input
           type="file"
           accept="image/*, video/*"
-          disabled={loading}
+          disabled={loading || videoActive || image || video}
           onChange={handleUpload}
         />
 
-        <button onClick={startVideo} disabled={loading}>
-          Start Webcam
+        <button 
+          onClick={startVideo} 
+          disabled={loading || videoActive || image || video}
+        >
+          {loading ? "Loading..." : "Start Webcam"}
         </button>
-        {(image || video || videoActive) && <button onClick={handleReset}>Reset</button>}
+
+        {(image || video || videoActive) && (
+          <button onClick={handleReset}>Reset</button>
+        )}
 
         {(image || video || videoActive) && (
           <>
