@@ -8,7 +8,6 @@ export default function ASG_30() {
   const [video, setVideo] = useState(null);
   const [videoActive, setVideoActive] = useState(false);
   const [stream, setStream] = useState(null);
-  const [boxes, setBoxes] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleUpload = (e) => {
@@ -62,10 +61,16 @@ export default function ASG_30() {
     const pos_z = 0;
 
     // Check if required landmark positions exist
-    if (!positions[eyesMiddleBottom] || !positions[eyesMiddleTop] || 
-        !positions[lipsBottom] || !positions[faceBottom] ||
-        !positions[rightEyeOuter] || !positions[rightEyeInner] ||
-        !positions[leftEyeInner] || !positions[leftEyeOuter]) {
+    if (
+      !positions[eyesMiddleBottom] ||
+      !positions[eyesMiddleTop] ||
+      !positions[lipsBottom] ||
+      !positions[faceBottom] ||
+      !positions[rightEyeOuter] ||
+      !positions[rightEyeInner] ||
+      !positions[leftEyeInner] ||
+      !positions[leftEyeOuter]
+    ) {
       return null;
     }
 
@@ -75,7 +80,10 @@ export default function ASG_30() {
       positions[eyesMiddleTop]
     );
     const rot_x_b = getDistance(positions[lipsBottom], positions[faceBottom]);
-    const rot_x = rot_x_a + rot_x_b > 0 ? Math.asin((0.5 - rot_x_b / (rot_x_a + rot_x_b)) * 2) : 0;
+    const rot_x =
+      rot_x_a + rot_x_b > 0
+        ? Math.asin((0.5 - rot_x_b / (rot_x_a + rot_x_b)) * 2)
+        : 0;
 
     // rotation : y
     const rot_y_a = getDistance(
@@ -86,7 +94,10 @@ export default function ASG_30() {
       positions[leftEyeInner],
       positions[leftEyeOuter]
     );
-    const rot_y = rot_y_a + rot_y_b > 0 ? Math.asin((0.5 - rot_y_b / (rot_y_a + rot_y_b)) * 2) * 2.5 : 0;
+    const rot_y =
+      rot_y_a + rot_y_b > 0
+        ? Math.asin((0.5 - rot_y_b / (rot_y_a + rot_y_b)) * 2) * 2.5
+        : 0;
 
     // rotation : z
     const rot_z_y = positions[rightEyeOuter].y - positions[leftEyeOuter].y;
@@ -94,14 +105,16 @@ export default function ASG_30() {
       positions[rightEyeOuter],
       positions[leftEyeOuter]
     );
-    const rot_z = rot_z_d > 0 ? (
-      positions[rightEyeOuter].x < positions[leftEyeOuter].x
-        ? Math.asin(rot_z_y / rot_z_d)
-        : 1 - Math.asin(rot_z_y / rot_z_d) + Math.PI * 0.68
-    ) : 0;
+    const rot_z =
+      rot_z_d > 0
+        ? positions[rightEyeOuter].x < positions[leftEyeOuter].x
+          ? Math.asin(rot_z_y / rot_z_d)
+          : 1 - Math.asin(rot_z_y / rot_z_d) + Math.PI * 0.68
+        : 0;
 
     // scale
-    const scale = getDistance(positions[rightEyeOuter], positions[leftEyeOuter]) * 0.7;
+    const scale =
+      getDistance(positions[rightEyeOuter], positions[leftEyeOuter]) * 0.7;
 
     // limit y rotation
     if (Math.abs(rot_y) > 0.7) {
@@ -113,102 +126,6 @@ export default function ASG_30() {
       rotation: { x: rot_x, y: rot_y, z: rot_z },
       scale: { x: scale, y: scale, z: scale },
     };
-  };
-
-  const drawHeadPose = (ctx, orientation, scaleX, scaleY) => {
-    if (!orientation) return;
-
-    const centerX = orientation.position.x * scaleX;
-    const centerY = orientation.position.y * scaleY;
-    const scale = orientation.scale.x * Math.min(scaleX, scaleY);
-
-    // Draw coordinate axes to show head orientation
-    ctx.lineWidth = 3;
-
-    // X-axis (red) - left/right rotation
-    ctx.strokeStyle = "#ff0000";
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(
-      centerX + Math.cos(orientation.rotation.y) * scale * 0.3,
-      centerY + Math.sin(orientation.rotation.x) * scale * 0.3
-    );
-    ctx.stroke();
-
-    // Y-axis (green) - up/down rotation
-    ctx.strokeStyle = "#00ff00";
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(
-      centerX + Math.sin(orientation.rotation.y) * scale * 0.3,
-      centerY - Math.cos(orientation.rotation.x) * scale * 0.3
-    );
-    ctx.stroke();
-
-    // Z-axis (blue) - roll rotation
-    ctx.strokeStyle = "#0000ff";
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(
-      centerX + Math.cos(orientation.rotation.z) * scale * 0.2,
-      centerY + Math.sin(orientation.rotation.z) * scale * 0.2
-    );
-    ctx.stroke();
-
-    // Draw center point
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
-    ctx.fill();
-  };
-
-  const drawLandmarks = (canvas, landmarks, scaleX, scaleY, box) => {
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.strokeStyle = "#ff0000";
-    ctx.fillStyle = "#ff0000";
-    ctx.lineWidth = 1;
-
-    // Draw landmark points
-    landmarks.positions.forEach((point) => {
-      ctx.beginPath();
-      ctx.arc(point.x * scaleX, point.y * scaleY, 1, 0, 2 * Math.PI);
-      ctx.fill();
-    });
-
-    // Draw facial feature paths
-    const jaw = landmarks.getJawOutline();
-    const nose = landmarks.getNose();
-    const mouth = landmarks.getMouth();
-    const leftEye = landmarks.getLeftEye();
-    const rightEye = landmarks.getRightEye();
-    const leftEyebrow = landmarks.getLeftEyeBrow();
-    const rightEyebrow = landmarks.getRightEyeBrow();
-
-    const drawPath = (points, closePath = false) => {
-      if (points.length > 0) {
-        ctx.beginPath();
-        ctx.moveTo(points[0].x * scaleX, points[0].y * scaleY);
-        points.forEach((point) => {
-          ctx.lineTo(point.x * scaleX, point.y * scaleY);
-        });
-        if (closePath) ctx.closePath();
-        ctx.stroke();
-      }
-    };
-
-    drawPath(jaw);
-    drawPath(nose);
-    drawPath(mouth, true);
-    drawPath(leftEye, true);
-    drawPath(rightEye, true);
-    drawPath(leftEyebrow);
-    drawPath(rightEyebrow);
-
-    // Calculate and draw head pose
-    const orientation = getOrientation(landmarks.positions, box);
-    if (orientation) {
-      drawHeadPose(ctx, orientation, scaleX, scaleY);
-    }
   };
 
   const detectImageFaces = async (imageURL) => {
@@ -249,26 +166,6 @@ export default function ASG_30() {
           landmarkCanvas.height
         );
 
-        const boxes = detections.map((detection) => {
-          const box = detection.detection.box;
-
-          drawLandmarks(
-            landmarkCanvas,
-            detection.landmarks,
-            scaleX,
-            scaleY,
-            box
-          );
-
-          return {
-            x: box.x * scaleX,
-            y: box.y * scaleY,
-            width: box.width * scaleX,
-            height: box.height * scaleY,
-          };
-        });
-
-        setBoxes(boxes);
         setLoading(false);
       }, 100);
     };
@@ -311,22 +208,12 @@ export default function ASG_30() {
         const landmarkCtx = landmarkCanvas.getContext("2d", {
           willReadFrequently: true,
         });
-        landmarkCtx.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
-
-        const boxes = detections.map((detection) => {
-          const box = detection.detection.box;
-
-          drawLandmarks(landmarkCanvas, detection.landmarks, scaleX, scaleY, box);
-
-          return {
-            x: box.x * scaleX,
-            y: box.y * scaleY,
-            width: box.width * scaleX,
-            height: box.height * scaleY,
-          };
-        });
-
-        setBoxes(boxes);
+        landmarkCtx.clearRect(
+          0,
+          0,
+          landmarkCanvas.width,
+          landmarkCanvas.height
+        );
       } catch (error) {
         console.error("Error in video face detection:", error);
       }
@@ -339,7 +226,9 @@ export default function ASG_30() {
 
   const detectVideoFileFaces = async () => {
     const videoElement = document.getElementById("uploaded-video");
-    const landmarkCanvas = document.getElementById("video-file-landmark-canvas");
+    const landmarkCanvas = document.getElementById(
+      "video-file-landmark-canvas"
+    );
 
     if (videoElement && videoElement.readyState >= 2 && landmarkCanvas) {
       try {
@@ -359,20 +248,12 @@ export default function ASG_30() {
         const landmarkCtx = landmarkCanvas.getContext("2d", {
           willReadFrequently: true,
         });
-        landmarkCtx.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
-
-        const boxes = detections.map((detection) => {
-          const box = detection.detection.box;
-          drawLandmarks(landmarkCanvas, detection.landmarks, scaleX, scaleY, box);
-          return {
-            x: box.x * scaleX,
-            y: box.y * scaleY,
-            width: box.width * scaleX,
-            height: box.height * scaleY,
-          };
-        });
-
-        setBoxes(boxes);
+        landmarkCtx.clearRect(
+          0,
+          0,
+          landmarkCanvas.width,
+          landmarkCanvas.height
+        );
       } catch (error) {
         console.error("Error in video file face detection:", error);
       }
@@ -389,7 +270,6 @@ export default function ASG_30() {
   };
 
   const handleReset = () => {
-    setBoxes([]);
     setImage(null);
     setVideo(null);
     setVideoActive(false);
@@ -438,8 +318,8 @@ export default function ASG_30() {
           onChange={handleUpload}
         />
 
-        <button 
-          onClick={startVideo} 
+        <button
+          onClick={startVideo}
           disabled={loading || videoActive || image || video}
         >
           {loading ? "Loading..." : "Start Webcam"}
@@ -516,18 +396,6 @@ export default function ASG_30() {
                   id="video-landmark-canvas"
                   className="landmark-overlay"
                 />
-                {boxes.map((box, index) => (
-                  <div
-                    key={index}
-                    className="face-box"
-                    style={{
-                      top: `${box.y}px`,
-                      left: `${box.x}px`,
-                      width: `${box.width}px`,
-                      height: `${box.height}px`,
-                    }}
-                  />
-                ))}
               </div>
             )}
           </>
