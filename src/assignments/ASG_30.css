@@ -24,26 +24,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.face-box {
-  position: absolute;
-  border: 3px solid #00ff00;
-  pointer-events: none;
-  box-sizing: border-box;
-  border-radius: 4px;
-  z-index: 1;
-}
-
-.landmark-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
-  border-radius: 8px;
-}
-
 /* Button styles for file input and webcam buttons */
 input[type="file"] {
   padding: 12px 24px;
@@ -127,48 +107,4 @@ button:disabled {
 
 .asg30-reset:hover {
   background-color: #d32f2f;
-}
-
-.detection-info {
-  background: #2a2d35;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 20px;
-  color: #f1f1f1;
-  max-width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.detection-info h3 {
-  color: #4CAF50;
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
-.face-info {
-  background: #353945;
-  border-radius: 6px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
-
-.face-info h4 {
-  color: #fff;
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.expressions {
-  margin-bottom: 10px;
-}
-
-.expression-item {
-  padding: 2px 0;
-  font-size: 14px;
-}
-
-.landmarks-count {
-  font-size: 14px;
-  color: #ccc;
 }
