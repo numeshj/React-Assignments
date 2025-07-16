@@ -4,14 +4,15 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .asg31-container {
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.9);
+  padding-bottom: 10px;
+  background-color: #242424;
+   background: linear-gradient(90deg, #242424, #3b3b3b);
   width: 700px;
-  height: 450px;
+  height: 420px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -46,11 +47,9 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
   background-color: #007acc;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 50%;
   flex-shrink: 0;
 }
 
@@ -60,11 +59,6 @@
 
 .asg31-play-btn.pause {
   background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>');
-}
-
-.asg31-play-btn:hover {
-  transform: scale(1.05);
-  background-color: #0088ff;
 }
 
 .asg31-time-display {
@@ -88,8 +82,8 @@
 }
 
 .asg31-progress-bar {
-  width: 100%;
-  height: 4px;
+  width: 500px;
+  height: 10px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   overflow: hidden;
@@ -97,7 +91,7 @@
 
 .asg31-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  background: linear-gradient(90deg, #c7781e, #bd384e);
   border-radius: 2px;
   transition: width 0.1s ease;
 }
