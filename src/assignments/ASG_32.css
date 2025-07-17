@@ -1,1 +1,54 @@
+.asg32-body{
+    overflow: hidden;
+    margin: 0px;
+    position: absolute;
+}
 
+.asg32-container {
+    position: relative;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 20px;
+    width: 400px;
+    height: 500px;
+    background-color: #504e4e;
+    box-shadow: 0px 0px 20px #000000;;
+    
+    border-radius: 15px;
+}
+
+.asg32-items{
+    padding: 10px;
+    margin: 20px;
+    background-color: #FFF1;
+    cursor: grab;
+    border-radius: 12px;
+    border: 1px solid #FFF6;
+    transition: opacity 0.1s;
+    font-size: 20px;
+}
+
+/* Add these for 5 colored items */
+.asg32-items:nth-child(1) { background-color: #FF6F61; }
+.asg32-items:nth-child(2) { background-color: #6B5B95; }
+.asg32-items:nth-child(3) { background-color: #88B04B; }
+.asg32-items:nth-child(4) { background-color: #F7CAC9; }
+.asg32-items:nth-child(5) { background-color: #92A8D1; }
+
+.asg32-items {
+    padding: 10px;
+    margin: 20px;
+    background-color: #FFF1;
+    cursor: grab;
+    border-radius: 12px;
+    border: 1px solid #FFF6;
+    transition: opacity 0.1s;
+    font-size: 20px;
+    padding: 10px 20px;
+    line-height: 40px;
+    height: 40px;
+    font-weight: 600;
+    color: #FFF;
+    opacity: 0.85;
+}
