@@ -53,12 +53,10 @@ export default function ASG_32() {
 
     let insertIndex = targetIndex;
 
-    // Adjust insert position based on drop position
     if (dragOverInfo.position === "bottom") {
       insertIndex = targetIndex + 1;
     }
 
-    // Adjust for when dragging from above
     if (draggedIndex < insertIndex) {
       insertIndex -= 1;
     }
@@ -86,7 +84,8 @@ export default function ASG_32() {
                 {/* Top drop indicator */}
                 <div
                   className={`drop-indicator ${
-                    dragOverInfo.index === index && dragOverInfo.position === "top"
+                    dragOverInfo.index === index &&
+                    dragOverInfo.position === "top"
                       ? "active"
                       : ""
                   }`}
@@ -107,7 +106,8 @@ export default function ASG_32() {
                 {/* Bottom drop indicator */}
                 <div
                   className={`drop-indicator ${
-                    dragOverInfo.index === index && dragOverInfo.position === "bottom"
+                    dragOverInfo.index === index &&
+                    dragOverInfo.position === "bottom"
                       ? "active"
                       : ""
                   }`}
