@@ -42,25 +42,32 @@ export default function ASG_31() {
     }
   };
 
-  const formatTime = (time) => {
-    if (isNaN(time)) return "0:00";
-    const seconds = Math.floor(time);
-    const miniSeconds = Math.floor((time % 1) * 100);
-    return `${seconds}:${miniSeconds.toString().padStart(2, "0")}`;
-  };
-
   useEffect(() => {
     const myVideo = videoRef.current;
     if (myVideo) {
       myVideo.addEventListener("timeupdate", handleTimeUpdate);
       myVideo.addEventListener("loadedmetadata", handleTimeUpdate);
 
+      const handleEnded = () => {
+        setPlay(false);
+        setCurrentTime(duration);
+      };
+      myVideo.addEventListener("ended", handleEnded);
+
+      const interval = setInterval(() => {
+        if (myVideo && !myVideo.paused) {
+          handleTimeUpdate();
+        }
+      }, 50);
+
       return () => {
         myVideo.removeEventListener("timeupdate", handleTimeUpdate);
         myVideo.removeEventListener("loadedmetadata", handleTimeUpdate);
+        myVideo.removeEventListener("ended", handleEnded);
+        clearInterval(interval);
       };
     }
-  }, []);
+  }, [duration]);
 
   return (
     <>
@@ -74,8 +81,11 @@ export default function ASG_31() {
           ref={videoRef}
           loop
           autoPlay
+          onTimeUpdate={handleTimeUpdate}
           muted
           id="asg31-video"
+          onPlay={() => setPlay(true)}
+          onPause={() => setPlay(false)}
         >
           <source src="/custom-video-player.mp4" type="video/mp4" />
           Your browser does not support the video tag.
@@ -105,10 +115,10 @@ export default function ASG_31() {
 
           <div className="asg31-time-display">
             <span className="asg31-current-time">
-              {formatTime(currentTime)}
+              {currentTime.toFixed(2)}
             </span>
             <span>/</span>
-            <span className="asg31-total-time">{formatTime(duration)}</span>
+            <span className="asg31-total-time">{duration.toFixed(2)}</span>
           </div>
         </div>
       </div>
