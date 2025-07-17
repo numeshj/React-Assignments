@@ -18,9 +18,20 @@
     border-radius: 15px;
 }
 
+.asg32-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.asg32-items-list {
+    width: 100%;
+}
+
 .asg32-items{
     padding: 10px 20px;
-    margin: 20px;
+    margin: 8px;
     cursor: grab;
     border-radius: 12px;
     border: 1px solid #FFF6;
@@ -31,6 +42,8 @@
     font-weight: 600;
     color: #FFF;
     opacity: 0.85;
+    position: relative;
+    z-index: 1;
 }
 
 .asg32-items:hover {
@@ -41,4 +54,33 @@
 .asg32-items:active {
     cursor: grabbing;
     opacity: 0.7;
+}
+
+.drop-zone {
+  height: 12px;
+  background-color: transparent;
+  margin: 4px 0;
+  transition: background-color 0.2s;
+}
+
+.highlight-drop-zone {
+  background-color: #00f2ff88;
+}
+
+.asg32-item-wrapper {
+  position: relative;
+}
+
+.drop-indicator {
+  height: 3px;
+  background-color: transparent;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  margin: 2px 2px;
+}
+
+.drop-indicator.active {
+  background-color: #00f2ff;
+  box-shadow: 0 0 8px #00f2ff;
+  height: 4px;
 }
