@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { useLoginMutation } from "../store/api";
 
 export default function LoginScreen({ onLoginSuccess, success, loading = false, disabled = false }) {
   const [post, setPost] = useState({ email: "", password: "" });
@@ -8,60 +8,43 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [successMsg, setSuccess] = useState("");
 
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
+
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
     setError("");
     setSuccess("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setSuccess("");
     if (!post.email || !post.password) return;
-    if (loading || disabled) return;
-    axios
-      .post(
-        "https://auth.dnjs.lk/api/login",
-        { email: post.email, password: post.password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => {
-        const token = response.data.access_token;
-        if (keepLoggedIn) {
-          localStorage.setItem("authToken", token);
-        } else {
-          sessionStorage.setItem("authToken", token);
-        }
-        fetchUserDetails(token);
-        setError("");
-        setSuccess("You have logged!");
-      })
-      .catch((error) => {
-        setSuccess("");
-        console.log("Error : ", error)
-        setError(error.response?.data?.error?.message || "Login failed");
-      });
-  };
+    if (loading || disabled || loginLoading) return;
 
-  const fetchUserDetails = (token) => {
-    if (!token) return;
-    axios
-      .get("https://auth.dnjs.lk/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        if (onLoginSuccess) onLoginSuccess(response.data, token, keepLoggedIn);
-      })
-      .catch((error) => {
-        setError("Failed to fetch user details after login.");
-      });
+    try {
+      const response = await login({ 
+        email: post.email, 
+        password: post.password 
+      }).unwrap();
+      
+      const token = response.access_token;
+      if (keepLoggedIn) {
+        localStorage.setItem("authToken", token);
+      } else {
+        sessionStorage.setItem("authToken", token);
+      }
+      
+      setError("");
+      setSuccess("You have logged!");
+      
+      if (onLoginSuccess) onLoginSuccess(response.user, token, keepLoggedIn);
+    } catch (error) {
+      setSuccess("");
+      console.log("Error : ", error);
+      setError(error.data?.error?.message || "Login failed");
+    }
   };
 
   return (
@@ -79,53 +62,50 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
             value={post.email}
             onChange={handleInput}
             name="email"
-            disabled={loading || disabled}
+            disabled={loading || disabled || loginLoading}
+            autoComplete="email"
             required
           />
         </div>
         <div className="input-icon-row">
           <div className="input-icon input-icon-lock"></div>
           <input
-            className="asg10-login-input"
+            className="asg33-login-input input-with-icon"
             placeholder="Enter the password"
             onChange={handleInput}
             value={post.password}
             name="password"
             type={showPassword ? "text" : "password"}
-            disabled={loading || disabled}
+            disabled={loading || disabled || loginLoading}
+            autoComplete="current-password"
             required
           />
         </div>
-        <div className="asg10-checkbox-row">
+        <div className="checkbox-row">
           <input
             type="checkbox"
             id="showPassword"
             checked={showPassword}
             onChange={() => setShowPassword(!showPassword)}
-            className="asg10-checkbox"
-            disabled={loading || disabled}
+            disabled={loading || disabled || loginLoading}
           />
-          <label htmlFor="showPassword" className="asg10-checkbox-label">
-            Show Password
-          </label>
+          <label htmlFor="showPassword">Show Password</label>
+          
           <input
             type="checkbox"
             id="keepLoggedIn"
             checked={keepLoggedIn}
             onChange={() => setKeepLoggedIn(!keepLoggedIn)}
-            className="asg10-checkbox"
-            disabled={loading || disabled}
+            disabled={loading || disabled || loginLoading}
           />
-          <label htmlFor="keepLoggedIn" className="asg10-checkbox-label">
-            Keep me logged in
-          </label>
+          <label htmlFor="keepLoggedIn">Keep me logged in</label>
         </div>
         <button
-          className="btn-login"
+          className="btn-primary btn-fullwidth"
           type="submit"
-          disabled={!post.email || !post.password || loading || disabled}
+          disabled={!post.email || !post.password || loading || disabled || loginLoading}
         >
-          {loading || disabled ? "Loading..." : "Submit"}
+          {loading || disabled || loginLoading ? "Loading..." : "Submit"}
         </button>
       </form>
     </div>

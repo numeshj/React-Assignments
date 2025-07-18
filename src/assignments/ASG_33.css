@@ -4,19 +4,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2f2f30;
+  background: #d5dbe1;
   padding: 32px;
 }
 
-.profile-container {
+.asg33-profile-container {
   min-height: 100vh;
-  background: #e9ecf1;
+  background: #d5dbe1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
 }
-.profile-card {
+.asg33-profile-card {
   display: flex;
   width: 900px;
   min-height: 600px;
@@ -25,8 +25,8 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
-.profile-left,
-.profile-right {
+.asg33-profile-left,
+.asg33-profile-right {
   flex: 1 1 50%;
   width: 50%;
   min-width: 0;
@@ -34,54 +34,56 @@
   flex-direction: column;
   justify-content: center;
 }
-.profile-left {
+.asg33-profile-left {
   align-items: center;
   padding: 48px 32px 40px 32px;
 }
-.profile-right {
-  background: #0866e6;
+.asg33-profile-right {
+  background: #065AD8;
   align-items: center;
   justify-content: center;
   min-height: 100%;
   display: flex;
 }
-.profile-illustration-bg {
+.asg33-profile-illustration-bg {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 75%;
   height: 100%;
-  min-height: 340px;
+  min-height: 240px;
+  background-color: #065ad8;
 }
-.profile-illustration-img {
-  max-width: 540px;
-  max-height: 840px;
+.asg33-profile-illustration-img {
+  max-width: 100%;
+  max-height: 100%;
   width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
+  background-color: #065ad8;
 }
 
 /* --- LOGO & HEADINGS --- */
-.profile-logo {
+.asg33-profile-logo {
   display: flex;
   align-items: center;
   margin-bottom: 18px;
   width: 100%;
   justify-content: flex-start;
 }
-.profile-logo-icon {
+.asg33-profile-logo-icon {
   margin-right: 8px;
   font-size: 18px;
 }
-.profile-logo-text {
+.asg33-profile-logo-text {
   display: flex;
   align-items: center;
   font-weight: 700;
   color: #0866e6;
   font-size: 14px;
 }
-.profile-heading {
+.asg33-profile-heading {
   display: flex;
   align-items: center;
   font-size: 1.5rem;
@@ -91,7 +93,7 @@
   width: 100%;
   text-align: left;
 }
-.profile-subtext {
+.asg33-profile-subtext {
   color: #7a7a7a;
   font-size: 1rem;
   margin-bottom: 24px;
@@ -100,7 +102,7 @@
 }
 
 /* --- PROFILE IMAGE & INFO --- */
-.profile-pic {
+.asg33-profile-pic {
   width: 120px;
   height: 120px;
   object-fit: cover;
@@ -111,21 +113,21 @@
   margin: 0 auto 18px auto;
   background: #f7f9fb;
 }
-.profile-name {
+.asg33-profile-name {
   font-size: 1.25rem;
   font-weight: 700;
   color: #222;
   text-align: center;
   margin-bottom: 2px;
 }
-.profile-email {
+.asg33-profile-email {
   font-size: 1rem;
   color: #8a8a8a;
   text-align: center;
   font-style: italic;
   margin-bottom: 2px;
 }
-.profile-title {
+.asg33-profile-title {
   font-size: 1.08rem;
   color: #444;
   text-align: center;
@@ -133,13 +135,13 @@
 }
 
 /* --- BUTTONS --- */
-.profile-btn-row {
+.asg33-profile-btn-row {
   display: flex;
   gap: 16px;
   margin: 0 auto 18px auto;
   justify-content: center;
 }
-.btn-edit {
+.asg33-btn-edit {
   background: #fff;
   color: #0866e6;
   border: 2px solid #0866e6;
@@ -153,12 +155,12 @@
   gap: 8px;
   transition: background 0.2s, color 0.2s, border 0.2s;
 }
-.btn-edit:hover {
+.asg33-btn-edit:hover {
   background: #eaf2ff;
   color: #054bb5;
   border-color: #054bb5;
 }
-.btn-logout-outline {
+.asg33-btn-logout-outline {
   background: #fff;
   color: #d50000;
   border: 2px solid #d50000;
@@ -172,17 +174,12 @@
   gap: 8px;
   transition: background 0.2s, color 0.2s, border 0.2s;
 }
-.btn-logout-outline:hover {
+.asg33-btn-logout-outline:hover {
   background: #fff5f5;
   color: #a30000;
   border-color: #a30000;
 }
-.btn-icon {
-  font-size: 1.1em;
-  display: flex;
-  align-items: center;
-}
-.homepage-btn {
+.asg33-homepage-btn {
   width: 320px;
   max-width: 100%;
   margin: 0 auto;
@@ -197,10 +194,10 @@
   display: block;
   transition: background 0.2s;
 }
-.homepage-btn:hover {
+.asg33-homepage-btn:hover {
   background: #054bb5;
 }
-.btn-primary.btn-fullwidth {
+.asg33-btn-primary.asg33-btn-fullwidth {
   width: 340px;
   max-width: 100%;
   margin: 0 auto;
@@ -215,7 +212,7 @@
   display: block;
   transition: background 0.2s;
 }
-.btn-primary.btn-fullwidth:hover {
+.asg33-btn-primary.asg33-btn-fullwidth:hover {
   background: #054bb5;
 }
 .btn-primary.btn-small {
@@ -294,6 +291,12 @@
 }
 
 /* --- AVATAR --- */
+.asg33-avatar-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
 .avatar-center {
   display: flex;
   flex-direction: column;
@@ -412,7 +415,7 @@
 }
 
 /* --- ICONS --- */
-.icon-network::before {
+.asg33-icon-network::before {
   content: "";
   display: inline-block;
   width: 1.2em;
@@ -420,7 +423,7 @@
   background: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 16 16" width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: rgb(0, 116, 186); opacity: 1; transform: rotate(0deg) scale(0.7, 0.7);"><g><path d="M3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3zm2.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm8 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM12 13.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM8 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></g></svg>')
     center/contain no-repeat;
 }
-.icon-edit::before {
+.asg33-icon-edit::before {
   content: "";
   display: inline-block;
   width: 1em;
@@ -429,7 +432,7 @@
     center/contain no-repeat;
   margin-right: 4px;
 }
-.icon-logout::before {
+.asg33-icon-logout::before {
   content: "";
   display: inline-block;
   width: 1em;
@@ -525,24 +528,25 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
-  .profile-card {
+  .asg33-profile-card {
     flex-direction: column;
     width: 100%;
     min-width: 0;
   }
-  .profile-left,
-  .profile-right {
+  .asg33-profile-left,
+  .asg33-profile-right {
     display: flex;
     align-items: center;
     width: 100%;
     flex: 1 1 100%;
   }
-  .profile-illustration-img {
+  .asg33-profile-illustration-img {
     width: 180px;
     height: 180px;
   }
-  .homepage-btn,
-  .btn-primary.btn-fullwidth {
+  .asg33-homepage-btn,
+  .asg33-btn-primary.asg33-btn-fullwidth {
     width: 100%;
   }
 }
+
