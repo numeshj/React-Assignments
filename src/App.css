@@ -82,7 +82,7 @@
 .asg-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(45deg, #4224ee, #6b8eff);
+  background: linear-gradient(45deg, #351dbead, #7792eb);
 }
 
 @media (max-width: 1024px) {

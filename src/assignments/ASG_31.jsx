@@ -87,7 +87,7 @@ export default function ASG_31() {
           onPlay={() => setPlay(true)}
           onPause={() => setPlay(false)}
         >
-          <source src="/custom-video-player.mp4" type="video/mp4" />
+          <source src="./custom-video-player.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
