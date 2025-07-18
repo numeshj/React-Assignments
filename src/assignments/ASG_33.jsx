@@ -91,7 +91,7 @@ export default function ASG_33() {
   return (
     <>
       <BackToHome disabled={isLoading} />
-      <h1 className="assignment-title">Assignment - 33</h1>
+      <h1 className="asg33-assignment-title">Assignment - 33</h1>
       <hr />
       <br />
       <div className="asg33-login-container">

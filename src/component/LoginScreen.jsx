@@ -48,16 +48,16 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
   };
 
   return (
-    <div className="login-form">
+    <div className="asg33-login-form">
       <h2>Login</h2>
       {error && <div className="asg10-error">{error}</div>}
       {successMsg && <pre className="asg10-success">{successMsg}</pre>}
       <form onSubmit={handleSubmit}>
-        <div className="input-icon-row">
-          <div className="input-icon input-icon-person"></div>
+        <div className="asg33-input-icon-row">
+          <div className="asg33-input-icon asg33-input-icon-person"></div>
           <input
             type="email"
-            className="asg33-login-input input-with-icon"
+            className="asg33-login-input asg33-input-with-icon"
             placeholder="Email"
             value={post.email}
             onChange={handleInput}
@@ -67,10 +67,10 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
             required
           />
         </div>
-        <div className="input-icon-row">
-          <div className="input-icon input-icon-lock"></div>
+        <div className="asg33-input-icon-row">
+          <div className="asg33-input-icon asg33-input-icon-lock"></div>
           <input
-            className="asg33-login-input input-with-icon"
+            className="asg33-login-input asg33-input-with-icon"
             placeholder="Enter the password"
             onChange={handleInput}
             value={post.password}
@@ -81,7 +81,7 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
             required
           />
         </div>
-        <div className="checkbox-row">
+        <div className="asg33-checkbox-row">
           <input
             type="checkbox"
             id="showPassword"
@@ -101,7 +101,7 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
           <label htmlFor="keepLoggedIn">Keep me logged in</label>
         </div>
         <button
-          className="btn-primary btn-fullwidth"
+          className="asg33-btn-primary asg33-btn-fullwidth"
           type="submit"
           disabled={!post.email || !post.password || loading || disabled || loginLoading}
         >

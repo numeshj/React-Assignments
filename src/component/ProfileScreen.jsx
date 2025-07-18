@@ -288,24 +288,24 @@ export default function ProfileScreen({
   // Render different modes
   let leftColumn;
   let rightColumn = (
-    <div className="section secondary">
+    <div className="asg33-section asg33-secondary">
       {/* Background image is handled by CSS */}
     </div>
   );
 
   if (mode === "summary") {
     leftColumn = (
-      <div className="section primary">
-        <div className="content">
-          <div className="heading">
-            <div className="heading-logo"></div>
-            <div className="heading-title">Account Manager</div>
-            <div className="heading-description">
+      <div className="asg33-section asg33-primary">
+        <div className="asg33-content">
+          <div className="asg33-heading">
+            <div className="asg33-heading-logo"></div>
+            <div className="asg33-heading-title">Account Manager</div>
+            <div className="asg33-heading-description">
               You can update your details here
             </div>
           </div>
-          <div className="profile">
-            <div className="profile-avatar" data-active>
+          <div className="asg33-profile">
+            <div className="asg33-profile-avatar" data-active>
               <img
                 src={user?.avatar || "/default-profile.svg"}
                 alt="Profile"
@@ -315,37 +315,37 @@ export default function ProfileScreen({
                 }}
               />
             </div>
-            <div className="profile-data">
-              <div className="profile-name">{user?.name || "User Name"}</div>
-              <div className="profile-email">{user?.email}</div>
-              <div className="profile-description">{user?.description}</div>
+            <div className="asg33-profile-data">
+              <div className="asg33-profile-name">{user?.name || "User Name"}</div>
+              <div className="asg33-profile-email">{user?.email}</div>
+              <div className="asg33-profile-description">{user?.description}</div>
             </div>
-            <div className="profile-buttons">
+            <div className="asg33-profile-buttons">
               <button
-                className="profile-button edit"
+                className="asg33-profile-button asg33-edit"
                 onClick={() => dispatch(setMode("edit-menu"))}
                 disabled={loading || disabled}
               >
               </button>
               <button
-                className="profile-button logout"
+                className="asg33-profile-button asg33-logout"
                 onClick={handleLogout}
                 disabled={loading || disabled || localLoading}
               >
               </button>
             </div>
-            <div className="profile-subscription">
+            <div className="asg33-profile-subscription">
               <input
                 type="checkbox"
-                className="profile-subscription-switch"
+                className="asg33-profile-subscription-switch"
                 checked={subscriptionEnabled}
                 onChange={(e) => dispatch(setSubscriptionEnabled(e.target.checked))}
                 disabled={disabled}
               />
-              <span className="profile-subscription-text">Email Subscription</span>
+              <span className="asg33-profile-subscription-text">Email Subscription</span>
             </div>
             <button
-              className="action"
+              className="asg33-action"
               onClick={handleGoHome}
               disabled={loading || disabled}
             >
@@ -357,46 +357,46 @@ export default function ProfileScreen({
     );
   } else if (mode === "edit-menu") {
     leftColumn = (
-      <div className="section primary">
-        <div className="content">
-          <div className="heading">
-            <div className="heading-logo"></div>
-            <div className="heading-title">Edit Profile</div>
-            <div className="heading-description">
+      <div className="asg33-section asg33-primary">
+        <div className="asg33-content">
+          <div className="asg33-heading">
+            <div className="asg33-heading-logo"></div>
+            <div className="asg33-heading-title">Edit Profile</div>
+            <div className="asg33-heading-description">
               Update your details and security options
             </div>
           </div>
-          <div className="editor">
-            <div className="question" data-align="left">
+          <div className="asg33-editor">
+            <div className="asg33-question" data-align="left">
               <button
-                className="question-link"
+                className="asg33-question-link"
                 onClick={() => dispatch(setMode("edit-info"))}
                 disabled={loading || disabled}
               >
                 Update Name and Description
               </button>
             </div>
-            <div className="question" data-align="left">
+            <div className="asg33-question" data-align="left">
               <button
-                className="question-link"
+                className="asg33-question-link"
                 onClick={() => dispatch(setMode("edit-avatar"))}
                 disabled={loading || disabled}
               >
                 Update or Remove Avatar
               </button>
             </div>
-            <div className="question" data-align="left">
+            <div className="asg33-question" data-align="left">
               <button
-                className="question-link"
+                className="asg33-question-link"
                 onClick={() => dispatch(setMode("edit-password"))}
                 disabled={loading || disabled}
               >
                 Change Password
               </button>
             </div>
-            <div className="question" data-align="left">
+            <div className="asg33-question" data-align="left">
               <button
-                className="question-link"
+                className="asg33-question-link"
                 onClick={() => dispatch(setMode("edit-email"))}
                 disabled={loading || disabled}
               >
@@ -655,8 +655,8 @@ export default function ProfileScreen({
   }
 
   return (
-    <div id="app">
-      <div className="container">
+    <div className="asg33-app">
+      <div className="asg33-container">
         {leftColumn}
         {rightColumn}
       </div>
