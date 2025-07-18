@@ -65,60 +65,69 @@ export default function LoginScreen({ onLoginSuccess, success, loading = false, 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login :</h2>
+    <div className="login-form">
+      <h2>Login</h2>
       {error && <div className="asg10-error">{error}</div>}
       {successMsg && <pre className="asg10-success">{successMsg}</pre>}
-      <label className="asg10-label">Email :</label>
-      <input
-        className="asg10-login-input"
-        placeholder="Enter the email"
-        onChange={handleInput}
-        value={post.email}
-        name="email"
-        disabled={loading || disabled}
-      />
-      <label className="asg10-label">Password :</label>
-      <input
-        className="asg10-login-input"
-        placeholder="Enter the password"
-        onChange={handleInput}
-        value={post.password}
-        name="password"
-        type={showPassword ? "text" : "password"}
-        disabled={loading || disabled}
-      />
-      <div className="asg10-checkbox-row">
-        <input
-          type="checkbox"
-          id="showPassword"
-          checked={showPassword}
-          onChange={() => setShowPassword(!showPassword)}
-          className="asg10-checkbox"
-          disabled={loading || disabled}
-        />
-        <label htmlFor="showPassword" className="asg10-checkbox-label">
-          Show Password
-        </label>
-        <input
-          type="checkbox"
-          id="keepLoggedIn"
-          checked={keepLoggedIn}
-          onChange={() => setKeepLoggedIn(!keepLoggedIn)}
-          className="asg10-checkbox"
-          disabled={loading || disabled}
-        />
-        <label htmlFor="keepLoggedIn" className="asg10-checkbox-label">
-          Keep me logged in
-        </label>
-      </div>
-      <button
-        className="btn-login"
-        type="submit"
-        disabled={!post.email || !post.password || loading || disabled}
-      >
-        {loading || disabled ? "Loading..." : "Submit"}
-      </button>
-    </form>
+      <form onSubmit={handleSubmit}>
+        <div className="input-icon-row">
+          <div className="input-icon input-icon-person"></div>
+          <input
+            type="email"
+            className="asg33-login-input input-with-icon"
+            placeholder="Email"
+            value={post.email}
+            onChange={handleInput}
+            name="email"
+            disabled={loading || disabled}
+            required
+          />
+        </div>
+        <div className="input-icon-row">
+          <div className="input-icon input-icon-lock"></div>
+          <input
+            className="asg10-login-input"
+            placeholder="Enter the password"
+            onChange={handleInput}
+            value={post.password}
+            name="password"
+            type={showPassword ? "text" : "password"}
+            disabled={loading || disabled}
+            required
+          />
+        </div>
+        <div className="asg10-checkbox-row">
+          <input
+            type="checkbox"
+            id="showPassword"
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+            className="asg10-checkbox"
+            disabled={loading || disabled}
+          />
+          <label htmlFor="showPassword" className="asg10-checkbox-label">
+            Show Password
+          </label>
+          <input
+            type="checkbox"
+            id="keepLoggedIn"
+            checked={keepLoggedIn}
+            onChange={() => setKeepLoggedIn(!keepLoggedIn)}
+            className="asg10-checkbox"
+            disabled={loading || disabled}
+          />
+          <label htmlFor="keepLoggedIn" className="asg10-checkbox-label">
+            Keep me logged in
+          </label>
+        </div>
+        <button
+          className="btn-login"
+          type="submit"
+          disabled={!post.email || !post.password || loading || disabled}
+        >
+          {loading || disabled ? "Loading..." : "Submit"}
+        </button>
+      </form>
+    </div>
   );
 }

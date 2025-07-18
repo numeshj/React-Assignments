@@ -677,9 +677,71 @@ export default function ProfileScreen({
   }
 
   return (
-    <div className="profile-card">
-      {leftColumn}
-      {rightColumn}
+    <div className="profile-container">
+      <div className="profile-card">
+        <div className="profile-left">
+          <div className="profile-logo">
+            <div className="profile-logo-icon icon-network"></div>
+            <div className="profile-logo-text">React Assignment</div>
+          </div>
+          
+          <h2 className="profile-heading">Profile</h2>
+          <p className="profile-subtext">Manage your account information</p>
+          
+          <div className="avatar-center">
+            <img
+              src={user?.avatar || "/default-avatar.png"}
+              alt="Profile"
+              className="profile-pic"
+            />
+          </div>
+          
+          <div className="profile-name">{user?.name || "User Name"}</div>
+          <div className="profile-email">{user?.email || "user@example.com"}</div>
+          <div className="profile-title">{user?.title || "Software Developer"}</div>
+          
+          <div className="profile-btn-row">
+            <button
+              className="btn-edit"
+              disabled={disabled}
+              onClick={() => console.log("Edit profile clicked")}
+            >
+              <span className="icon-edit"></span>
+              Edit Profile
+            </button>
+            <button
+              className="btn-logout-outline"
+              disabled={disabled}
+              onClick={onLoggedOut}
+            >
+              <span className="icon-logout"></span>
+              Logout
+            </button>
+          </div>
+          
+          <button className="homepage-btn" disabled={disabled}>
+            Go to Homepage
+          </button>
+        </div>
+        
+        <div className="profile-right">
+          <div className="profile-illustration-bg">
+            <div style={{ 
+              width: '200px', 
+              height: '200px', 
+              background: 'rgba(255,255,255,0.1)', 
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '48px'
+            }}>
+              👤
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
