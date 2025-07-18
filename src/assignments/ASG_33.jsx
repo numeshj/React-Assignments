@@ -1,14 +1,21 @@
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_33.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import LoginScreen from "../component/LoginScreen";
 import ProfileScreen from "../component/ProfileScreen";
-
+import { 
+  setAuthState, 
+  clearAuth, 
+  setSuccess, 
+  clearMessages,
+  updateUser 
+} from "../store/authSlice";
 import { useGetUserQuery } from "../store/api";
 
 export default function ASG_33() {
-  const [logged, setLogged] = useState(false);
-  const [success, setSuccess] = useState("");
+  const dispatch = useDispatch();
+  const { isAuthenticated, success } = useSelector((state) => state.auth);
 
   const getStoredToken = () => {
     return (
@@ -23,29 +30,34 @@ export default function ASG_33() {
     data: user,
     error,
     isLoading,
+    refetch,
   } = useGetUserQuery(token, {
     skip: !token,
   });
 
   useEffect(() => {
     if (token && user) {
-      setSuccess("You are already logged in.");
-      setLogged(true);
+      dispatch(setSuccess("You are already logged in."));
+      dispatch(setAuthState({ 
+        user, 
+        token, 
+        isAuthenticated: true 
+      }));
     } else if (error) { 
       localStorage.removeItem("authToken");
       sessionStorage.removeItem("authToken");
-      setLogged(false);
-    } else {
-      setLogged(false);
+      dispatch(clearAuth());
+    } else if (!token) {
+      dispatch(clearAuth());
     }
-  }, [token, user, error]);
+  }, [token, user, error, dispatch]);
 
   useEffect(() => {
     if (success) {
-      const timer = setTimeout(() => setSuccess(""), 5000);
+      const timer = setTimeout(() => dispatch(clearMessages()), 5000);
       return () => clearTimeout(timer);
     }
-  }, [success]);
+  }, [success, dispatch]);
 
   // Handle login success
   const handleLoginSuccess = (userData, token, keepLoggedIn) => {
@@ -54,21 +66,26 @@ export default function ASG_33() {
     } else {
       sessionStorage.setItem("authToken", token);
     }
-    setSuccess("You have logged in!");
-    setLogged(true);
+    dispatch(setSuccess("You have logged in!"));
+    dispatch(setAuthState({ 
+      user: userData, 
+      token, 
+      isAuthenticated: true 
+    }));
   };
 
   // Called by ProfileScreen after profile update
   const handleUserUpdate = (newUser) => {
-    // This would typically trigger a refetch or update cache
-    console.log("User updated:", newUser);
+    dispatch(updateUser(newUser));
+    // Force refetch to get updated data
+    refetch();
   };
 
   const handleLoggedOut = () => {
     localStorage.removeItem("authToken");
     sessionStorage.removeItem("authToken");
-    setSuccess("You are logged out.");
-    setLogged(false);
+    dispatch(setSuccess("You are logged out."));
+    dispatch(clearAuth());
   };
 
   return (
@@ -78,7 +95,7 @@ export default function ASG_33() {
       <hr />
       <br />
       <div className="asg33-login-container">
-        {!logged ? (
+        {!isAuthenticated ? (
           <LoginScreen
             onLoginSuccess={handleLoginSuccess}
             success={success}

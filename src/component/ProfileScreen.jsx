@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLogoutMutation } from "../store/api";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutMutation, useUpdateUserMutation, useUploadAvatarMutation, useRemoveAvatarMutation, useChangePasswordMutation, useChangeEmailMutation } from "../store/api";
+import { setMode, setSubscriptionEnabled, updateUser as updateUserAction } from "../store/authSlice";
+import Swal from "sweetalert2";
 import { getStoredToken } from "../utility/helper";
 import "../assignments/ASG_33.css";
 
@@ -10,13 +13,211 @@ export default function ProfileScreen({
   disabled = false,
   onLoggedOut, 
 }) {
-  const [localLoading, setLocalLoading] = useState(false);
-  const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const { mode, subscriptionEnabled } = useSelector((state) => state.auth);
+  
+  const [name, setName] = useState(user?.name || "");
+  const [description, setDescription] = useState(user?.description || "");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [passwords, setPasswords] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
+  const [email, setEmail] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-  // Logout logic using RTK Query
+  // Local loading state for button feedback
+  const [localLoading, setLocalLoading] = useState(false);
+
+  // RTK Query mutations
+  const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
+  const [updateUser, { isLoading: updateLoading }] = useUpdateUserMutation();
+  const [uploadAvatar, { isLoading: uploadLoading }] = useUploadAvatarMutation();
+  const [removeAvatar, { isLoading: removeLoading }] = useRemoveAvatarMutation();
+  const [changePassword, { isLoading: passwordLoading }] = useChangePasswordMutation();
+  const [changeEmail, { isLoading: emailLoading }] = useChangeEmailMutation();
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setDescription(user.description || "");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    setLocalLoading(
+      logoutLoading || updateLoading || uploadLoading || 
+      removeLoading || passwordLoading || emailLoading
+    );
+  }, [logoutLoading, updateLoading, uploadLoading, removeLoading, passwordLoading, emailLoading]);
+
+  // Profile update
+  const handleProfileUpdate = async (name, description) => {
+    if (loading || disabled || updateLoading) return;
+    const token = getStoredToken();
+    if (!token) return;
+    
+    try {
+      const response = await updateUser({ token, name, description }).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Profile Updated",
+        text: "Your profile was updated successfully!",
+        showConfirmButton: true,
+        timer: 5000,
+      });
+      dispatch(updateUserAction(response.data));
+      if (onUserUpdate) onUserUpdate(response.data);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update profile.",
+        showConfirmButton: true,
+      });
+    }
+  };
+
+  // Avatar upload
+  const handleAvatarUpload = async () => {
+    if (loading || disabled || uploadLoading) return;
+    if (!avatarFile) {
+      Swal.fire({
+        icon: "warning",
+        title: "No File Selected",
+        text: "Please select an image file.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+    
+    const token = getStoredToken();
+    const formData = new FormData();
+    formData.append("avatar", avatarFile);
+    
+    try {
+      const response = await uploadAvatar({ token, formData }).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Profile Picture Uploaded",
+        text: "Profile picture uploaded successfully.",
+        showConfirmButton: true,
+      });
+      setAvatarFile(null);
+      dispatch(updateUserAction(response.data));
+      if (onUserUpdate) onUserUpdate(response.data);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Upload Failed",
+        text: "Failed to upload avatar.",
+        showConfirmButton: true,
+      });
+    }
+  };
+
+  // Avatar remove
+  const handleAvatarRemove = async () => {
+    if (loading || disabled || removeLoading) return;
+    const token = getStoredToken();
+    if (!token) return;
+    
+    const result = await Swal.fire({
+      title: "Remove Profile Picture?",
+      text: "Are you sure you want to remove your profile picture?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d50000",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+    });
+    
+    if (result.isConfirmed) {
+      try {
+        const response = await removeAvatar(token).unwrap();
+        Swal.fire(
+          "Removed!",
+          "Your profile picture has been removed.",
+          "success"
+        );
+        dispatch(updateUserAction(response.data));
+        if (onUserUpdate) onUserUpdate(response.data);
+      } catch (error) {
+        Swal.fire("Failed", "Failed to remove profile picture.", "error");
+      }
+    }
+  };
+
+  // Password validation
+  const validatePassword = (password) => {
+    const specialCharRegex = /[\*\/@#$\-]/;
+    const numberRegex = /[0-9]/;
+    const lowerRegex = /[a-z]/;
+    const upperRegex = /[A-Z]/;
+    if (password.length < 8)
+      return "Password must be at least 8 characters long.";
+    if (password.length > 40) return "Password must not exceed 40 characters.";
+    if (!numberRegex.test(password))
+      return "Password must contain at least one numeric character.";
+    if (!specialCharRegex.test(password))
+      return "Password must contain at least one special character (*/-@#$).";
+    if (!lowerRegex.test(password))
+      return "Password must contain at least one lowercase letter.";
+    if (!upperRegex.test(password))
+      return "Password must contain at least one uppercase letter.";
+    return null;
+  };
+
+  // Change password
+  const handleChangePassword = async () => {
+    if (loading || disabled || passwordLoading) return;
+
+    // Basic checks
+    if (!passwords.current || !passwords.new || !passwords.confirm) {
+      setPasswordError("All password fields are required.");
+      return;
+    }
+
+    if (passwords.new !== passwords.confirm) {
+      setPasswordError("New password and confirmation do not match.");
+      return;
+    }
+
+    const validationMsg = validatePassword(passwords.new);
+    if (validationMsg) {
+      setPasswordError(validationMsg);
+      return;
+    }
+
+    const token = getStoredToken();
+    try {
+      await changePassword({
+        token,
+        old_password: passwords.current,
+        new_password: passwords.new,
+        new_password_confirmation: passwords.confirm,
+      }).unwrap();
+
+      Swal.fire({
+        icon: "success",
+        title: "Password Changed",
+        text: "Your password was changed successfully!",
+      });
+
+      setPasswords({ current: "", new: "", confirm: "" });
+      setPasswordError("");
+      dispatch(setMode("edit-menu"));
+    } catch (err) {
+      console.log(err);
+      setPasswordError(err.data?.error?.message || "Failed to change the password");
+    }
+  };
+
+  // Logout logic
   const handleLogout = async () => {
-    if (loading || disabled || localLoading || logoutLoading) return;
-    setLocalLoading(true);
+    if (loading || disabled || logoutLoading) return;
     
     const token = getStoredToken();
     
@@ -30,77 +231,434 @@ export default function ProfileScreen({
       localStorage.removeItem("authToken");
       sessionStorage.removeItem("authToken");
       if (onLoggedOut) onLoggedOut();
-      setLocalLoading(false);
+    }
+  };
+
+  // Change email
+  const handleEmailChange = async () => {
+    if (loading || disabled || emailLoading) return;
+    if (!email) {
+      Swal.fire({
+        icon: "warning",
+        title: "No Email Entered",
+        text: "Please enter a new email address.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+    const token = getStoredToken();
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Authenticated",
+        text: "You are not logged in. Please log in again.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+    
+    try {
+      await changeEmail({ token, email }).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Verification Sent",
+        text: "A verification link has been sent to your new email.",
+        showConfirmButton: true,
+      });
+      setEmail("");
+      setEmailError("");
+      dispatch(setMode("edit-menu"));
+    } catch (error) {
+      console.log(error);
+      const message = error.data?.error?.message || "Failed to change email";
+      setEmailError(message);
+      Swal.fire({
+        icon: "error",
+        title: "Change email failed",
+        text: message,
+      });
     }
   };
 
   // Navigation helpers
   const handleGoHome = () => {
-    if (loading || disabled) return;
     window.location.href = "/";
   };
 
-  return (
-    <div className="asg33-profile-container">
-      <div className="asg33-profile-card">
-        <div className="asg33-profile-left">
-          <div className="asg33-profile-logo">
-            <div className="asg33-profile-logo-icon asg33-icon-network"></div>
-            <div className="asg33-profile-logo-text">React Assignment</div>
+  // Render different modes
+  let leftColumn;
+  let rightColumn = (
+    <div className="section secondary">
+      {/* Background image is handled by CSS */}
+    </div>
+  );
+
+  if (mode === "summary") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Account Manager</div>
+            <div className="heading-description">
+              You can update your details here
+            </div>
           </div>
-          
-          <h2 className="asg33-profile-heading">Profile</h2>
-          <p className="asg33-profile-subtext">Manage your account information</p>
-          
-          <div className="asg33-avatar-center">
-            <img
-              src={user?.avatar || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23f0f0f0'/%3E%3Ctext x='60' y='60' font-size='48' text-anchor='middle' dy='16' fill='%23666'%3E👤%3C/text%3E%3C/svg%3E"}
-              alt="Profile"
-              className="asg33-profile-pic"
-              onError={(e) => {
-                e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23f0f0f0'/%3E%3Ctext x='60' y='60' font-size='48' text-anchor='middle' dy='16' fill='%23666'%3E👤%3C/text%3E%3C/svg%3E";
-              }}
+          <div className="profile">
+            <div className="profile-avatar" data-active>
+              <img
+                src={user?.avatar || "/default-profile.svg"}
+                alt="Profile"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                onError={(e) => {
+                  e.target.src = "/default-profile.svg";
+                }}
+              />
+            </div>
+            <div className="profile-data">
+              <div className="profile-name">{user?.name || "User Name"}</div>
+              <div className="profile-email">{user?.email}</div>
+              <div className="profile-description">{user?.description}</div>
+            </div>
+            <div className="profile-buttons">
+              <button
+                className="profile-button edit"
+                onClick={() => dispatch(setMode("edit-menu"))}
+                disabled={loading || disabled}
+              >
+              </button>
+              <button
+                className="profile-button logout"
+                onClick={handleLogout}
+                disabled={loading || disabled || localLoading}
+              >
+              </button>
+            </div>
+            <div className="profile-subscription">
+              <input
+                type="checkbox"
+                className="profile-subscription-switch"
+                checked={subscriptionEnabled}
+                onChange={(e) => dispatch(setSubscriptionEnabled(e.target.checked))}
+                disabled={disabled}
+              />
+              <span className="profile-subscription-text">Email Subscription</span>
+            </div>
+            <button
+              className="action"
+              onClick={handleGoHome}
+              disabled={loading || disabled}
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (mode === "edit-menu") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Edit Profile</div>
+            <div className="heading-description">
+              Update your details and security options
+            </div>
+          </div>
+          <div className="editor">
+            <div className="question" data-align="left">
+              <button
+                className="question-link"
+                onClick={() => dispatch(setMode("edit-info"))}
+                disabled={loading || disabled}
+              >
+                Update Name and Description
+              </button>
+            </div>
+            <div className="question" data-align="left">
+              <button
+                className="question-link"
+                onClick={() => dispatch(setMode("edit-avatar"))}
+                disabled={loading || disabled}
+              >
+                Update or Remove Avatar
+              </button>
+            </div>
+            <div className="question" data-align="left">
+              <button
+                className="question-link"
+                onClick={() => dispatch(setMode("edit-password"))}
+                disabled={loading || disabled}
+              >
+                Change Password
+              </button>
+            </div>
+            <div className="question" data-align="left">
+              <button
+                className="question-link"
+                onClick={() => dispatch(setMode("edit-email"))}
+                disabled={loading || disabled}
+              >
+                Change Email
+              </button>
+            </div>
+            <button
+              className="action"
+              onClick={() => dispatch(setMode("summary"))}
+              disabled={loading || disabled}
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (mode === "edit-info") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Name and Description</div>
+            <div className="heading-description">
+              Your name and a short description about you
+            </div>
+          </div>
+          <div className="editor">
+            <input
+              className="input name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name"
+              disabled={loading || disabled}
             />
-          </div>
-          
-          <div className="asg33-profile-name">{user?.name || "User Name"}</div>
-          <div className="asg33-profile-email">{user?.email || "user@example.com"}</div>
-          <div className="asg33-profile-title">{user?.description || "Software Developer"}</div>
-          
-          <div className="asg33-profile-btn-row">
-            <button
-              className="asg33-btn-edit"
-              disabled={disabled}
-              onClick={() => console.log("Edit profile clicked")}
-            >
-              <span className="asg33-icon-edit"></span>
-              Edit Profile
-            </button>
-            <button
-              className="asg33-btn-logout-outline"
-              disabled={disabled || logoutLoading}
-              onClick={handleLogout}
-            >
-              <span className="asg33-icon-logout"></span>
-              {logoutLoading ? "Logging out..." : "Logout"}
-            </button>
-          </div>
-          
-          <button 
-            className="asg33-homepage-btn" 
-            disabled={disabled}
-            onClick={handleGoHome}
-          >
-            Go to Homepage
-          </button>
-        </div>
-        
-        <div className="asg33-profile-right">
-          <div className="asg33-profile-illustration-bg">
-            
-              <img className="asg33-profile-illustration-img" src="./image_R.png"/>
+            <textarea
+              className="input description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              disabled={loading || disabled}
+            />
+            <div className="editor-cols">
+              <button
+                className="action"
+                onClick={() => dispatch(setMode("edit-menu"))}
+                disabled={loading || disabled}
+              >
+                Close
+              </button>
+              <button
+                className="action"
+                onClick={() => {
+                  handleProfileUpdate(name, description);
+                  dispatch(setMode("summary"));
+                }}
+                disabled={loading || disabled}
+              >
+                Save Details
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+    );
+  } else if (mode === "edit-avatar") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Update Avatar</div>
+            <div className="heading-description">
+              Display image for your profile
+            </div>
+          </div>
+          <div className="editor">
+            <div className="profile">
+              <div className="profile-avatar large" data-active>
+                <img
+                  src={
+                    avatarFile
+                      ? URL.createObjectURL(avatarFile)
+                      : user?.avatar || "/default-profile.svg"
+                  }
+                  alt="Profile"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onError={(e) => {
+                    e.target.src = "/default-profile.svg";
+                  }}
+                />
+                <label htmlFor="avatar-upload-input">
+                  <input
+                    id="avatar-upload-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0])
+                        setAvatarFile(e.target.files[0]);
+                    }}
+                    disabled={loading || disabled}
+                  />
+                  <button
+                    className="profile-avatar-upload"
+                    disabled={loading || disabled}
+                  />
+                </label>
+              </div>
+              <div className="profile-buttons">
+                <button
+                  className="profile-button upload"
+                  onClick={handleAvatarUpload}
+                  disabled={loading || disabled}
+                >
+                </button>
+                <button
+                  className="profile-button remove"
+                  onClick={handleAvatarRemove}
+                  disabled={loading || disabled}
+                >
+                </button>
+              </div>
+            </div>
+            <button
+              className="action"
+              onClick={() => dispatch(setMode("edit-menu"))}
+              disabled={loading || disabled}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (mode === "edit-password") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Change Password</div>
+            <div className="heading-description">
+              Make your account safe and secure
+            </div>
+          </div>
+          <div className="editor">
+            <input
+              className="input password"
+              type="password"
+              autoComplete="current-password"
+              value={passwords.current}
+              onChange={(e) => {
+                setPasswords({ ...passwords, current: e.target.value });
+                setPasswordError("");
+              }}
+              placeholder="Current Password"
+              disabled={loading || disabled}
+            />
+            <input
+              className="input password"
+              type="password"
+              autoComplete="new-password"
+              value={passwords.new}
+              onChange={(e) => {
+                setPasswords({ ...passwords, new: e.target.value });
+                setPasswordError("");
+              }}
+              placeholder="New Password"
+              disabled={loading || disabled}
+            />
+            <input
+              className="input password"
+              type="password"
+              autoComplete="new-password"
+              value={passwords.confirm}
+              onChange={(e) => {
+                setPasswords({ ...passwords, confirm: e.target.value });
+                setPasswordError("");
+              }}
+              placeholder="Confirm New Password"
+              disabled={loading || disabled}
+            />
+            {passwordError && (
+              <div className="alert error">
+                <div className="alert-message">{passwordError}</div>
+              </div>
+            )}
+            <div className="editor-cols">
+              <button
+                className="action"
+                onClick={() => dispatch(setMode("edit-menu"))}
+                disabled={loading || disabled}
+              >
+                Close
+              </button>
+              <button
+                className="action"
+                onClick={handleChangePassword}
+                disabled={loading || disabled}
+              >
+                Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (mode === "edit-email") {
+    leftColumn = (
+      <div className="section primary">
+        <div className="content">
+          <div className="heading">
+            <div className="heading-logo"></div>
+            <div className="heading-title">Change Email</div>
+            <div className="heading-description">
+              We will send a verification link to your new email
+            </div>
+          </div>
+          <div className="editor">
+            <input
+              className="input email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="New Email"
+              disabled={loading || disabled}
+            />
+            {emailError && (
+              <div className="alert error">
+                <div className="alert-message">{emailError}</div>
+              </div>
+            )}
+            <div className="editor-cols">
+              <button
+                className="action"
+                onClick={() => dispatch(setMode("edit-menu"))}
+                disabled={loading || disabled}
+              >
+                Close
+              </button>
+              <button
+                className="action"
+                onClick={handleEmailChange}
+                disabled={loading || disabled}
+              >
+                Send verification link
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div id="app">
+      <div className="container">
+        {leftColumn}
+        {rightColumn}
       </div>
     </div>
   );
