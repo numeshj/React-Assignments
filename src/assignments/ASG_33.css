@@ -268,6 +268,7 @@ body {
 }
 
 .asg33-profile-button {
+  font-size: 12px;
   flex-grow: 1;
   flex-shrink: 0;
   width: 110px;
@@ -360,6 +361,9 @@ body {
 
 .asg33-profile-button.asg33-edit::before {
   background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIgogICAgc3R5bGU9ImZpbGw6IHJnYig2LCA5MCwgMjE2KTsgb3BhY2l0eTogMTsgdHJhbnNmb3JtOiByb3RhdGUoMGRlZykgc2NhbGUoMSwgMSk7Ij4KICAgIDxnPgogICAgICAgIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKDQ1LjAwMSAxNi4zNTcgNC42NTYpIiBkPSJNMTQuMjM1IDMuMDM5SDE4LjQ3OFY2LjI3M0gxNC4yMzV6Ij48L3BhdGg+CiAgICAgICAgPHBhdGggZD0iTTQgMTRMNCAxNyA3IDE3IDE1LjI5OSA4LjcxMyAxMi4yOTkgNS43MTN6TTQgMjBIMjBWMjJINHoiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   width: 16px;
   height: 16px;
   content: "";
@@ -558,6 +562,7 @@ body {
 /* --- ACTIONS --- */
 .asg33-action {
   height: 40px;
+  width: 380px;
   background-color: #065ad8;
   border: 1px solid #054ab3;
   border-radius: 4px;
