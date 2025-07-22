@@ -53,18 +53,10 @@ export default function ASG_35() {
     }
   };
 
+  
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === "v") {
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("paste", handlePaste);
-
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("paste", handlePaste);
+      // Remove any global event listeners
     };
   }, []);
 
@@ -80,7 +72,8 @@ export default function ASG_35() {
             className="asg35-drop-area"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            onClick={handleUpload}
+            onPaste={handlePaste}
+            tabIndex={0}
           >
             <h2 className="asg35-heading">
               Drag and Drop or Paste Image here...
@@ -117,3 +110,4 @@ export default function ASG_35() {
     </div>
   );
 }
+            

@@ -42,6 +42,12 @@
     background-color: #FFF1;
 }
 
+.asg35-drop-area:focus {
+    outline: none;
+    border-color: #FFF8;
+    background-color: #FFF1;
+}
+
 .asg35-heading{
     text-align: center;
     font-size: 18px;
