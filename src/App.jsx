@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function App() {
   const navigate = useNavigate();
 
-  const buttons = Array.from({ length: 34 }, (_, i) => ({
+  const buttons = Array.from({ length: 35 }, (_, i) => ({
     label: `ASG_${i + 1}`,
     path: `/asg-${i + 1}`,
   }));

@@ -107,7 +107,7 @@ export default function ASG_34() {
           <audio
             ref={audioRef}
             className="asg34-audio"
-            src="https://www.soundjay.com/misc/sounds-mp3/beep-07a.mp3"
+            src="./audio.mp3"
             controls
             autoPlay
             loop
