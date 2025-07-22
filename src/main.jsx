@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Routes, Route, HashRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./store/store.js";
 import "./index.css";
 import App from "./App.jsx";
 import ASG_1 from "./assignments/ASG_1.jsx";
@@ -40,44 +42,46 @@ import ASG_34 from "./assignments/ASG_34.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/asg-1" element={<ASG_1 />} />
-        <Route path="/asg-2" element={<ASG_2 />} />
-        <Route path="/asg-3" element={<ASG_3 />} />
-        <Route path="/asg-4" element={<ASG_4 />} />
-        <Route path="/asg-5" element={<ASG_5 />} />
-        <Route path="/asg-6" element={<ASG_6 />} />
-        <Route path="/asg-7" element={<ASG_7 />} />
-        <Route path="/asg-8" element={<ASG_8 />} />
-        <Route path="/asg-9" element={<ASG_9 />} />
-        <Route path="/asg-10" element={<ASG_10 />} />
-        <Route path="/asg-11" element={<ASG_11 />} />
-        <Route path="/asg-12" element={<ASG_12 />} />
-        <Route path="/asg-13" element={<ASG_13 />} />
-        <Route path="/asg-14" element={<ASG_14 />} />
-        <Route path="/asg-15" element={<ASG_15 />} />
-        <Route path="/asg-16" element={<ASG_16 />} />
-        <Route path="/asg-17" element={<ASG_17 />} />
-        <Route path="/asg-18" element={<ASG_18 />} />
-        <Route path="/asg-19" element={<ASG_19 />} />
-        <Route path="/asg-20" element={<ASG_20 />} />
-        <Route path="/asg-21" element={<ASG_21 />} />
-        <Route path="/asg-22" element={<ASG_22 />} />
-        <Route path="/asg-23" element={<ASG_23 />} />
-        <Route path="/asg-24" element={<ASG_24 />} />
-        <Route path="/asg-25" element={<ASG_25 />} />
-        <Route path="/asg-26" element={<ASG_26 />} />
-        <Route path="/asg-27" element={<ASG_27 />} />
-        <Route path="/asg-28" element={<ASG_28 />} />
-        <Route path="/asg-29" element={<ASG_29 />} />
-        <Route path="/asg-30" element={<ASG_30 />} />
-        <Route path="/asg-31" element={<ASG_31 />} />
-        <Route path="/asg-32" element={<ASG_32 />} />
-        <Route path="/asg-33" element={<ASG_33 />} />
-        <Route path="/asg-34" element={<ASG_34 />} />
-      </Routes>
-    </HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/asg-1" element={<ASG_1 />} />
+          <Route path="/asg-2" element={<ASG_2 />} />
+          <Route path="/asg-3" element={<ASG_3 />} />
+          <Route path="/asg-4" element={<ASG_4 />} />
+          <Route path="/asg-5" element={<ASG_5 />} />
+          <Route path="/asg-6" element={<ASG_6 />} />
+          <Route path="/asg-7" element={<ASG_7 />} />
+          <Route path="/asg-8" element={<ASG_8 />} />
+          <Route path="/asg-9" element={<ASG_9 />} />
+          <Route path="/asg-10" element={<ASG_10 />} />
+          <Route path="/asg-11" element={<ASG_11 />} />
+          <Route path="/asg-12" element={<ASG_12 />} />
+          <Route path="/asg-13" element={<ASG_13 />} />
+          <Route path="/asg-14" element={<ASG_14 />} />
+          <Route path="/asg-15" element={<ASG_15 />} />
+          <Route path="/asg-16" element={<ASG_16 />} />
+          <Route path="/asg-17" element={<ASG_17 />} />
+          <Route path="/asg-18" element={<ASG_18 />} />
+          <Route path="/asg-19" element={<ASG_19 />} />
+          <Route path="/asg-20" element={<ASG_20 />} />
+          <Route path="/asg-21" element={<ASG_21 />} />
+          <Route path="/asg-22" element={<ASG_22 />} />
+          <Route path="/asg-23" element={<ASG_23 />} />
+          <Route path="/asg-24" element={<ASG_24 />} />
+          <Route path="/asg-25" element={<ASG_25 />} />
+          <Route path="/asg-26" element={<ASG_26 />} />
+          <Route path="/asg-27" element={<ASG_27 />} />
+          <Route path="/asg-28" element={<ASG_28 />} />
+          <Route path="/asg-29" element={<ASG_29 />} />
+          <Route path="/asg-30" element={<ASG_30 />} />
+          <Route path="/asg-31" element={<ASG_31 />} />
+          <Route path="/asg-32" element={<ASG_32 />} />
+          <Route path="/asg-33" element={<ASG_33 />} />
+          <Route path="/asg-34" element={<ASG_34 />} />
+        </Routes>
+      </HashRouter>
+    </Provider>
   </StrictMode>
 );
