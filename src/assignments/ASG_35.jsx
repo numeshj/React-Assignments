@@ -69,7 +69,7 @@ export default function ASG_35() {
   }, []);
 
   return (
-    <>
+    <div className="asg35-body">
       <BackToHome />
       <h1 className="assignment-title">Assignment-35</h1>
       <hr />
@@ -114,6 +114,6 @@ export default function ASG_35() {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }
