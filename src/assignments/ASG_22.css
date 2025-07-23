@@ -1,3 +1,13 @@
+.asg22{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #1e1e2f !important;
+    overflow: auto;
+}
+
 .image-filter-container {
   max-width: 480px;
   margin: 40px auto;

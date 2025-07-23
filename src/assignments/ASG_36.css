@@ -1,23 +1,47 @@
-.asg36{
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #1a1a1a !important;
-    overflow: auto;
+.asg36 {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1e1e2f !important;
+  overflow: auto;
 }
 
 .picture-box {
-     width: 600px;
-    height: 450px;
-    background-color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
+  width: 600px;
+  height: 450px;
+  background-color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  gap: 30px;
+  /* cursor: none; */
+}
+
+.range-selection {
+  width: 600px;
+  height: 5px;
+  appearance: auto;
+  cursor: default;
+  color: light-dark(rgb(16, 16, 16), rgb(255, 255, 255));
+  padding: initial;
+  border: initial;
+  margin: 2px;
+  flex-grow: 1;
+}
+
+.picture-frame {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    gap: 30px;
+    border: 2px solid #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
 }
