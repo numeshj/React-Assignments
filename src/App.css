@@ -102,3 +102,8 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.App {
+  text-align: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}

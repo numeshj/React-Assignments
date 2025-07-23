@@ -1,3 +1,29 @@
+/* Override any Roboto font loading */
+@font-face {
+  font-family: 'Roboto';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -28,6 +54,10 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background: inherit;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1 {
@@ -59,6 +89,15 @@ html, body, #root {
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: light) {
