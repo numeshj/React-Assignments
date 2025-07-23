@@ -45,24 +45,23 @@
 }
 
 .hover-frame {
-    border: 2px solid #ff0000;
+    border: 2px solid #0000ff;
     background-color: rgba(255, 0, 0, 0.1);
 }
 
 .selected-area {
-    border: 2px solid #ff0000;
+    border: 2px solid #0000ff;
     background-color: transparent;
     z-index: 5;
 }
 
 .captured-frame {
-    border: 2px solid #00ff00;
+    border: 2px solid #ff0000;
     background-color: transparent;
     z-index: 10;
 }
 
 .placed-frame {
-    border: 2px solid #0000ff;
     background-color: transparent;
     z-index: 7;
 }

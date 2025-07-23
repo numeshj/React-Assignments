@@ -65,7 +65,6 @@ const onMouseMove = (event) => {
   const onMouseDown = (e) => {
     if (frame.x && frame.y) {
       if (selectedArea && capturedImage) {
-        // Add a new placed frame at the current mouse position
         const newPlacedFrame = {
           x: frame.x,
           y: frame.y,
@@ -92,7 +91,6 @@ const onMouseMove = (event) => {
   const resetOrigin = () => {
     setSelectedArea(null);
     setCapturedImage(null);
-    setPlacedFrames([]);
     setIsDragging(false);
     setFrame({});
   };
@@ -110,6 +108,7 @@ const onMouseMove = (event) => {
           max="120" 
           min="40" 
           value={rangeValue}
+          disabled={isDragging}
           onChange={(e) => setRangeValue(e.target.value)}
         />
         <button className="range-button" onClick={resetOrigin}>Reset Origin</button>
