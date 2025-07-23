@@ -11,7 +11,9 @@ export default function ASG_36() {
       <h1 className="assignment-title">Assignment-36</h1>
       <hr />
       <br />
-
+      <div className="picture-box">
+        <img src="./asg36.png" alt="asg36"/>
+      </div>
     </div>
   );
 }
