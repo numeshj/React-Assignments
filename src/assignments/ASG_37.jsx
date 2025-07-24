@@ -10,9 +10,7 @@ export default function ASG_37() {
   const [isDragging, setIsDragging] = useState(false);
   const [cursorPos, setCursorPos] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
-  const [baseOriginalImage, setBaseOriginalImage] = useState(null); // Store truly original image
 
-  // Load the image when component mounts
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -23,13 +21,23 @@ export default function ASG_37() {
       ctx.drawImage(img, 0, 0);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       setOriginalImage(imageData);
-      setBaseOriginalImage(imageData); // Store base original for reset
     };
     img.src = "./asg36.png";
   }, []);
 
-  // Draw selected area with red dashed border
-  const drawSelectedArea = (ctx, x, y, size) => {
+  const drawHoverFrame = (ctx, x, y, size) => {
+    ctx.strokeStyle = "#0000ff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+  };
+
+  const activeFrame = (ctx, x, y, size) => {
+    ctx.strokeStyle = "#ff0000";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+  };
+
+  const drawSelectedAreaFrame = (ctx, x, y, size) => {
     ctx.strokeStyle = "#ff0000";
     ctx.lineWidth = 3;
     ctx.setLineDash([5, 5]);
@@ -37,58 +45,48 @@ export default function ASG_37() {
     ctx.setLineDash([]);
   };
 
-  // Redraw everything when state changes
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !originalImage) return;
-    const ctx = canvas.getContext("2d");
-
-    // Reset to original
-    ctx.putImageData(originalImage, 0, 0);
-
-    // Draw selected area with red border if exists
-    if (selectedArea) {
-      drawSelectedArea(ctx, selectedArea.x, selectedArea.y, selectedArea.size);
-    }
-
-    // Draw moving image if dragging
-    if (isDragging && selectedData && cursorPos) {
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = selectedData.width;
-      tempCanvas.height = selectedData.height;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.putImageData(selectedData.data, 0, 0);
-
-      const x = cursorPos.x - range / 2;
-      const y = cursorPos.y - range / 2;
-
-      // Draw the captured image
-      ctx.drawImage(tempCanvas, x, y, range, range);
-
-      // Green border for moving frame
-      ctx.strokeStyle = "#00ff00";
-      ctx.lineWidth = 3;
-      ctx.strokeRect(x, y, range, range);
-
-      // Add transparency overlay
-      ctx.fillStyle = "rgba(0, 255, 0, 0.1)";
-      ctx.fillRect(x, y, range, range);
-    }
-  }, [cursorPos, isDragging, selectedData, selectedArea, range, originalImage]);
-
-  // Mouse move: update cursor position and show moving frame
   const handleMouseMove = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (canvas.width / rect.width);
     const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-    if (isDragging) {
-      setCursorPos({ x, y });
+    setCursorPos({ x, y });
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+    if (originalImage) {
+      ctx.putImageData(originalImage, 0, 0);
+    }
+
+    // Draw selected area frame if exists
+    if (selectedArea) {
+      drawSelectedAreaFrame(ctx, selectedArea.x, selectedArea.y, selectedArea.size);
+    }
+
+    if (!isDragging) {
+      drawHoverFrame(ctx, x, y, range);
+    } else {
+      activeFrame(ctx, x, y, range);
+
+      if (selectedData) {
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = selectedData.width;
+        tempCanvas.height = selectedData.height;
+        const tempCtx = tempCanvas.getContext("2d");
+        tempCtx.putImageData(selectedData.data, 0, 0);
+
+        const drawX = x - range / 2;
+        const drawY = y - range / 2;
+
+        ctx.drawImage(tempCanvas, drawX, drawY, range, range);
+
+        ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
+        ctx.fillRect(drawX, drawY, range, range);
+      }
     }
   };
 
-  // Mouse down: first click to select, subsequent clicks to place
   const handleMouseDown = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
@@ -109,11 +107,15 @@ export default function ASG_37() {
       const data = ctx.getImageData(startX, startY, width, height);
       setSelectedData({ data, width, height });
 
-      // Save selected area for red box drawing
+      // Save selected area for red dashed frame
       setSelectedArea({ x, y, size });
 
       setIsDragging(true);
       setCursorPos({ x, y });
+
+      // Immediately draw the selected area frame
+      ctx.putImageData(originalImage, 0, 0);
+      drawSelectedAreaFrame(ctx, x, y, size);
     } else {
       // Subsequent clicks - place the image data
       if (selectedData) {
@@ -134,7 +136,6 @@ export default function ASG_37() {
   };
 
   const handleReset = () => {
-    // Clear all states first
     setSelectedData(null);
     setSelectedArea(null);
     setIsDragging(false);
