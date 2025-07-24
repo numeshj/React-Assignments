@@ -57,29 +57,23 @@
 }
 
 .canvas-container {
-  position: relative;
   display: flex;
   justify-content: center;
-  background: #1e1e2f;
+  background: #fff;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
 }
 
-.main-canvas {
-  border-radius: 3px;
-  cursor: crosshair;
+.canvas-container canvas {
+  border: 2px solid #ddd;
+  border-radius: 8px;
   background: white;
+  display: block;
 }
 
-.overlay-canvas {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  pointer-events: none;
-  z-index: 10;
+.canvas-container canvas:hover {
+  border-color: #667eea;
 }
 
 .info-section {
@@ -126,7 +120,6 @@
     max-width: 100%;
     height: auto;
   }
-}
   transform: translateY(-1px);
 }
 
@@ -198,6 +191,17 @@
   .brightness-controls {
     flex-direction: column;
     gap: 10px;
+  }
+  
+  .actions-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 200px;
+  }
+}
   }
   
   .actions-section {
