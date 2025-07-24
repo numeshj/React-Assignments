@@ -6,62 +6,206 @@
   left: 0;
   background-color: #1e1e2f !important;
   overflow: auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.picture-box {
-  width: 600px;
-  height: 450px;
-  background-color: #333;
+.controls {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  gap: 30px;
-  /* cursor: none; */
+  gap: 20px;
+  margin-bottom: 20px;
+  background: #2a2a3e;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 .range-selection {
-  width: 600px;
-  height: 5px;
-  appearance: auto;
-  cursor: default;
-  color: light-dark(rgb(16, 16, 16), rgb(255, 255, 255));
-  padding: initial;
-  border: initial;
-  margin: 2px;
-  flex-grow: 1;
+  width: 300px;
+  height: 6px;
+  border-radius: 3px;
+  background: #555;
+  outline: none;
+  -webkit-appearance: none;
 }
 
-.picture-frame {
-    position: absolute;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
+.range-selection::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  border: 2px solid #fff;
 }
 
-.hover-frame {
-    border: 2px solid #0000ff;
-    background-color: rgba(255, 0, 0, 0.1);
+.range-button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.selected-area {
-    border: 2px solid #0000ff;
-    background-color: transparent;
-    z-index: 5;
+.range-button:hover {
+  background: #ff5252;
+  transform: translateY(-1px);
 }
 
-.captured-frame {
-    border: 2px solid #ff0000;
-    background-color: transparent;
-    z-index: 10;
+.canvas-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: #1e1e2f;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.placed-frame {
-    background-color: transparent;
-    z-index: 7;
+.main-canvas {
+  border-radius: 3px;
+  cursor: crosshair;
+  background: white;
+}
+
+.overlay-canvas {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.info-section {
+  background: #2a2a3e;
+  padding: 20px;
+  border-radius: 10px;
+  color: #e0e0e0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #667eea;
+  text-align: center;
+}
+
+.info-section ul {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.info-section li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.info-section strong {
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .range-selection {
+    width: 250px;
+  }
+  
+  .main-canvas, .overlay-canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+  transform: translateY(-1px);
+}
+
+.action-btn.download {
+  background: #4caf50;
+  color: white;
+}
+
+.action-btn.download:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.canvas-section {
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: auto;
+  margin-bottom: 20px;
+}
+
+.editor-canvas {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  max-width: 100%;
+  max-height: 60vh;
+  background: white;
+}
+
+.editor-canvas:hover {
+  border-color: #667eea;
+}
+
+.info-section {
+  background: #3a3a4e;
+  padding: 15px;
+  border-radius: 10px;
+  color: #e0e0e0;
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: #667eea;
+}
+
+.info-section ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.info-section li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.info-section strong {
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .brightness-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .actions-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 200px;
+  }
 }
