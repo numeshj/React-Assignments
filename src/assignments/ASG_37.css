@@ -76,35 +76,6 @@
   border-color: #667eea;
 }
 
-.info-section {
-  background: #2a2a3e;
-  padding: 20px;
-  border-radius: 10px;
-  color: #e0e0e0;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.info-section h4 {
-  margin-top: 0;
-  color: #667eea;
-  text-align: center;
-}
-
-.info-section ul {
-  margin: 15px 0;
-  padding-left: 20px;
-}
-
-.info-section li {
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.info-section strong {
-  color: #fff;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .controls {
@@ -116,99 +87,8 @@
     width: 250px;
   }
   
-  .main-canvas, .overlay-canvas {
+  .canvas-container canvas {
     max-width: 100%;
     height: auto;
   }
-  transform: translateY(-1px);
-}
-
-.action-btn.download {
-  background: #4caf50;
-  color: white;
-}
-
-.action-btn.download:hover {
-  background: #45a049;
-  transform: translateY(-1px);
-}
-
-.canvas-section {
-  display: flex;
-  justify-content: center;
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  overflow: auto;
-  margin-bottom: 20px;
-}
-
-.editor-canvas {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  max-width: 100%;
-  max-height: 60vh;
-  background: white;
-}
-
-.editor-canvas:hover {
-  border-color: #667eea;
-}
-
-.info-section {
-  background: #3a3a4e;
-  padding: 15px;
-  border-radius: 10px;
-  color: #e0e0e0;
-}
-
-.info-section h4 {
-  margin-top: 0;
-  color: #667eea;
-}
-
-.info-section ul {
-  margin: 10px 0;
-  padding-left: 20px;
-}
-
-.info-section li {
-  margin-bottom: 5px;
-  line-height: 1.4;
-}
-
-.info-section strong {
-  color: #fff;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .filter-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .brightness-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .actions-section {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .action-btn {
-    width: 200px;
-  }
-}
-  .hover-frame {
-    border: 2px solid #0000ff;
-    background-color: rgba(255, 0, 0, 0.1);
-}
-
-.selected-area {
-    border: 2px solid #0000ff;
-    background-color: transparent;
-    z-index: 5;
 }

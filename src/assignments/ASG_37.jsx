@@ -10,6 +10,7 @@ export default function ASG_37() {
   const [isDragging, setIsDragging] = useState(false);
   const [cursorPos, setCursorPos] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
+  const [imageHistory, setImageHistory] = useState([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -61,7 +62,12 @@ export default function ASG_37() {
 
     // Draw selected area frame if exists
     if (selectedArea) {
-      drawSelectedAreaFrame(ctx, selectedArea.x, selectedArea.y, selectedArea.size);
+      drawSelectedAreaFrame(
+        ctx,
+        selectedArea.x,
+        selectedArea.y,
+        selectedArea.size
+      );
     }
 
     if (!isDragging) {
@@ -117,20 +123,20 @@ export default function ASG_37() {
       ctx.putImageData(originalImage, 0, 0);
       drawSelectedAreaFrame(ctx, x, y, size);
     } else {
-      // Subsequent clicks - place the image data
       if (selectedData) {
         const startX = Math.max(0, Math.floor(x - range / 2));
         const startY = Math.max(0, Math.floor(y - range / 2));
         ctx.putImageData(selectedData.data, startX, startY);
 
-        // Update original image to include the placed data
+        // Save new state of image into history
         const newImageData = ctx.getImageData(
           0,
           0,
           canvas.width,
           canvas.height
         );
-        setOriginalImage(newImageData);
+        setOriginalImage(newImageData); // this keeps the latest state
+        setImageHistory((prev) => [...prev, newImageData]); // keep a history
       }
     }
   };
@@ -139,7 +145,20 @@ export default function ASG_37() {
     setSelectedData(null);
     setSelectedArea(null);
     setIsDragging(false);
-    setCursorPos(null);
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+    if (imageHistory.length > 0) {
+      const latestImage = imageHistory[imageHistory.length - 1];
+      ctx.putImageData(latestImage, 0, 0);
+      setOriginalImage(latestImage); // update current image state
+    }
+
+    // Optionally, keep hover frame active
+    if (cursorPos) {
+      drawHoverFrame(ctx, cursorPos.x, cursorPos.y, range);
+    }
   };
 
   return (
