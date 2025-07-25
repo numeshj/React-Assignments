@@ -60,7 +60,6 @@ export default function ASG_37() {
       ctx.putImageData(originalImage, 0, 0);
     }
 
-    // Draw selected area frame if exists
     if (selectedArea) {
       drawSelectedAreaFrame(
         ctx,
@@ -102,24 +101,20 @@ export default function ASG_37() {
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
     if (!isDragging) {
-      // First click - select area and save to selectedArea
       const size = range;
       const startX = Math.max(0, Math.floor(x - size / 2));
       const startY = Math.max(0, Math.floor(y - size / 2));
       const width = Math.min(size, canvas.width - startX);
       const height = Math.min(size, canvas.height - startY);
 
-      // Capture image data
       const data = ctx.getImageData(startX, startY, width, height);
       setSelectedData({ data, width, height });
 
-      // Save selected area for red dashed frame
       setSelectedArea({ x, y, size });
 
       setIsDragging(true);
       setCursorPos({ x, y });
 
-      // Immediately draw the selected area frame
       ctx.putImageData(originalImage, 0, 0);
       drawSelectedAreaFrame(ctx, x, y, size);
     } else {
@@ -128,15 +123,14 @@ export default function ASG_37() {
         const startY = Math.max(0, Math.floor(y - range / 2));
         ctx.putImageData(selectedData.data, startX, startY);
 
-        // Save new state of image into history
         const newImageData = ctx.getImageData(
           0,
           0,
           canvas.width,
           canvas.height
         );
-        setOriginalImage(newImageData); // this keeps the latest state
-        setImageHistory((prev) => [...prev, newImageData]); // keep a history
+        setOriginalImage(newImageData); 
+        setImageHistory((prev) => [...prev, newImageData]);
       }
     }
   };
@@ -152,10 +146,9 @@ export default function ASG_37() {
     if (imageHistory.length > 0) {
       const latestImage = imageHistory[imageHistory.length - 1];
       ctx.putImageData(latestImage, 0, 0);
-      setOriginalImage(latestImage); // update current image state
+      setOriginalImage(latestImage);
     }
 
-    // Optionally, keep hover frame active
     if (cursorPos) {
       drawHoverFrame(ctx, cursorPos.x, cursorPos.y, range);
     }
