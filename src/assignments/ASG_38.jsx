@@ -7,7 +7,7 @@ export default function ASG_38() {
   const position = useRef({ x: 50, y: 50 });
   const speed = useRef({ x: 1, y: 1 });
   const [count, setCount] = useState(0);
-  const barPosition = useRef({x:0 ,y:0})
+  const barPosition = useRef({ x: 0, y: 0 });
 
   const animate = () => {
     frame.current = requestAnimationFrame(animate);
@@ -15,25 +15,24 @@ export default function ASG_38() {
     position.current.y += speed.current.y;
     position.current.x += speed.current.x;
 
-
     const ballX = position.current.x;
     const ballY = position.current.y;
     const barX = barPosition.current.x;
-    const barY = 250; 
+    const barY = 250;
     const barWidth = 100;
     const barHeight = 5;
     const ballSize = 10;
 
     if (
-      ballX + ballSize >= barX && 
+      ballX + ballSize >= barX &&
       ballX <= barX + barWidth &&
-      ballY + ballSize >= barY && 
+      ballY + ballSize >= barY &&
       ballY <= barY + barHeight
     ) {
       if (ballY <= 240) {
-        speed.current.y = -Math.abs(speed.current.y); 
-      } else if (ballY >= 245) { 
-        speed.current.y = Math.abs(speed.current.y); 
+        speed.current.y = -Math.abs(speed.current.y);
+      } else if (ballY >= 245) {
+        speed.current.y = Math.abs(speed.current.y);
       }
     }
 
@@ -65,10 +64,10 @@ export default function ASG_38() {
   const onMouseMove = (event) => {
     const boxRect = event.currentTarget.getBoundingClientRect();
     let x = event.clientX - boxRect.left - 50;
-    x = Math.max(0, Math.min(x, 380)); 
+    x = Math.max(0, Math.min(x, 380));
     barPosition.current.x = x;
-    setCount((prev) => prev + 1); 
-  }
+    setCount((prev) => prev + 1);
+  };
 
   useEffect(() => {
     animate();
@@ -92,7 +91,7 @@ export default function ASG_38() {
             top: position.current.y + "px",
           }}
         />
-        <div className="bar" style={{left: barPosition.current.x + "px"}}/>
+        <div className="bar" style={{ left: barPosition.current.x + "px" }} />
       </div>
       <div>
         <input type="range" id="range-x" min="0" max="8" onChange={onChangeX} />
