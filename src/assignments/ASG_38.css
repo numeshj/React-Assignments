@@ -25,3 +25,13 @@
     position: absolute;
     background-color: aqua;
 }
+
+.bar{
+    margin: 1px;
+    width: 100px;
+    height: 5px;
+    top: 450px;
+    position: absolute;
+    border: 2px;
+    background-color: #797373;
+}

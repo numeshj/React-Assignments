@@ -5,8 +5,9 @@ import { useState, useEffect, useRef } from "react";
 export default function ASG_38() {
   const frame = useRef(null);
   const position = useRef({ x: 50, y: 50 });
-  const speed = useRef({ x: 1, y: 1 });
+  const speed = useRef({ x: 5, y: 7 });
   const [count, setCount] = useState(0);
+  const barPosition = useRef({x:0 ,y:0})
 
   const animate = () => {
     frame.current = requestAnimationFrame(animate);
@@ -35,10 +36,18 @@ export default function ASG_38() {
   };
 
   const onChangeY = (e) => {
-    const speedX = Number(e.target.value);
-    speed.current.x = speedX;
+    const speedY = Number(e.target.value);
+    speed.current.y = speedY;
     setCount((prev) => prev + 1);
   };
+
+  const onMouseMove = (event) => {
+    const boxRect = event.currentTarget.getBoundingClientRect();
+    let x = event.clientX - boxRect.left - 50;
+    x = Math.max(0, Math.min(x, 380)); 
+    barPosition.current.x = x;
+    setCount((prev) => prev + 1); // trigger re-render
+  }
 
   useEffect(() => {
     animate();
@@ -54,7 +63,7 @@ export default function ASG_38() {
       <h1 className="assignment-title">Assignment-38</h1>
       <hr />
       <br />
-      <div className="box">
+      <div className="box" onMouseMove={onMouseMove}>
         <div
           className="ball"
           style={{
@@ -62,6 +71,7 @@ export default function ASG_38() {
             top: position.current.y + "px",
           }}
         />
+        <div className="bar" style={{left: barPosition.current.x + "px"}}/>
       </div>
       <div>
         <input type="range" id="range-x" min="0" max="8" onChange={onChangeX} />
