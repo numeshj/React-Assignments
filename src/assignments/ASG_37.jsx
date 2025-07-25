@@ -1,187 +1,202 @@
-import { useState, useRef, useEffect } from "react";
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_37.css";
+import { useState, useEffect, useRef } from "react";
 
 export default function ASG_37() {
-  const canvasRef = useRef(null);
-  const [range, setRange] = useState(80);
-  const [selectedData, setSelectedData] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [cursorPos, setCursorPos] = useState(null);
-  const [originalImage, setOriginalImage] = useState(null);
-  const [imageHistory, setImageHistory] = useState([]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    const img = new Image();
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      setOriginalImage(imageData);
+const [frame, setFrame] = useState({})
+const [rangeValue, setRangeValue] = useState(80)
+const [selectedArea, setSelectedArea] = useState(null)
+const [capturedImage, setCapturedImage] = useState(null)
+const [placedFrames, setPlacedFrames] = useState([])
+const [isDragging, setIsDragging] = useState(false)
+const canvasRef = useRef(null)
+const pictureBoxRef = useRef(null)
+
+// Load image into canvas when component mounts
+useEffect(() => {
+  const canvas = canvasRef.current;
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+  };
+  
+  img.src = './asg36.png';
+}, []);
+
+const onMouseMove = (event) => {
+    const rect = pictureBoxRef.current.getBoundingClientRect();
+    const newFrame = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      id: crypto.randomUUID(),
     };
-    img.src = "./asg36.png";
-  }, []);
 
-  const drawHoverFrame = (ctx, x, y, size) => {
-    ctx.strokeStyle = "#0000ff";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+    setFrame(newFrame);
   };
 
-  const activeFrame = (ctx, x, y, size) => {
-    ctx.strokeStyle = "#ff0000";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+  const captureImageSection = (x, y, size) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const sourceCanvas = canvasRef.current;
+    const pictureBox = pictureBoxRef.current;
+    
+    if (!sourceCanvas || !pictureBox) return null;
+    
+    canvas.width = size;
+    canvas.height = size;
+    
+    // Get the canvas position within the picture-box
+    const canvasRect = sourceCanvas.getBoundingClientRect();
+    const boxRect = pictureBox.getBoundingClientRect();
+    
+    // Calculate relative position within the canvas
+    const relativeX = x - (canvasRect.left - boxRect.left);
+    const relativeY = y - (canvasRect.top - boxRect.top);
+    
+    // Calculate scale factors
+    const scaleX = sourceCanvas.width / canvasRect.width;
+    const scaleY = sourceCanvas.height / canvasRect.height;
+    
+    // Calculate source coordinates on the original canvas
+    const sourceX = (relativeX - size/2) * scaleX;
+    const sourceY = (relativeY - size/2) * scaleY;
+    const sourceWidth = size * scaleX;
+    const sourceHeight = size * scaleY;
+    
+    ctx.drawImage(
+      sourceCanvas,
+      sourceX, sourceY, sourceWidth, sourceHeight,
+      0, 0, size, size
+    );
+    
+    return canvas.toDataURL();
   };
 
-  const drawSelectedAreaFrame = (ctx, x, y, size) => {
-    ctx.strokeStyle = "#ff0000";
-    ctx.lineWidth = 3;
-    ctx.setLineDash([5, 5]);
-    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
-    ctx.setLineDash([]);
-  };
-
-  const handleMouseMove = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-    setCursorPos({ x, y });
-
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-
-    if (originalImage) {
-      ctx.putImageData(originalImage, 0, 0);
-    }
-
-    if (selectedArea) {
-      drawSelectedAreaFrame(
-        ctx,
-        selectedArea.x,
-        selectedArea.y,
-        selectedArea.size
-      );
-    }
-
-    if (!isDragging) {
-      drawHoverFrame(ctx, x, y, range);
-    } else {
-      activeFrame(ctx, x, y, range);
-
-      if (selectedData) {
-        const tempCanvas = document.createElement("canvas");
-        tempCanvas.width = selectedData.width;
-        tempCanvas.height = selectedData.height;
-        const tempCtx = tempCanvas.getContext("2d");
-        tempCtx.putImageData(selectedData.data, 0, 0);
-
-        const drawX = x - range / 2;
-        const drawY = y - range / 2;
-
-        ctx.drawImage(tempCanvas, drawX, drawY, range, range);
-
-        ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
-        ctx.fillRect(drawX, drawY, range, range);
+  const onMouseDown = (e) => {
+    if (frame.x && frame.y) {
+      if (selectedArea && capturedImage) {
+        const newPlacedFrame = {
+          x: frame.x,
+          y: frame.y,
+          size: rangeValue,
+          image: capturedImage,
+          id: crypto.randomUUID()
+        };
+        setPlacedFrames(prev => [...prev, newPlacedFrame]);
+      } else {
+        // First selection - capture the area
+        const captured = captureImageSection(frame.x, frame.y, rangeValue);
+        setSelectedArea({
+          x: frame.x,
+          y: frame.y,
+          size: rangeValue,
+          originalImage: captured
+        });
+        setCapturedImage(captured);
+        setIsDragging(true);
       }
     }
-  };
+  }
 
-  const handleMouseDown = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-
-    if (!isDragging) {
-      const size = range;
-      const startX = Math.max(0, Math.floor(x - size / 2));
-      const startY = Math.max(0, Math.floor(y - size / 2));
-      const width = Math.min(size, canvas.width - startX);
-      const height = Math.min(size, canvas.height - startY);
-
-      const data = ctx.getImageData(startX, startY, width, height);
-      setSelectedData({ data, width, height });
-
-      setSelectedArea({ x, y, size });
-
-      setIsDragging(true);
-      setCursorPos({ x, y });
-
-      ctx.putImageData(originalImage, 0, 0);
-      drawSelectedAreaFrame(ctx, x, y, size);
-    } else {
-      if (selectedData) {
-        const startX = Math.max(0, Math.floor(x - range / 2));
-        const startY = Math.max(0, Math.floor(y - range / 2));
-        ctx.putImageData(selectedData.data, startX, startY);
-
-        const newImageData = ctx.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        setOriginalImage(newImageData); 
-        setImageHistory((prev) => [...prev, newImageData]);
-      }
-    }
-  };
-
-  const handleReset = () => {
-    setSelectedData(null);
+  const resetOrigin = () => {
     setSelectedArea(null);
+    setCapturedImage(null);
     setIsDragging(false);
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-
-    if (imageHistory.length > 0) {
-      const latestImage = imageHistory[imageHistory.length - 1];
-      ctx.putImageData(latestImage, 0, 0);
-      setOriginalImage(latestImage);
-    }
-
-    if (cursorPos) {
-      drawHoverFrame(ctx, cursorPos.x, cursorPos.y, range);
-    }
+    setFrame({});
   };
 
   return (
     <div className="asg37">
       <BackToHome />
-      <h1 className="assignment-title">
-        Assignment-37 - Canvas ImageData Clone
-      </h1>
+      <h1 className="assignment-title">Assignment-37</h1>
       <hr />
       <br />
       <div className="controls">
-        <input
-          type="range"
-          min="40"
-          max="120"
-          value={range}
+        <input 
+          className="range-selection" 
+          type="range" 
+          max="120" 
+          min="40" 
+          value={rangeValue}
           disabled={isDragging}
-          onChange={(e) => setRange(parseInt(e.target.value))}
+          onChange={(e) => setRangeValue(e.target.value)}
         />
-        <button onClick={handleReset}>Reset Origin</button>
+        <button className="range-button" onClick={resetOrigin}>Reset Origin</button>
       </div>
-      <div className="canvas-container">
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={600}
-          onMouseMove={handleMouseMove}
-          onMouseDown={handleMouseDown}
-          style={{ cursor: isDragging ? "none" : "crosshair" }}
-        />
+      <div 
+        ref={pictureBoxRef}
+        className="picture-box" 
+        onMouseMove={onMouseMove} 
+        onMouseDown={onMouseDown}
+      >
+        <canvas ref={canvasRef} />
+        
+        {/* Current hover frame */}
+        {frame.x && !isDragging && (
+          <div 
+            className="picture-frame hover-frame"
+            style={{
+              left: frame.x + "px",
+              top: frame.y + "px",
+              width: rangeValue + "px",
+              height: rangeValue + "px",
+            }}
+          />
+        )}
+        
+        {/* Original selected area with red border - always visible once selected */}
+        {selectedArea && (
+          <div 
+            className="picture-frame selected-area"
+            style={{
+              left: selectedArea.x + "px",
+              top: selectedArea.y + "px",
+              width: selectedArea.size + "px",
+              height: selectedArea.size + "px",
+              backgroundImage: `url(${selectedArea.originalImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        )}
+        
+        {/* All placed frames - remain until reset */}
+        {placedFrames.map((placedFrame) => (
+          <div 
+            key={placedFrame.id}
+            className="picture-frame placed-frame"
+            style={{
+              left: placedFrame.x + "px",
+              top: placedFrame.y + "px",
+              width: placedFrame.size + "px",
+              height: placedFrame.size + "px",
+              backgroundImage: `url(${placedFrame.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        ))}
+        
+        {/* Moving captured frame */}
+        {capturedImage && frame.x && (
+          <div 
+            className="picture-frame captured-frame"
+            style={{
+              left: frame.x + "px",
+              top: frame.y + "px",
+              width: rangeValue + "px",
+              height: rangeValue + "px",
+              backgroundImage: `url(${capturedImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        )}
       </div>
     </div>
   );
