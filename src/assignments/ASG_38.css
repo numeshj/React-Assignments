@@ -1,0 +1,27 @@
+.asg38 {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1e1e2f !important;
+  overflow: auto;
+  display: block;
+  /* align-items: center; */
+}
+
+.box {
+    height: 500px;
+    width: 500px;
+    margin: 20px auto;
+    border: 10px solid #797373;
+    position: relative;
+}
+
+.ball {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    position: absolute;
+    background-color: aqua;
+}

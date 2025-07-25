@@ -124,7 +124,7 @@ const onMouseMove = (event) => {
       </div>
       <div 
         ref={pictureBoxRef}
-        className="picture-box" 
+        className="picture-box"  
         onMouseMove={onMouseMove} 
         onMouseDown={onMouseDown}
       >
