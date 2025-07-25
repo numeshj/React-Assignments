@@ -13,7 +13,6 @@ const [isDragging, setIsDragging] = useState(false)
 const canvasRef = useRef(null)
 const pictureBoxRef = useRef(null)
 
-// Load image into canvas when component mounts
 useEffect(() => {
   const canvas = canvasRef.current;
   const ctx = canvas.getContext('2d');
@@ -50,19 +49,15 @@ const onMouseMove = (event) => {
     canvas.width = size;
     canvas.height = size;
     
-    // Get the canvas position within the picture-box
     const canvasRect = sourceCanvas.getBoundingClientRect();
     const boxRect = pictureBox.getBoundingClientRect();
     
-    // Calculate relative position within the canvas
     const relativeX = x - (canvasRect.left - boxRect.left);
     const relativeY = y - (canvasRect.top - boxRect.top);
     
-    // Calculate scale factors
     const scaleX = sourceCanvas.width / canvasRect.width;
     const scaleY = sourceCanvas.height / canvasRect.height;
     
-    // Calculate source coordinates on the original canvas
     const sourceX = (relativeX - size/2) * scaleX;
     const sourceY = (relativeY - size/2) * scaleY;
     const sourceWidth = size * scaleX;
@@ -89,7 +84,6 @@ const onMouseMove = (event) => {
         };
         setPlacedFrames(prev => [...prev, newPlacedFrame]);
       } else {
-        // First selection - capture the area
         const captured = captureImageSection(frame.x, frame.y, rangeValue);
         setSelectedArea({
           x: frame.x,
