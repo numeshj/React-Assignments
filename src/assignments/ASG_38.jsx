@@ -12,29 +12,31 @@ export default function ASG_38() {
   const animate = () => {
     frame.current = requestAnimationFrame(animate);
 
-    position.current.y += speed.current.y;
-    position.current.x += speed.current.x;
-
     const ballX = position.current.x;
     const ballY = position.current.y;
     const barX = barPosition.current.x;
-    const barY = 250;
+    const barY = 245;
     const barWidth = 100;
-    const barHeight = 5;
+    const barHeight = 15;
     const ballSize = 10;
 
     if (
       ballX + ballSize >= barX &&
       ballX <= barX + barWidth &&
-      ballY + ballSize >= barY &&
-      ballY <= barY + barHeight
+      ballY + ballSize + speed.current.y >= barY &&
+      ballY + speed.current.y <= barY + barHeight
     ) {
-      if (ballY <= 240) {
-        speed.current.y = -Math.abs(speed.current.y);
-      } else if (ballY >= 245) {
-        speed.current.y = Math.abs(speed.current.y);
+      if (speed.current.y > 0) {
+        speed.current.y = -speed.current.y;
+        position.current.y = barY - ballSize;
+      } else if (speed.current.y < 0) {
+        speed.current.y = -speed.current.y;
+        position.current.y = barY + barHeight;
       }
     }
+
+    position.current.y += speed.current.y;
+    position.current.x += speed.current.x;
 
     // bottom and top walls
     if (position.current.y >= 470 || position.current.y <= 0) {
