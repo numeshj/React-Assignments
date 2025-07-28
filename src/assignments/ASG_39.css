@@ -24,82 +24,24 @@
   align-items: center;
   justify-content: center;
   perspective: 1000px;
+
+  /* Invisible wall */
+  overflow: hidden;
+  clip-path: inset(0 round 20px); /* Soft clipping corners */
 }
 
 .carousel-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+    margin: 20px;
+  position: relative;
+  width: 800px;
+  height: 600px;
   user-select: none;
 }
 
 .carousel-item {
-  position: absolute;
   width: 150px;
   height: 200px;
-  left: 50%;
-  top: 50%;
-  margin-left: -75px;
-  margin-top: -100px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-}
-
-.carousel-item.visible {
-  opacity: 1 !important;
-}
-
-/* Position-based styles */
-.carousel-item.left {
-  transform: scale(0.9);
-  opacity: 0.6;
-  z-index: 1;
-}
-
-.carousel-item.center {
-  transform: scale(1.1);
-  opacity: 1;
-  z-index: 2;
-}
-
-.carousel-item.right {
-  transform: scale(0.9);
-  opacity: 0.6;
-  z-index: 1;
-}
-
-.carousel-3d {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  transform-style: preserve-3d;
   user-select: none;
-}
-
-.carousel-item-3d {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  left: 50%;
-  top: 50%;
-  margin-left: -100px;
-  margin-top: -100px;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.item-content {
-  width: 100%;
-  height: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 15px;
   display: flex;
@@ -110,25 +52,33 @@
   font-weight: bold;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
 }
 
-.item-content:hover {
-  transform: scale(1.05);
+.carousel-item:hover {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Remove unused 3D styles since we're using 2D positioning */
+.carousel-3d {
+  display: none;
+}
+
+.carousel-item-3d {
+  display: none;
+}
+
 .controls {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin-top: 50px;
   display: flex;
   gap: 20px;
-  pointer-events: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .nav-button {
+    margin: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -148,4 +98,5 @@
 .nav-button:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+}
 }
