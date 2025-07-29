@@ -7,7 +7,9 @@ const TOTAL_ITEMS = 8;
 
 export default function ASG_39() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const items = Array.from({ length: TOTAL_ITEMS }, (_, i) => `Item #${i + 1}`);
+  const [items, setItems] = useState(
+    Array.from({ length: TOTAL_ITEMS }, (_, i) => `Item #${i + 1}`)
+  );
 
   const dragStartX = useRef(null);
 
@@ -44,25 +46,21 @@ export default function ASG_39() {
     let x, y, scale, zIndex;
 
     if (distance === 0) {
-      // Center item
       x = 0;
       y = 0;
       scale = 1.1;
       zIndex = 10;
     } else if (distance === 1) {
-      // Right item
-      x = 200; // Increased spacing
+      x = 200; 
       y = 0;
       scale = 0.8;
       zIndex = 5;
     } else if (distance === TOTAL_ITEMS - 1) {
-      // Left item
-      x = -200; // Increased spacing
+      x = -200; 
       y = 0;
       scale = 0.8;
       zIndex = 5;
     } else {
-      // Hidden items - position them in circle but invisible
       let angle = (360 / TOTAL_ITEMS) * relativeIndex - 90;
       let rad = (angle * Math.PI) / 180;
       x = RADIUS * Math.cos(rad);
