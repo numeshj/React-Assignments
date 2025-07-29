@@ -7,7 +7,7 @@ export default function ASG_40() {
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
-    y: 0
+    y: 0,
   });
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function ASG_40() {
       setContextMenu({
         visible: true,
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
       });
     };
 
@@ -41,6 +41,15 @@ export default function ASG_40() {
   const handleMenuClick = (option) => {
     setMessage(`${option} selected!`);
     setContextMenu({ visible: false, x: 0, y: 0 });
+    if (option === "Red") {
+      document.querySelector(".asg40").style.background = "red";
+    } else if (option === "Green") {
+      document.querySelector(".asg40").style.background = "green";
+    } else if (option === "Blue") {
+      document.querySelector(".asg40").style.background = "blue";
+    } else {
+      document.querySelector(".asg40").style.background = "";
+    }
   };
 
   return (
@@ -55,21 +64,29 @@ export default function ASG_40() {
           {message && <p style={{ color: "red" }}>{message}</p>}
         </div>
       </div>
-      
+
       {contextMenu.visible && (
-        <div 
+        <div
           className="context-menu"
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: contextMenu.y,
             left: contextMenu.x,
-            zIndex: 1000
+            zIndex: 1000,
           }}
         >
-          <div className="menu-item" onClick={() => handleMenuClick('Default')}>Default</div>
-          <div className="menu-item" onClick={() => handleMenuClick('Red')}>Red</div>
-          <div className="menu-item" onClick={() => handleMenuClick('Green')}>Green</div>
-          <div className="menu-item" onClick={() => handleMenuClick('Blue')}>Blue</div>
+          <div className="menu-item" onClick={() => handleMenuClick("Default")}>
+            Default
+          </div>
+          <div className="menu-item" onClick={() => handleMenuClick("Red")}>
+            Red
+          </div>
+          <div className="menu-item" onClick={() => handleMenuClick("Green")}>
+            Green
+          </div>
+          <div className="menu-item" onClick={() => handleMenuClick("Blue")}>
+            Blue
+          </div>
         </div>
       )}
     </div>
