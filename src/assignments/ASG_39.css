@@ -4,99 +4,101 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #2a2a2a;
+  background-color: #1e1e2f !important;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding-top: 20px;
 }
 
-.assignment-title {
-  color: white;
-  margin-bottom: 2rem;
-}
-
-.circle-wrapper {
+.circle-container {
   position: relative;
-  width: 800px;
-  height: 600px;
+  width: 100%;
+  height: 500px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  perspective: 1000px;
-
-  /* Invisible wall */
-  overflow: hidden;
-  clip-path: inset(0 round 20px); /* Soft clipping corners */
-}
-
-.carousel-container {
-    margin: 20px;
-  position: relative;
-  width: 800px;
-  height: 600px;
-  user-select: none;
-}
-
-.carousel-item {
-  width: 150px;
-  height: 200px;
-  user-select: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 15px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.carousel-item:hover {
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-}
-
-/* Remove unused 3D styles since we're using 2D positioning */
-.carousel-3d {
-  display: none;
-}
-
-.carousel-item-3d {
-  display: none;
-}
-
-.controls {
-  position: relative;
+  gap: 60px;
   margin-top: 50px;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
 }
 
-.nav-button {
-    margin: 20px;
+.circle {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-item {
+  position: absolute;
+  width: 180px;
+  height: 320px;
+  background: linear-gradient(145deg, #6b6b73, #5a5a60);
+  color: #e8e8e8;
+  border: 1px solid rgb(96, 94, 90);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  top: 50%;
+  left: 50%;
+}
+
+
+.arrow-btn1,
+.arrow-btn2 {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  border: 3px solid white;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 24px;
+  z-index: 20;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: center;
   transition: all 0.3s ease;
-  pointer-events: auto;
   backdrop-filter: blur(10px);
 }
 
-.nav-button:hover {
+.arrow-btn1 {
+  background-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 16 16" width="200" height="200" xmlns="http://www.w3.org/2000/svg" style="fill: rgb(255, 255, 255); opacity: 0.8;"><g><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path></g></svg>');
+}
+
+.arrow-btn2 {
+  background-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 16 16" width="200" height="200" xmlns="http://www.w3.org/2000/svg" style="fill: rgb(255, 255, 255); opacity: 0.8;"><g><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"></path></g></svg>');
+}
+
+.arrow-btn1:hover,
+.arrow-btn2:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
+
+.arrow-btn1:active,
+.arrow-btn2:active {
+  transform: scale(0.95);
+}
+
+.assignment-title {
+  color: #e8e8e8;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+hr {
+  width: 80%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 30px;
 }
