@@ -1,10 +1,10 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/ASG_42.css";
+import "../assignments/ASG_41.css";
 import { useRef, useEffect } from "react";
 
 const NUM_PAGES = 10;
 
-export default function ASG_42() {
+export default function ASG_41() {
   const videoRef = useRef(null);
   const scrollRef = useRef(null);
 
