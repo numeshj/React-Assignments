@@ -65,7 +65,7 @@ export default function ASG_41() {
         <div style={{ height: `${NUM_PAGES * 100}vh`, position: "relative" }}>
           <video
             className="video"
-            src="scrollable-video.mp4"
+            src="./scrollable-video.mp4"
             ref={videoRef}
             onWheel={onWheel}
           />
