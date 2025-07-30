@@ -1,106 +1,87 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/ASG_41.css";
-import { useEffect, useRef, useState } from "react";
+import "../assignments/ASG_42.css";
+import { useRef, useEffect } from "react";
 
-const NUM_SECTIONS = 30;
+const NUM_PAGES = 10;
 
-export default function ASG_41() {
+export default function ASG_42() {
   const videoRef = useRef(null);
   const scrollRef = useRef(null);
-  const [videoDuration, setVideoDuration] = useState(0);
 
+  // Sync video time with scroll position
+  const onScroll = () => {
+    const video = videoRef.current;
+    const scroll = scrollRef.current;
+    if (video && scroll) {
+      const maxScroll = scroll.scrollHeight - scroll.clientHeight;
+      const percent = scroll.scrollTop / maxScroll;
+      video.currentTime = percent * video.duration;
+    }
+  };
+
+  // Sync scroll position with video time when using mouse wheel
+  const onWheel = (e) => {
+    const video = videoRef.current;
+    const scroll = scrollRef.current;
+    if (video && scroll && video.duration > 0) {
+      const pageDuration = video.duration / NUM_PAGES;
+      let currentPage = Math.floor(video.currentTime / pageDuration);
+      if (e.deltaY > 0) {
+        currentPage = Math.min(NUM_PAGES - 1, currentPage + 1);
+      } else {
+        currentPage = Math.max(0, currentPage - 1);
+      }
+      video.currentTime = currentPage * pageDuration;
+      // Update scroll position to match video time
+      const maxScroll = scroll.scrollHeight - scroll.clientHeight;
+      scroll.scrollTop = (video.currentTime / video.duration) * maxScroll;
+      e.preventDefault();
+    }
+  };
+
+  // Ensure scroll position matches video time when video loads
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      const onLoaded = () => setVideoDuration(video.duration || 0);
-      video.addEventListener("loadedmetadata", onLoaded);
-      return () => video.removeEventListener("loadedmetadata", onLoaded);
+    const scroll = scrollRef.current;
+    if (video && scroll) {
+      const syncScroll = () => {
+        if (video.duration > 0) {
+          const maxScroll = scroll.scrollHeight - scroll.clientHeight;
+          scroll.scrollTop = (video.currentTime / video.duration) * maxScroll;
+        }
+      };
+      video.addEventListener("loadedmetadata", syncScroll);
+      return () => video.removeEventListener("loadedmetadata", syncScroll);
     }
   }, []);
 
-  // Sync video with scroll
-  const handleScroll = () => {
-    if (!videoRef.current || !scrollRef.current || videoDuration === 0) return;
-    const scrollTop = scrollRef.current.scrollTop;
-    const scrollHeight = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-    const percent = scrollTop / scrollHeight;
-    videoRef.current.currentTime = percent * videoDuration;
-  };
-
-  // Mouse wheel scroll: one section per wheel "notch", attached directly to scroll area
-  useEffect(() => {
-    const scrollArea = scrollRef.current;
-    if (!scrollArea) return;
-
-    const handleWheel = (e) => {
-      if (!videoRef.current || !scrollRef.current || videoDuration === 0) return;
-      e.preventDefault();
-      // Each wheel event moves one section (page)
-      const sectionHeight = window.innerHeight;
-      scrollArea.scrollBy({
-        top: Math.sign(e.deltaY) * sectionHeight,
-        behavior: "smooth"
-      });
-    };
-
-    scrollArea.addEventListener("wheel", handleWheel, { passive: false });
-    return () => {
-      scrollArea.removeEventListener("wheel", handleWheel);
-    };
-  }, [videoDuration]);
-
-  // When video time changes (by play, seek, etc), update scroll bar
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !scrollRef.current || videoDuration === 0) return;
-
-    const onTimeUpdate = () => {
-      const percent = video.currentTime / videoDuration;
-      const scrollHeight = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-      scrollRef.current.scrollTop = percent * scrollHeight;
-    };
-
-    video.addEventListener("timeupdate", onTimeUpdate);
-    return () => video.removeEventListener("timeupdate", onTimeUpdate);
-  }, [videoDuration]);
-
-  // Each page is 100vh, total scroll height = NUM_SECTIONS * 100vh
-  const scrollContentHeight = `${NUM_SECTIONS * 100}vh`;
-
-  // Render 30 transparent pages with section numbers
-  const pages = [];
-  for (let i = 1; i <= NUM_SECTIONS; i++) {
-    pages.push(
-      <div className="section-page" key={i}>
-        <span className="section-page-label">{`Section #${i}`}</span>
-      </div>
-    );
-  }
-
   return (
-    <div className="asg41">
-      <BackToHome />
-      <video
-        className="video-bg"
-        ref={videoRef}
-        src="/scrollable-video.mp4"
-        muted
-      />
-      <div className="scroll-pages-wrapper">
-        <div
-          className="scroll-pages"
-          ref={scrollRef}
-          onScroll={handleScroll}
-        >
-          <div
-            className="scroll-pages-content"
-            style={{ height: scrollContentHeight }}
-          >
-            {pages}
-          </div>
+    <div className="asg42">
+      <div
+        className="video-scroll-container"
+        ref={scrollRef}
+        onScroll={onScroll}
+      >
+        <div style={{ height: `${NUM_PAGES * 100}vh`, position: "relative" }}>
+          <video
+            className="video"
+            src="scrollable-video.mp4"
+            ref={videoRef}
+            onWheel={onWheel}
+          />
+          {[...Array(NUM_PAGES)].map((_, i) => (
+            <div
+              key={i}
+              className="section-label"
+              style={{
+                top: `${(i + 0.5) * 100}vh`,
+              }}
+            >
+              Section #{i + 1}
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
-
