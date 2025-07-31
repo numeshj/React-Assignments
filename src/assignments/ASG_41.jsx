@@ -20,24 +20,24 @@ export default function ASG_41() {
   };
 
   // Sync scroll position with video time when using mouse wheel
-  const onWheel = (e) => {
-    const video = videoRef.current;
-    const scroll = scrollRef.current;
-    if (video && scroll && video.duration > 0) {
-      const pageDuration = video.duration / NUM_PAGES;
-      let currentPage = Math.floor(video.currentTime / pageDuration);
-      if (e.deltaY > 0) {
-        currentPage = Math.min(NUM_PAGES - 1, currentPage + 1);
-      } else {
-        currentPage = Math.max(0, currentPage - 1);
-      }
-      video.currentTime = currentPage * pageDuration;
-      // Update scroll position to match video time
-      const maxScroll = scroll.scrollHeight - scroll.clientHeight;
-      scroll.scrollTop = (video.currentTime / video.duration) * maxScroll;
-      e.preventDefault();
-    }
-  };
+  // const onWheel = (e) => {
+  //   const video = videoRef.current;
+  //   const scroll = scrollRef.current;
+  //   if (video && scroll && video.duration > 0) {
+  //     const pageDuration = video.duration / NUM_PAGES;
+  //     let currentPage = Math.floor(video.currentTime / pageDuration);
+  //     if (e.deltaY > 0) {
+  //       currentPage = Math.min(NUM_PAGES - 1, currentPage + 1);
+  //     } else {
+  //       currentPage = Math.max(0, currentPage - 1);
+  //     }
+  //     video.currentTime = currentPage * pageDuration;
+  //     // Update scroll position to match video time
+  //     const maxScroll = scroll.scrollHeight - scroll.clientHeight;
+  //     scroll.scrollTop = (video.currentTime / video.duration) * maxScroll;
+  //     e.preventDefault();
+  //   }
+  // };
 
   // Ensure scroll position matches video time when video loads
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function ASG_41() {
             className="video"
             src="./scrollable-video.mp4"
             ref={videoRef}
-            onWheel={onWheel}
+            // onWheel={onWheel}
           />
           {[...Array(NUM_PAGES)].map((_, i) => (
             <div
