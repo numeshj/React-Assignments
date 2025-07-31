@@ -10,8 +10,7 @@ export default function ASG_42() {
   const [loading, setLoading] = useState(null);
   const [filterSize, setFilterSize] = useState(4);
 
-  // Draw image to both canvases and apply minimum filter after upload
-  useEffect(() => {
+   useEffect(() => {
     if (image && canvasOriginRef.current && canvasNewRef.current) {
       const canvas = canvasOriginRef.current;
       const ctx = canvas.getContext("2d");
@@ -19,9 +18,9 @@ export default function ASG_42() {
       const ctxNew = canvasNew.getContext("2d");
       const img = new window.Image();
       img.onload = () => {
-        // Draw to origin
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Calculate scale and cropping for "cover" effect
+
         const canvasRatio = canvas.width / canvas.height;
         const imgRatio = img.width / img.height;
 
@@ -41,11 +40,9 @@ export default function ASG_42() {
 
         ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
-        // Draw to new canvas (no animation)
         ctxNew.clearRect(0, 0, canvasNew.width, canvasNew.height);
         ctxNew.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
-        // Apply minimum filter (fast, not animated)
         applyFilterToCanvas(ctxNew, canvasNew.width, canvasNew.height, 4);
       };
       img.src = image;
@@ -57,10 +54,9 @@ export default function ASG_42() {
       ctxNew.clearRect(0, 0, canvasNewRef.current.width, canvasNewRef.current.height);
     }
     setLoading(false);
-    // eslint-disable-next-line
+
   }, [image]);
 
-  // Helper: fast filter (no animation)
   function applyFilterToCanvas(ctx, width, height, size) {
     const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
@@ -103,7 +99,6 @@ export default function ASG_42() {
     ctx.putImageData(output, 0, 0);
   }
 
-  // Copy from origin to new canvas column by column
   const copyCanvasColumnByColumn = () => {
     const src = canvasOriginRef.current;
     const dst = canvasNewRef.current;
@@ -117,7 +112,6 @@ export default function ASG_42() {
     let col = 0;
     function copyNextColumn() {
       if (col >= width) return;
-      // Get 1px wide column from src
       const imageData = srcCtx.getImageData(col, 0, 1, height);
       dstCtx.putImageData(imageData, col, 0);
       col++;
@@ -132,7 +126,6 @@ export default function ASG_42() {
     setFilterSize(Number(e.target.value));
   };
 
-  // When user clicks "Apply Filter", animate from left to right
   const handleApplyFilter = () => {
     const dstCanvas = canvasNewRef.current;
     if (!dstCanvas) return;
@@ -141,7 +134,6 @@ export default function ASG_42() {
     const height = dstCanvas.height;
     const size = filterSize;
 
-    // Always start from the current image in the new canvas
     const srcData = dstCtx.getImageData(0, 0, width, height).data;
     const output = dstCtx.createImageData(width, height);
 
@@ -197,7 +189,6 @@ export default function ASG_42() {
     fileInputRef.current.click();
   };
 
-  // Add this function back if missing
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
