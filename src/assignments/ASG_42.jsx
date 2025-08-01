@@ -99,28 +99,14 @@ export default function ASG_42() {
     ctx.putImageData(output, 0, 0);
   }
 
-  const copyCanvasColumnByColumn = () => {
-    const src = canvasOriginRef.current;
-    const dst = canvasNewRef.current;
-    if (!src || !dst) return;
-    const srcCtx = src.getContext("2d");
-    const dstCtx = dst.getContext("2d");
-    const width = src.width;
-    const height = src.height;
-    dstCtx.clearRect(0, 0, width, height);
-
-    let col = 0;
-    function copyNextColumn() {
-      if (col >= width) return;
-      const imageData = srcCtx.getImageData(col, 0, 1, height);
-      dstCtx.putImageData(imageData, col, 0);
-      col++;
-      requestAnimationFrame(copyNextColumn);
-    }
-    copyNextColumn();
+  const handleDownload = () => {
+    const canvas = canvasNewRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = "filtered-image.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
   };
-
-  const handleDownload = () => {};
 
   const handleRange = (e) => {
     setFilterSize(Number(e.target.value));
