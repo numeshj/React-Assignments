@@ -187,7 +187,7 @@ export default function ASG_42() {
   return (
     <div className="asg42">
       <BackToHome />
-      <h1 className="assignment-title">Assignment-43</h1>
+      <h1 className="assignment-title">Assignment-42</h1>
       <hr />
       <br />
       <div className="picture-container">
