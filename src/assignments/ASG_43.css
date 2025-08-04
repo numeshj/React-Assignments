@@ -19,3 +19,19 @@
 .asg43.custom-cursor-container {
   cursor: none;
 }
+
+img {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.asg43-cursor-img {
+  position: fixed;
+  width: 90px;
+  height: 90px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  image-rendering: pixelated;
+  object-fit: contain;
+}

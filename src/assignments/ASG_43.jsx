@@ -64,21 +64,14 @@ export default function ASG_43() {
         <img
           src={gifMap[direction] || fallbackGif}
           alt="cursor"
+          className="asg43-cursor-img"
           style={{
-            position: "fixed",
-            left: Math.max(32, Math.min(window.innerWidth - 32, mouse.x)),
-            top: Math.max(32, Math.min(window.innerHeight - 32, mouse.y)),
-            width: 64,
-            height: 64,
-            pointerEvents: "none",
-            transform: "translate(-50%, -50%)",
-            zIndex: 9999,
-            imageRendering: "pixelated",
-            objectFit: "none", // ensures image is not stretched
-            // backgroundColor: "rgba(255,0,0,0.2)", // <-- use for testing
+            left: Math.max(50, Math.min(window.innerWidth - 50, mouse.x)),
+            top: Math.max(50, Math.min(window.innerHeight - 50, mouse.y)),
           }}
         />
       ) : null}
     </div>
   );
 }
+      
