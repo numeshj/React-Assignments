@@ -11,3 +11,11 @@
   align-items: center;
   padding-top: 20px;
 }
+
+.custom-cursor-container {
+  cursor: none;
+}
+
+.asg43.custom-cursor-container {
+  cursor: none;
+}
