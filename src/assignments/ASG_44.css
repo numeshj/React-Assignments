@@ -18,7 +18,7 @@
 
 .count {
   position: absolute;
-  top: 40px;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -57,7 +57,6 @@
   pointer-events: none;
 }
 
-
 @keyframes rotateTarget {
   from {
     transform: rotate(0deg);
@@ -71,19 +70,19 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   pointer-events: none;
   transition: transform 0.1s linear;
   transform-origin: 50% 100%;
 }
 
 .knife {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   position: absolute;
   left: 50%;
-  bottom: 140px;
+  bottom: 160px;
   transform: translateX(-50%);
   z-index: 3;
   cursor: pointer;
@@ -92,5 +91,5 @@
 .game-over {
   color: red;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 10%;
 }
