@@ -48,7 +48,8 @@ export default function ASG_44() {
     knifeFlyingRef.current = true;
     if (knifeRef.current) {
       knifeRef.current.style.transition = "top 0.2s linear";
-      knifeRef.current.style.top = "calc(50% - 125px)";
+      // Move knife to the bottom edge of target-base (not center)
+      knifeRef.current.style.top = "calc(50% + 125px)";
     }
 
     // After animation, check hit
@@ -65,13 +66,11 @@ export default function ASG_44() {
         const dx = knifeCenterX - baseCenterX;
         const dy = knifeCenterY - baseCenterY;
         let hitAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-        hitAngle = (hitAngle + 90 + 360) % 360; // Adjust so 0deg is up
+        hitAngle = (hitAngle - 90 + 360) % 360; // bottom side
         // Adjust for current base rotation
         hitAngle = (hitAngle - baseRotationRef.current + 360) % 360;
-        // Save the angle where knife hits
         handleKnifeHit(hitAngle);
       } else {
-        // fallback: use current base rotation
         handleKnifeHit(baseRotationRef.current);
       }
     }, 200);
@@ -148,19 +147,19 @@ export default function ASG_44() {
         {/* Rotating target base with stuck knives */}
         <div ref={targetBaseRef} className="target-base">
           {knifeHitsRef.current.map((deg, i) => (
-            // Assign knife-hit at the saved angle
+            // Assign knife-hit at the saved angle, ensure knife is upside down (tip at bottom)
             <div
               key={i}
               className="knife-hit"
               style={{
-                // Place knife at edge, rotated to hit angle
-                transform: `translate(-50%, -50%) rotate(${deg}deg) translateY(-125px)`,
+                // Add 180deg to flip knife upside down
+                transform: `translate(-50%, -50%) rotate(${deg + 180}deg) translateY(-125px)`,
               }}
             />
           ))}
         </div>
 
-        {/* Rotating target */}
+        {/* Rotating target (must be rendered after knife-hit for correct stacking) */}
         <div ref={targetRef} className="target" />
 
         {/* Flying knife (click to throw) */}
@@ -179,3 +178,4 @@ export default function ASG_44() {
     </div>
   );
 }
+
