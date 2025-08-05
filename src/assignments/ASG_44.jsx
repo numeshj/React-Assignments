@@ -84,8 +84,6 @@ export default function ASG_44() {
         alt=""
         className="knife-on-target"
         style={{
-          // Adjust translateY so blade tip is exactly at the target edge
-          // Try -90px for a 200px target and 80px knife image
           transform: "translateY(-90px) rotate(180deg)",
           width: "80px",
           height: "80px",
