@@ -3,30 +3,25 @@ import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_44.css";
 
 export default function ASG_44() {
-  // Score state
   const [score, setScore] = useState(0);
 
-  // Refs for game state and DOM
-  const knifeHitsRef = useRef([]); // Array of hit angles (saved when knife hits)
-  const baseRotationRef = useRef(0); // Current rotation of base
-  const directionRef = useRef(1); // Rotation direction
-  const animationRef = useRef(null); // Animation frame id
-  const gameOverRef = useRef(false); // Game over flag
-  const knifeFlyingRef = useRef(false); // Is knife flying
-  const knifeRef = useRef(null); // Knife DOM ref
-  const targetBaseRef = useRef(null); // Target base DOM ref
-  const targetRef = useRef(null); // Target DOM ref
+  const knifeHitsRef = useRef([]);
+  const baseRotationRef = useRef(0); 
+  const directionRef = useRef(1); 
+  const animationRef = useRef(null); 
+  const gameOverRef = useRef(false); 
+  const knifeFlyingRef = useRef(false); 
+  const knifeRef = useRef(null); 
+  const targetBaseRef = useRef(null);
+  const targetRef = useRef(null);
 
-  // Animation loop for rotating base and target
   useEffect(() => {
     const animate = () => {
       if (gameOverRef.current) return;
 
-      // Update rotation
-      baseRotationRef.current += directionRef.current * 2;
+      baseRotationRef.current += directionRef.current * 3;
       baseRotationRef.current = (baseRotationRef.current + 360) % 360;
 
-      // Apply rotation to DOM
       if (targetBaseRef.current) {
         targetBaseRef.current.style.transform = `translate(-50%, -50%) rotate(${baseRotationRef.current}deg)`;
       }
@@ -41,18 +36,16 @@ export default function ASG_44() {
     return () => cancelAnimationFrame(animationRef.current);
   }, []);
 
-  // Handle knife click: animate knife to target-base
   const handleKnifeClick = () => {
     if (knifeFlyingRef.current || gameOverRef.current) return;
 
     knifeFlyingRef.current = true;
     if (knifeRef.current) {
       knifeRef.current.style.transition = "top 0.2s linear";
-      // Move knife to the bottom edge of target-base (not center)
+
       knifeRef.current.style.top = "calc(50% + 125px)";
     }
 
-    // After animation, check hit
     setTimeout(() => {
       // Calculate hit position based on knife and target-base centers
       if (knifeRef.current && targetBaseRef.current) {
@@ -76,9 +69,7 @@ export default function ASG_44() {
     }, 200);
   };
 
-  // Handle knife hit: check collision, stick knife, update score/direction
   const handleKnifeHit = (hitAngle) => {
-    // Check collision with previous knives
     const collision = knifeHitsRef.current.some((deg) => {
       const diff = Math.abs((deg - hitAngle + 360) % 360);
       return diff < 15 || 360 - diff < 15;
@@ -86,17 +77,14 @@ export default function ASG_44() {
 
     if (collision) {
       gameOverRef.current = true;
-      setScore((s) => s); // force render
+      setScore((s) => s);
       setTimeout(() => restartGame(), 1000);
       return;
     }
-
-    // Stick knife to base at calculated angle
-    knifeHitsRef.current.push(hitAngle); // Assign knife-hit at the saved angle
+    knifeHitsRef.current.push(hitAngle); 
     setScore((s) => s + 1);
-    directionRef.current *= -1; // Reverse rotation
+    directionRef.current *= -1;
 
-    // Reset knife for next throw
     if (knifeRef.current) {
       knifeRef.current.style.transition = "none";
       knifeRef.current.style.top = "calc(90% - 60px)";
@@ -105,7 +93,6 @@ export default function ASG_44() {
     knifeFlyingRef.current = false;
   };
 
-  // Restart game after game over
   const restartGame = () => {
     knifeHitsRef.current = [];
     baseRotationRef.current = 0;
@@ -118,7 +105,6 @@ export default function ASG_44() {
     }
     setScore(0);
 
-    // Restart animation loop
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
@@ -147,12 +133,10 @@ export default function ASG_44() {
         {/* Rotating target base with stuck knives */}
         <div ref={targetBaseRef} className="target-base">
           {knifeHitsRef.current.map((deg, i) => (
-            // Assign knife-hit at the saved angle, ensure knife is upside down (tip at bottom)
             <div
               key={i}
               className="knife-hit"
               style={{
-                // Add 180deg to flip knife upside down
                 transform: `translate(-50%, -50%) rotate(${deg + 360}deg) translateY(125px)`,
               }}
             />
