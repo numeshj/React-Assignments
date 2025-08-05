@@ -153,7 +153,7 @@ export default function ASG_44() {
               className="knife-hit"
               style={{
                 // Add 180deg to flip knife upside down
-                transform: `translate(-50%, -50%) rotate(${deg + 180}deg) translateY(-125px)`,
+                transform: `translate(-50%, -50%) rotate(${deg + 360}deg) translateY(125px)`,
               }}
             />
           ))}
