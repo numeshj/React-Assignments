@@ -84,3 +84,10 @@
   transform: translateX(-50%);
   z-index: 4;
 }
+
+.darken {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6); /* Stronger darkening */
+  pointer-events: none;
+  z-index: 1;
+}
