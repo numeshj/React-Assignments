@@ -3,7 +3,7 @@ import "../assignments/ASG_45.css";
 import { useState, useRef, useEffect } from "react";
 
 export default function ASG_45() {
-  const [image, setImage] = useState("/image-crop-tool.jpg"); // Must be inside `public/`
+  const [image, setImage] = useState("./image-crop-tool.jpg");
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [cropRect, setCropRect] = useState(null);
