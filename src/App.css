@@ -58,7 +58,9 @@
 }
 
 .asg-btn-grid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   grid-template-columns: repeat(8, 1fr);
   gap: 15px;
   max-width: 1000px;
