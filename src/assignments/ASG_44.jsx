@@ -19,7 +19,7 @@ export default function ASG_44() {
     const animate = () => {
       if (gameOverRef.current) return;
 
-      baseRotationRef.current += directionRef.current * 3;
+      baseRotationRef.current += directionRef.current * 5; // Increased from 3 to 5
       baseRotationRef.current = (baseRotationRef.current + 360) % 360;
 
       if (targetBaseRef.current) {
@@ -110,7 +110,7 @@ export default function ASG_44() {
     }
     const animate = () => {
       if (gameOverRef.current) return;
-      baseRotationRef.current += directionRef.current * 2;
+      baseRotationRef.current += directionRef.current * 4;
       baseRotationRef.current = (baseRotationRef.current + 360) % 360;
       if (targetBaseRef.current) {
         targetBaseRef.current.style.transform = `translate(-50%, -50%) rotate(${baseRotationRef.current}deg)`;
@@ -128,6 +128,7 @@ export default function ASG_44() {
       <BackToHome />
       <div 
         className="container"
+        onClick={handleKnifeClick}
         style={{
           backgroundImage: "url('./blade-hit-demo-background.png')"
         }}
