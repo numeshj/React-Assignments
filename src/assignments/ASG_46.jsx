@@ -6,10 +6,10 @@ export default function ASG_46() {
   const [tick, setTick] = useState(0);
   const groundRef = useRef(null);
   const skyRef = useRef(null);
+  const dinoRef = useRef(null);
 
-  // Multiple tree refs
   const treeRefs = [useRef(null), useRef(null), useRef(null)];
-  const treeOffsets = useRef([80, 140, 260]); 
+  const treeOffsets = useRef([80, 140, 260]);
 
   const groundOffset = useRef(0);
   const skyOffset = useRef(0);
@@ -21,29 +21,30 @@ export default function ASG_46() {
   };
 
   const minGap = 60;
-  const maxGap = 200; 
+  const maxGap = 200;
 
   const getRandomGap = () => {
     return minGap + Math.random() * (maxGap - minGap);
   };
 
+  // Animation loop
   useEffect(() => {
     let frameId;
 
     const animate = () => {
-      // ground scroll
+      // move ground
       groundOffset.current -= speed.ground;
       if (groundRef.current) {
         groundRef.current.style.backgroundPositionX = `${groundOffset.current}vh`;
       }
 
-      // sky scroll
+      // move sky
       skyOffset.current -= speed.sky;
       if (skyRef.current) {
         skyRef.current.style.backgroundPositionX = `${skyOffset.current}vh`;
       }
 
-      // trees scroll and reset
+      // move trees
       treeOffsets.current.forEach((offset, idx) => {
         treeOffsets.current[idx] -= speed.tree;
 
@@ -67,6 +68,25 @@ export default function ASG_46() {
     return () => cancelAnimationFrame(frameId);
   }, []);
 
+  // Handle spacebar jump
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        const dino = dinoRef.current;
+        if (!dino || dino.dataset.jumping === "true") return;
+
+        dino.dataset.jumping = "true";
+
+        setTimeout(() => {
+          if (dino) dino.dataset.jumping = "false";
+        }, 500); // match animation duration
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="asg46">
       <BackToHome />
@@ -77,6 +97,7 @@ export default function ASG_46() {
 
           {/* Dino */}
           <img
+            ref={dinoRef}
             src="./asg46/dino-run-game-dino.gif"
             className="dino"
             data-jumping="false"

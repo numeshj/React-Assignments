@@ -18,7 +18,7 @@
   flex-direction: column;
 }
 
-/* SKY container (fills above ground) */
+/* SKY container */
 .sky {
   flex: 1;
   position: relative;
@@ -35,19 +35,10 @@
   background-image: url('./asg46/dino-run-game-sky.png');
   background-repeat: repeat-x;
   background-size: auto 100%;
-  background-position-x: 0vh; /* dynamically updated */
+  background-position-x: 0vh;
 }
 
-.tree {
-  width: 9vh;
-  height: 9vh;
-  position: absolute;
-  bottom: 0vh; /* sits on ground */
-  object-fit: contain;
-}
-
-
-/* GROUND container (now using background) */
+/* Ground container */
 .ground {
   height: 20vh;
   width: 100%;
@@ -56,7 +47,7 @@
   background-image: url('./asg46/dino-run-game-ground.jpg');
   background-repeat: repeat-x;
   background-size: auto 100%;
-  background-position-x: 0vh; /* will be updated dynamically */
+  background-position-x: 0vh;
 }
 
 /* Dino */
@@ -69,7 +60,6 @@
   object-fit: contain;
 }
 
-/* Dino jump animation */
 .dino[data-jumping="true"] {
   animation-name: jumping;
   animation-duration: 0.5s;
@@ -80,12 +70,21 @@
 
 @keyframes jumping {
   0% {
-    bottom: 20vh;
+    bottom: 0vh;
   }
   50% {
-    bottom: 30vh;
+    bottom: 10vh;
   }
   100% {
-    bottom: 20vh;
+    bottom: 0vh;
   }
+}
+
+/* Trees */
+.tree {
+  width: 9vh;
+  height: 9vh;
+  position: absolute;
+  bottom: 0vh;
+  object-fit: contain;
 }
