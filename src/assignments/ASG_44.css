@@ -17,7 +17,6 @@
   width: auto;
   height: 100vh;
   aspect-ratio: 4/3;
-  background-image: url('./blade-hit-demo-background.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -53,7 +52,6 @@
   top: 50%;
   transform: translate(-50%, -50%);
   height: 120px;
-  background-image: url('./blade-hit-demo-knife.png');
   background-size: contain;
   z-index: 3;
 }
@@ -64,7 +62,6 @@
   left: 50%;
   width: 180px;
   height: 180px;
-  background-image: url('./blade-hit-demo-target.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -76,7 +73,6 @@
   position: absolute;
   width: 40px;
   height: 120px;
-  background-image: url('./blade-hit-demo-knife.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

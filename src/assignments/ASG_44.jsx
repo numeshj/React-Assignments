@@ -126,7 +126,12 @@ export default function ASG_44() {
   return (
     <div className="asg44">
       <BackToHome />
-      <div className="container">
+      <div 
+        className="container"
+        style={{
+          backgroundImage: "url('./blade-hit-demo-background.png')"
+        }}
+      >
         {/* Score display */}
         <div className="score">{gameOverRef.current ? "Game Over" : `Score: ${score}`}</div>
 
@@ -138,13 +143,20 @@ export default function ASG_44() {
               className="knife-hit"
               style={{
                 transform: `translate(-50%, -50%) rotate(${deg + 360}deg) translateY(125px)`,
+                backgroundImage: "url('./blade-hit-demo-knife.png')"
               }}
             />
           ))}
         </div>
 
         {/* Rotating target (must be rendered after knife-hit for correct stacking) */}
-        <div ref={targetRef} className="target" />
+        <div 
+          ref={targetRef} 
+          className="target"
+          style={{
+            backgroundImage: "url('./blade-hit-demo-target.png')"
+          }}
+        />
 
         {/* Flying knife (click to throw) */}
         {!gameOverRef.current && (
@@ -155,6 +167,7 @@ export default function ASG_44() {
             style={{
               top: "calc(90% - 60px)",
               cursor: "pointer",
+              backgroundImage: "url('./blade-hit-demo-knife.png')"
             }}
           />
         )}
