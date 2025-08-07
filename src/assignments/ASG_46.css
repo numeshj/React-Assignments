@@ -1,4 +1,4 @@
-.asg46 {
+.asg46-46 {
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -9,7 +9,7 @@
   justify-content: center;
 }
 
-.container-asg46 {
+.container-asg46-46 {
   width: 100vh;
   height: 100vh;
   position: relative;
@@ -19,14 +19,14 @@
 }
 
 /* SKY container */
-.sky {
+.sky-46 {
   flex: 1;
   position: relative;
   width: 100%;
   overflow: hidden;
 }
 
-.sky-img {
+.sky-img-46 {
   position: absolute;
   top: 0;
   left: 0;
@@ -38,7 +38,7 @@
 }
 
 /* Ground container */
-.ground {
+.ground-46 {
   height: 20vh;
   width: 100%;
   position: relative;
@@ -49,39 +49,37 @@
 }
 
 /* Dino */
-.dino {
+.dino46  {
   width: 10vh;
   height: 10vh;
   position: absolute;
   left: 18vh;
-  bottom: 0vh;
+  bottom: 0vh ; 
   object-fit: contain;
-}
+} 
 
-.dino[data-jumping="true"] {
-  animation-name: jumping;
+.dino46[data-jumping="true"] {
+  animation-name: jumping-46;
   animation-duration: 0.5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-timing-function: ease-out;
 }
 
-@keyframes jumping {
+@keyframes jumping-46 {
   0% {
     bottom: 0vh;
   }
-
   50% {
     bottom: 10vh;
   }
-
   100% {
     bottom: 0vh;
   }
 }
 
 /* Trees */
-.tree {
+.tree-46 {
   width: 9vh;
   height: 9vh;
   position: absolute;

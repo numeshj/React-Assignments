@@ -88,12 +88,13 @@ export default function ASG_46() {
   }, []);
 
   return (
-    <div className="asg46">
+    <div className="asg46-46">
       <BackToHome />
-      <div className="container-asg46">
+      <div className="container-asg46-46">
         {/* Sky Section */}
-        <div className="sky">
-          <div className="sky-img"
+        <div className="sky-46">
+          <div
+            className="sky-img-46"
             ref={skyRef}
             style={{
               backgroundImage: "url('./asg46/dino-run-game-sky.png')"
@@ -104,7 +105,7 @@ export default function ASG_46() {
           <img
             ref={dinoRef}
             src="./asg46/dino-run-game-dino.gif"
-            className="dino"
+            className="dino46"
             data-jumping="false"
             alt="dino"
           />
@@ -115,14 +116,15 @@ export default function ASG_46() {
               key={i}
               ref={ref}
               src="./asg46/dino-run-game-tree.png"
-              className="tree"
+              className="tree-46"
               alt={`tree-${i}`}
             />
           ))}
         </div>
 
         {/* Ground Section */}
-        <div className="ground"
+        <div
+          className="ground-46"
           ref={groundRef}
           style={{
             backgroundImage: "URL('./asg46/dino-run-game-ground.jpg')"
@@ -132,3 +134,5 @@ export default function ASG_46() {
     </div>
   );
 }
+
+// Do NOT set dino.style.bottom in your JS

@@ -1,13 +1,205 @@
 .asg47 {
+  margin: 0;
+  padding: 0;
   width: 100vw;
   height: 100vh;
-  position: fixed;
-  top: 0;
+  background-color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Game Info HUD */
+.hud {
+  position: absolute;
+  top: 2vh;
   left: 0;
-  background-color: #1e1e2f !important;
-  overflow: auto;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 2vh;
+  color: #fff;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 0 1vh #000, 0 0 0.5vh #000;
+}
+
+.hud .center {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1vh;
+  margin-top: 10vh;
+  padding: 1vh 3vh;
+  box-shadow: 0 0 1vh #0008;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px;
+  min-width: 20vh;
+}
+
+.hud .center .score,
+.hud .center .level {
+  font-size: 3vh;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  border-radius: 1vh;
+  margin-top: 10vh;
+  top: 20vh; 
+  margin: 0.5vh 0;
+  color: #ffe082;
+  text-shadow: 0 0 1vh #000, 0 0 0.5vh #ffb300;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 0.7vh;
+  padding: 0.5vh 2vh;
+  box-shadow: 0 0 0.5vh #0008;
+}
+
+.hud .right {
+  position: absolute;
+  right: 20vw;
+  top: 0;
+  left: 60%;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 1vh;
+  padding: 1vh 2vh;
+  box-shadow: 0 0 1vh #0008;
+  min-width: 18vh;
+}
+
+.hud .right div {
+  font-size: 2vh;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.game-over {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6vh;
+  color: #fff;
+  z-index: 20;
+  background: linear-gradient(90deg, #e53935 0%, #ffb300 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  padding: 2vh 6vh;
+  border-radius: 2vh;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 0 0 2vh #000, 0 0 1vh #e53935;
+  border: 0.5vh solid #fff3;
+  box-shadow: 0 0 4vh #e5393555;
+  letter-spacing: 0.15em;
+  animation: gameover-pop 0.5s cubic-bezier(.68, -0.55, .27, 1.55);
+}
+
+@keyframes gameover-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+  }
+
+  80% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.container-asg47 {
+  width: 100vh;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* SKY container */
+.sky {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sky-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position-x: 0vh;
+}
+
+/* Ground container */
+.ground {
+  height: 20vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position-x: 0vh;
+}
+
+/* Dino */
+.dino {
+  width: 10vh;
+  height: 10vh;
+  position: absolute;
+  left: 18vh;
+  bottom: 20vh;
+  /* <-- ground level */
+  object-fit: contain;
+  z-index: 21;
+  transition: bottom 1.5s ease-in;
+  /* Add drop shadow for visibility */
+  filter: drop-shadow(0 0.5vh 1vh #000a);
+}
+
+.dino[data-jumping="true"] {
+  animation-name: jumping;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+}
+
+@keyframes jumping {
+  0% {
+    bottom: 20vh;
+  }
+
+  50% {
+    bottom: 30vh;
+  }
+
+  100% {
+    bottom: 20vh;
+  }
+}
+
+/* Trees */
+.tree {
+  width: 9vh;
+  height: 9vh;
+  position: absolute;
+  bottom: 0vh;
+  object-fit: contain;
 }
