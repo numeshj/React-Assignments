@@ -94,7 +94,8 @@ export default function ASG_45() {
       <div key="top" className="darken" style={{
         top: 0, left: 0,
         width: imgSize.width,
-        height: cropRect.y
+        height: cropRect.y,
+                backgroundImage: "url(./image-crop-tool.svg)"
       }} />
     );
     overlays.push(
@@ -102,7 +103,8 @@ export default function ASG_45() {
         top: cropRect.y + cropRect.h,
         left: 0,
         width: imgSize.width,
-        height: imgSize.height - cropRect.y - cropRect.h
+        height: imgSize.height - cropRect.y - cropRect.h,
+                backgroundImage: "url(./image-crop-tool.svg)"
       }} />
     );
     overlays.push(
@@ -110,7 +112,8 @@ export default function ASG_45() {
         top: cropRect.y,
         left: 0,
         width: cropRect.x,
-        height: cropRect.h
+        height: cropRect.h,
+        backgroundImage: "url(./image-crop-tool.svg)"
       }} />
     );
     overlays.push(
@@ -118,7 +121,8 @@ export default function ASG_45() {
         top: cropRect.y,
         left: cropRect.x + cropRect.w,
         width: imgSize.width - cropRect.x - cropRect.w,
-        height: cropRect.h
+        height: cropRect.h,
+                backgroundImage: "url(./image-crop-tool.svg)"
       }} />
     );
   }

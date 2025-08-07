@@ -58,7 +58,6 @@
 .darken {
   position: absolute;
   background-color: #1119;
-  background-image: url(./image-crop-tool.svg);
   background-attachment: fixed;
   pointer-events: none;
   z-index: 1;
