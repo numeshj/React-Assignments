@@ -93,7 +93,12 @@ export default function ASG_46() {
       <div className="container-asg46">
         {/* Sky Section */}
         <div className="sky">
-          <div className="sky-img" ref={skyRef}></div>
+          <div className="sky-img"
+            ref={skyRef}
+            style={{
+              backgroundImage: "url('./asg46/dino-run-game-sky.png')"
+            }}
+          ></div>
 
           {/* Dino */}
           <img
@@ -117,7 +122,12 @@ export default function ASG_46() {
         </div>
 
         {/* Ground Section */}
-        <div className="ground" ref={groundRef}></div>
+        <div className="ground"
+          ref={groundRef}
+          style={{
+            backgroundImage: "URL('./asg46/dino-run-game-ground.jpg')"
+          }}
+        ></div>
       </div>
     </div>
   );
