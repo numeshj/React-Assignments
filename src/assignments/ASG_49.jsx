@@ -27,7 +27,6 @@ export default function ASG_49() {
   const blinkingCellRef = useRef(blinkingCell);
   const snakeRef = useRef(snake);
 
-  // Helper to get all empty cells
   function getRandomEmptyCell(snakeArr) {
     const emptyCells = [];
     for (let y = 0; y < ROWS; y++) {
@@ -66,7 +65,6 @@ export default function ASG_49() {
           y: (head.y + dir.y + ROWS) % ROWS,
         };
 
-        // Check self-collision
         if (prev.some((s) => s.x === newHead.x && s.y === newHead.y)) {
           setGameOver(true);
           return prev;
@@ -74,19 +72,15 @@ export default function ASG_49() {
 
         let newSnake = [...prev.slice(1), newHead];
 
-        // Check food collision (use blinkingCellRef.current)
         if (
           blinkingCellRef.current &&
           newHead.x === blinkingCellRef.current.x &&
           newHead.y === blinkingCellRef.current.y
         ) {
-          // Grow snake
           newSnake = [...prev, newHead];
 
-          // Increase score once
           setScore((s) => s + 1);
-
-          // Move food to a new spot immediately
+y
           setBlinkingCell(getRandomEmptyCell(newSnake));
         }
 
@@ -117,7 +111,6 @@ export default function ASG_49() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [snake]);
 
-  // Restart game after 2 seconds if game over
   useEffect(() => {
     if (!gameOver) return;
     const timeout = setTimeout(() => {
