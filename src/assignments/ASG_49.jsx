@@ -80,7 +80,7 @@ export default function ASG_49() {
           newSnake = [...prev, newHead];
 
           setScore((s) => s + 1);
-y
+
           setBlinkingCell(getRandomEmptyCell(newSnake));
         }
 
