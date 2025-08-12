@@ -38,9 +38,9 @@
   width: 95px;
 }
 
-.option[data-selected="true"] {
-      color: #FFF;
-    background-color: #06c;
+.option-asg50[data-selected="true"] {
+  color: #FFF;
+  background-color: #06c;
 }
 
 .board-asg50 {
@@ -59,19 +59,10 @@
   overflow: hidden;
   position: relative;
   justify-content: center;
-}
-
-.card-asg50-back {
-  width: inherit;
-  height: inherit;
-  position: absolute;
-  background-color: #FFF;
-  backface-visibility: hidden;
   transition: transform 0.3s;
-  transform: rotateY(0deg);
-  border-radius: 15px;
 }
 
+.card-asg50-back,
 .card-asg50-front {
   width: inherit;
   height: inherit;
@@ -81,9 +72,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: rotateY(180deg);
-  transition-property: transform, background;
-  transition-duration: 0.3s;
-  font-size: 35px;
+  transition: transform 0.3s, background 0.3s;
   border-radius: 15px;
+}
+
+.card-asg50-front {
+  transform: rotateY(180deg);
+  font-size: 35px;
+}
+
+.card-asg50[data-flipped="false"] .card-asg50-back {
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+.card-asg50[data-flipped="false"] .card-asg50-front {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+.card-asg50[data-flipped="true"] .card-asg50-back {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+.card-asg50[data-flipped="true"] .card-asg50-front {
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+.card-asg50[data-done="true"] .card-asg50-front {
+  background-color: gold;
 }
