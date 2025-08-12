@@ -20,7 +20,7 @@ export default function ASG_50() {
 
   // Load collections from JSON
   useEffect(() => {
-    fetch("/asg50/flip-and-match-collections.json")
+    fetch("./asg50/flip-and-match-collections.json")
       .then((res) => res.json())
       .then((data) => {
         setCollections(data);
