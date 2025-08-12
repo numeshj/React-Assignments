@@ -131,13 +131,13 @@ export default function ASG_49() {
     for (let x = 0; x < COLS; x++) {
       const isSnake = snake.some((s) => s.x === x && s.y === y);
       const isBlink = blinkingCell && blinkingCell.x === x && blinkingCell.y === y;
+      let cellClass = "board-asg49-cell";
+      if (isSnake) cellClass += " board-asg49-snake";
+      if (isBlink) cellClass += " board-asg49-blink";
       row.push(
         <div
           key={x}
-          className={
-            "board-asg49-cell" +
-            (isBlink ? " board-asg49-blink" : "")
-          }
+          className={cellClass}
           data-snake={isSnake ? "1" : "0"}
         ></div>
       );

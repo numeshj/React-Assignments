@@ -49,10 +49,15 @@
   box-shadow: 0 0 4px #db2424;
 }
 
+.board-asg49-snake {
+  background-color: #db2424 !important;
+  box-shadow: 0 0 4px #db2424;
+}
+
 .board-asg49-blink {
-  animation: blink-blue 0.5s steps(1) infinite alternate;
+  animation: blink-blue 0.5s steps(1) infinite alternate !important;
   background-color: #2196f3 !important;
-  box-shadow: 0 0 8px #2196f3;
+  box-shadow: 0 0 8px #2196f3 !important;
 }
 
 @keyframes blink-blue {

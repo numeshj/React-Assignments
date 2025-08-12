@@ -11,3 +11,79 @@
   align-items: center;
   padding-top: 20px;
 }
+
+.container-asg50 {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  background-color: #333;
+  box-shadow: 0px 0px 20px #111;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.options-asg50 {
+  display: flex;
+  gap: 15px;
+}
+
+.option-asg50 {
+  height: 30px;
+  background-color: #FFF2;
+  border: none;
+  cursor: pointer;
+  color: #FFFC;
+  padding: 0px 12px 0px 10px;
+  border-radius: 6px;
+  width: 95px;
+}
+
+.option[data-selected="true"] {
+      color: #FFF;
+    background-color: #06c;
+}
+
+.board-asg50 {
+  width: 425px;
+  height: 425px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  perspective: 1000px;
+}
+
+.card-asg50 {
+  width: calc(calc(425px - 24px) / 4);
+  height: calc(calc(425px - 24px) / 4);
+  transform-style: preserve-3d;
+  overflow: hidden;
+  position: relative;
+  justify-content: center;
+}
+
+.card-asg50-back {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  background-color: #FFF;
+  backface-visibility: hidden;
+  transition: transform 0.3s;
+  transform: rotateY(0deg);
+  border-radius: 15px;
+}
+
+.card-asg50-front {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  background-color: #FFF;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateY(180deg);
+  transition-property: transform, background;
+  transition-duration: 0.3s;
+  font-size: 35px;
+  border-radius: 15px;
+}
