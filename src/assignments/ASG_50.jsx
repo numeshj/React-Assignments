@@ -3,7 +3,6 @@ import "../assignments/ASG_50.css";
 import { useState, useEffect } from "react";
 
 function shuffle(arr) {
-  // Fisher-Yates shuffle
   let a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -16,8 +15,8 @@ export default function ASG_50() {
   const [collections, setCollections] = useState([]);
   const [selected, setSelected] = useState(null);
   const [cards, setCards] = useState([]);
-  const [flipped, setFlipped] = useState([]); // indices of currently flipped cards (max 2)
-  const [done, setDone] = useState([]); // indices of matched cards
+  const [flipped, setFlipped] = useState([]);
+  const [done, setDone] = useState([]);
 
   // Load collections from JSON
   useEffect(() => {
@@ -34,10 +33,9 @@ export default function ASG_50() {
     if (!collections.length || !selected) return;
     const collection = collections.find((c) => c.label === selected);
     if (!collection) return;
-    // Each emoji appears twice, then shuffle for 16 cards
     let arr = shuffle([...collection.items, ...collection.items]);
     setCards(arr.slice(0, 16));
-    setFlipped([]); // Reset flipped cards when collection changes
+    setFlipped([]);
     setDone([]);
   }, [collections, selected]);
 
