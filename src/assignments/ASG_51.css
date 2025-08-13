@@ -57,15 +57,12 @@
 
 .arrow-up-asg51 {
   top: 30px;
-  background-image: url(/asg51/step-scroll-animation-up.svg);
 }
 
 .arrow-down-asg51 {
   bottom: 30px;
-  background-image: url(/asg51/step-scroll-animation-down.svg);
 }
 
-/* hide behavior for down arrow when at last section */
 .arrow-down-asg51[data-hidden="true"] {
   bottom: -50px;
   opacity: 0;
@@ -76,22 +73,19 @@
   left: 480px;
 }
 
-/* ensure top is consistent for both states, and add left for reversed */
 .mobile-asg51 {
   position: absolute;
-  top: 80px; /* added to apply in both states */
+  top: 80px;
   height: 450px;
   width: 280px;
-  background-image: url(/asg51/step-scroll-animation.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   transition: left 0.6s;
-  z-index: 1;            /* ensure it stays behind content */
-  pointer-events: none;  /* do not block wheel/clicks */
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* new: position when reversed */
 .mobile-asg51[data-reversed="true"] {
   left: 40px;
 }
@@ -100,10 +94,10 @@
   margin-top: 0px;
 }
 
-/* new: shift sections up by container height (600px) per step */
 .sections-asg51[data-section="1"] {
   margin-top: -600px;
 }
+
 .sections-asg51[data-section="2"] {
   margin-top: -1200px;
 }
@@ -111,8 +105,8 @@
 .sections-asg51 {
   transition: margin-top 0.6s;
   perspective: 1000px;
-  position: relative; /* make z-index work */
-  z-index: 2;         /* content above the phone */
+  position: relative;
+  z-index: 2;
 }
 
 .sections-asg51[data-section="0"] .section-asg51:nth-child(1),
@@ -127,7 +121,6 @@
   transform: scale(0.8) rotateY(80deg);
 }
 
-/* new: mirror transform for reversed sections */
 .section-asg51[data-reversed="true"] {
   transform: scale(0.8) rotateY(-80deg);
 }
@@ -148,15 +141,17 @@
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  padding: 28px 60px;
+  padding-left: 60px;
+  padding-right: 20px;
 }
 
-/* when phone is on the left, shift text column right so it doesn't overlap the phone */
 .section-asg51[data-reversed="true"] .section-content-asg51 {
-  margin-left: 320px; /* 280px phone width + ~40px gutter */
+  margin-left: 320px;
 }
 
 .section-title-asg51 {
+  align-items: flex-start;
+  text-align: left;
   font-size: 30px;
   font-weight: 600;
   color: black;
@@ -165,10 +160,12 @@
 .section-description-asg51 {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  gap: 15px;
 }
 
 .section-paragraph-asg51 {
-  font-size: 15px;
+  font-size: 13px;
   color: black;
 }

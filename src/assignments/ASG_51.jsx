@@ -3,36 +3,15 @@ import "../assignments/ASG_51.css";
 import { useState, useEffect, useRef } from "react";
 
 export default function ASG_51() {
-  // scroll state
   const [section, setSection] = useState(0);
   const [sectionsCount, setSectionsCount] = useState(0);
-  const [mobileReversed, setMobileReversed] = useState(true);
+  const [mobileReversed, setMobileReversed] = useState(false);
 
-  // refs
   const sectionsRef = useRef(null);
   const reversedRef = useRef([]);
   const scrollLockRef = useRef(false);
   const timeoutRef = useRef(0);
 
-  // init: read sections and their reversed flags
-  useEffect(() => {
-    const el = sectionsRef.current;
-    if (!el) return;
-    const nodes = Array.from(el.querySelectorAll(".section-asg51"));
-    setSectionsCount(nodes.length);
-    reversedRef.current = nodes.map((n) => n.getAttribute("data-reversed") === "true");
-    setMobileReversed(reversedRef.current[0] ?? false);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  // update mobile reversed when section changes
-  useEffect(() => {
-    setMobileReversed(reversedRef.current[section] ?? false);
-  }, [section]);
-
-  // helpers
   const lockAndDelay = (cb) => {
     if (scrollLockRef.current) return;
     scrollLockRef.current = true;
@@ -40,7 +19,7 @@ export default function ASG_51() {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       scrollLockRef.current = false;
-    }, 700); // slightly longer than CSS 0.6s transition
+    }, 700);
   };
 
   const goPrev = () =>
@@ -61,15 +40,21 @@ export default function ASG_51() {
         <div className="hint-asg51">Use Mouse Wheel or Touchpad to scroll through sections</div>
         <div
           className="arrow-asg51 arrow-up-asg51"
+          style={{backgroundImage: "url(./asg51/step-scroll-animation-up.svg)"}}
           data-hidden={section === 0 ? "true" : "false"}
           onClick={goPrev}
         ></div>
         <div
           className="arrow-asg51 arrow-down-asg51"
+          style={{ backgroundImage: "url(./asg51/step-scroll-animation-down.svg)"}}
           data-hidden={section === sectionsCount - 1 ? "true" : "false"}
           onClick={goNext}
         ></div>
-        <div className="mobile-asg51" data-reversed={mobileReversed ? "true" : "false"}></div>
+        <div 
+          className="mobile-asg51"
+          style={{backgroundImage : "url(./asg51/step-scroll-animation.png)"}} 
+          data-reversed={mobileReversed ? "true" : "false"}
+        ></div>
         <div className="sections-asg51" data-section={section} ref={sectionsRef}>
           {/* Internet of Things (phone on right) */}
           <div className="section-asg51" data-reversed="false">
