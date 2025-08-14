@@ -12,6 +12,22 @@ export default function ASG_51() {
   const scrollLockRef = useRef(false);
   const timeoutRef = useRef(0);
 
+  useEffect(() => {
+    const el = sectionsRef.current;
+    if (!el) return;
+    const nodes = Array.from(el.querySelectorAll(".section-asg51"));
+    setSectionsCount(nodes.length);
+    reversedRef.current = nodes.map((n) => n.getAttribute("data-reversed") === "true");
+    setMobileReversed(reversedRef.current[0] ?? false);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    setMobileReversed(reversedRef.current[section] ?? false);
+  }, [section]);
+
   const lockAndDelay = (cb) => {
     if (scrollLockRef.current) return;
     scrollLockRef.current = true;
@@ -19,7 +35,7 @@ export default function ASG_51() {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       scrollLockRef.current = false;
-    }, 700);
+    }, 700); 
   };
 
   const goPrev = () =>
