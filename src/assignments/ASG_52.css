@@ -4,10 +4,55 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #1e1e2f !important;
+  background-color: #222222 !important;
   overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
 }
+
+.container-asg52 {
+  margin-top: 200px;
+  display: flex;
+  gap: 30px;
+  background-color: #444;
+  box-shadow: 0px 0px 20px #111;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.digit-asg52 {
+  width: 80px;
+  height: 120px;
+  position: relative;
+  overflow: hidden;
+  background-color: #FFF8;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 12px #0008;
+}
+
+.digit-asg52-item {
+  width: 80px;
+  height: 120px;
+  color: #000;
+  position: absolute;
+  transition-property: left, opacity, transform;
+  transition-duration: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50px);
+  font-size: 70px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+}
+
+.colon-asg52 {
+  color: #FFF4;
+  line-height: 120px;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+/* ...existing code... */
