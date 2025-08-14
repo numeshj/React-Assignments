@@ -1,3 +1,5 @@
+/* ASG_52.css */
+
 .asg52 {
   width: 100vw;
   height: 100vh;
@@ -25,34 +27,33 @@
 .digit-asg52 {
   width: 80px;
   height: 120px;
+  /* <- must equal ITEM_H in TSX */
   position: relative;
   overflow: hidden;
   background-color: #FFF8;
   border-radius: 10px;
-  box-shadow: inset 0px 0px 12px #0008;
+  box-shadow: inset 0 0 12px #0008;
+  transform: scaleY(-1);
 }
 
 .digit-asg52-item {
   width: 80px;
   height: 120px;
-  color: #000;
+  /* <- must equal ITEM_H */
   position: absolute;
-  transition-property: left, opacity, transform;
-  transition-duration: 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-50px);
-  font-size: 70px;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 700;
+  font: 700 70px "Courier New", Courier, monospace;
+  color: #000;
+  transition: top 0.3s ease, opacity 0.3s ease;
+    transform: scaleY(-1);
+  /* smooth roll */
 }
 
 .colon-asg52 {
-  color: #FFF4;
+  color: #fff4;
   line-height: 120px;
   font-size: 40px;
   font-weight: 700;
 }
-
-/* ...existing code... */

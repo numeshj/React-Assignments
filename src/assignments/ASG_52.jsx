@@ -3,64 +3,54 @@ import "../assignments/ASG_52.css";
 import { useState, useEffect } from "react";
 
 export default function ASG_52() {
-  // Predefined vertical positions (kept from original static markup order)
-  const POSITIONS = [
-    145.623,   // far below
-    55.6231,   // below
-    -55.6231,  // center (visually)
-    -145.623,  // above
-    -180,      // far above
-    -145.623,  // mirror path (repeat for smooth loop)
-    -55.6231,
-    55.6231,
-    145.623,
-    180
-  ];
+  const ITEM_H = 120; // must match CSS .digit-asg52/.digit-asg52-item height
 
-  // Return digits array [h1,h2,m1,m2,s1,s2]
-  const getTimeDigits = () => {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2, "0");
-    const m = String(now.getMinutes()).padStart(2, "0");
-    const s = String(now.getSeconds()).padStart(2, "0");
-    return [...h, ...m, ...s].map(d => parseInt(d, 10));
+  // Get formatted time string "hh : mm : ss"
+  const getTimeString = () => {
+    const raw = new Date().toLocaleTimeString("en-GB", { hour12: false });
+    const [h, m, s] = raw.split(":");
+    return `${h.padStart(2, "0")} : ${m.padStart(2, "0")} : ${s.padStart(2, "0")}`;
   };
 
-  const [digits, setDigits] = useState(getTimeDigits());
-
+  const [timeStr, setTimeStr] = useState(getTimeString());
   useEffect(() => {
-    const id = setInterval(() => setDigits(getTimeDigits()), 1000);
+    const id = setInterval(() => setTimeStr(getTimeString()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Compute style for each item in a digit column relative to active digit
-  const styleFor = (itemDigit, activeDigit) => {
-    // distance in circular list (0..9)
-    const diff = (itemDigit - activeDigit + 10) % 10;
-    // Map diff (0..9) onto POSITIONS cyclically
-    const top = POSITIONS[diff];
-    // Keep opacity pattern similar to original: show a window of 5 forward digits + the wrapped previous (diff 9)
-    const visible = diff <= 4 || diff === 9;
-    return {
-      top: `${top}px`,
-      opacity: visible ? 1 : 0,
-      transitionProperty: "top"
-    };
-  };
+  // Extract digits: [h1,h2,m1,m2,s1,s2]
+  const digits = timeStr.replace(/\D/g, "").split("").map(Number);
 
-  const renderDigitColumn = (activeDigit, key) => (
+  // Render drum column: show current digit and 2 above/below for smoothness
+  const renderDrumColumn = (activeDigit, key, maxDigit) => (
     <div className="digit-asg52" key={key}>
-      {Array.from({ length: 10 }, (_, d) => (
-        <div
-          key={d}
+      {Array.from({ length: maxDigit }, (_, d) => {
+        const diff = d - activeDigit;
+        // Only show current digit and 2 above/below
+        if (Math.abs(diff) > 2 && Math.abs(diff - maxDigit) > 2 && Math.abs(diff + maxDigit) > 2) return null;
+        // Wrap for negative/overflow
+        let offset = diff;
+        if (offset > maxDigit / 2) offset -= maxDigit;
+        if (offset < -maxDigit / 2) offset += maxDigit;
+        return (
+          <div
+            key={d}
             className="digit-asg52-item"
-            style={styleFor(d, activeDigit)}
-        >
-          {d}
-        </div>
-      ))}
+            style={{
+              top: `${offset * ITEM_H}px`,
+              opacity: Math.abs(offset) <= 2 ? 1 : 0,
+              transition: "top 0.5s cubic-bezier(.5,1.5,.5,1), opacity 0.5s"
+            }}
+          >
+            {d}
+          </div>
+        );
+      })}
     </div>
   );
+
+  const h1 = digits[0];
+  const h2Max = h1 === 2 ? 4 : 10;
 
   return (
     <div className="asg52">
@@ -69,16 +59,16 @@ export default function ASG_52() {
       <hr />
       <br />
       <div className="container-asg52">
-        {renderDigitColumn(digits[0], "h1")}
-        {renderDigitColumn(digits[1], "h2")}
+        {renderDrumColumn(h1, "h1", 3)}
+        {renderDrumColumn(digits[1] % h2Max, `h2-${h2Max}`, h2Max)}
         <div className="colon-asg52">:</div>
-        {renderDigitColumn(digits[2], "m1")}
-        {renderDigitColumn(digits[3], "m2")}
+        {renderDrumColumn(digits[2], "m1", 6)}
+        {renderDrumColumn(digits[3], "m2", 10)}
         <div className="colon-asg52">:</div>
-        {renderDigitColumn(digits[4], "s1")}
-        {renderDigitColumn(digits[5], "s2")}
+        {renderDrumColumn(digits[4], "s1", 6)}
+        {renderDrumColumn(digits[5], "s2", 10)}
       </div>
     </div>
   );
 }
-          
+ 
