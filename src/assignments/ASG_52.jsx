@@ -3,9 +3,8 @@ import "../assignments/ASG_52.css";
 import { useState, useEffect } from "react";
 
 export default function ASG_52() {
-  const ITEM_H = 120; // must match CSS .digit-asg52/.digit-asg52-item height
+  const ITEM_H = 120;
 
-  // Get formatted time string "hh : mm : ss"
   const getTimeString = () => {
     const raw = new Date().toLocaleTimeString("en-GB", { hour12: false });
     const [h, m, s] = raw.split(":");
@@ -71,4 +70,3 @@ export default function ASG_52() {
     </div>
   );
 }
- 
