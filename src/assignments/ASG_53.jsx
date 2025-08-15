@@ -8,9 +8,11 @@ export default function ASG_53() {
 
 	// words loaded from public/asg53/word-jumble.json
 	const [wordsList, setWordsList] = useState(null);
+	const [loadError, setLoadError] = useState(null);
 
 	const [grid, setGrid] = useState(() => Array.from({length: GRID_SIZE}, ()=> Array(GRID_SIZE).fill(null)));
 	const [addedWords, setAddedWords] = useState([]); // {word, coords:[{x,y}, ...]}
+	const [answers, setAnswers] = useState([]); // will contain 10 items: placed words + decoys
 	const [selectedCoords, setSelectedCoords] = useState([]); // sequence of {x,y}
 	const [foundWords, setFoundWords] = useState(new Set());
 
@@ -29,6 +31,26 @@ export default function ASG_53() {
 
 	function pickRandom(arr) {
 		return arr[randInt(0, arr.length - 1)];
+	}
+
+	// helper: pick n unique random items from arr (without mutating arr)
+	function pickNUnique(arr, n) {
+		const copy = arr.slice();
+		const result = [];
+		while (result.length < n && copy.length > 0) {
+			const idx = randInt(0, copy.length - 1);
+			result.push(copy.splice(idx, 1)[0]);
+		}
+		return result;
+	}
+	
+	// helper: shuffle
+	function shuffle(arr) {
+		for (let i = arr.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[arr[i], arr[j]] = [arr[j], arr[i]];
+		}
+		return arr;
 	}
 
 	function generateEmptyGrid() {
@@ -108,32 +130,55 @@ export default function ASG_53() {
 				const arr = Object.values(obj).map(v => String(v).toUpperCase());
 				const uniq = Array.from(new Set(arr));
 				setWordsList(uniq);
+				setLoadError(null);
 			})
-			.catch(() => {
-				// fallback small list if fetch fails (keeps previous behavior)
-				setWordsList(["CAT","DOG","TREE","APPLE","TRAIN","PLANE","ROCK","LIGHT","PHONE","TABLE"].map(w => w.toUpperCase()));
+			.catch((err) => {
+				// Make this fully dynamic: do NOT inject a hard-coded fallback.
+				// Surface the error and set an empty list so generation is skipped.
+				console.error("Failed to load word list:", err);
+				setWordsList([]);
+				setLoadError("Failed to load word list. Check network or /asg53/word-jumble.json");
 			});
 	}, []);
 
 	// generate puzzle after words list is loaded
 	useEffect(() => {
-		if (!wordsList) return;
-		const {grid: g, added} = generatePuzzleFromWords(wordsList);
-		setGrid(g);
-		setAddedWords(added);
-		setFoundWords(new Set());
-		setSelectedCoords([]);
-	}, [wordsList]);
+			// Only generate when we have a non-empty words list
+			if (!wordsList || wordsList.length === 0) return;
+			const {grid: g, added} = generatePuzzleFromWords(wordsList);
+			setGrid(g);
+			setAddedWords(added);
+			setFoundWords(new Set());
+			setSelectedCoords([]);
+			// Build answers array with 10 entries: placed words + decoys
+			{
+				const placedWords = added.map(a => a.word);
+				const remainingPool = wordsList.filter(w => !placedWords.includes(w));
+				const need = Math.max(0, 10 - placedWords.length);
+				const decoys = pickNUnique(remainingPool, need).map(w => ({ word: w, coords: null }));
+				const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
+				setAnswers(shuffle([...placedItems, ...decoys]).slice(0, 10));
+			}
+ 		}, [wordsList]);
 
-	function restart() {
-		if (!wordsList) return;
-		const {grid: g, added} = generatePuzzleFromWords(wordsList);
-		setGrid(g);
-		setAddedWords(added);
-		setFoundWords(new Set());
-		setSelectedCoords([]);
-		setSelectionValid(true);
-	}
+		function restart() {
+			if (!wordsList || wordsList.length === 0) return;
+ 			const {grid: g, added} = generatePuzzleFromWords(wordsList);
+ 			setGrid(g);
+ 			setAddedWords(added);
+ 			setFoundWords(new Set());
+ 			setSelectedCoords([]);
+ 			setSelectionValid(true);
+			// regenerate answers (10)
+			{
+				const placedWords = added.map(a => a.word);
+				const remainingPool = wordsList.filter(w => !placedWords.includes(w));
+				const need = Math.max(0, 10 - placedWords.length);
+				const decoys = pickNUnique(remainingPool, need).map(w => ({ word: w, coords: null }));
+				const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
+				setAnswers(shuffle([...placedItems, ...decoys]).slice(0, 10));
+			}
+ 		}
 
 	function coordsEqual(a, b) {
 		return a.x === b.x && a.y === b.y;
@@ -204,38 +249,43 @@ export default function ASG_53() {
 		e.preventDefault(); // allow drop
 		// If dragging an answer-word
 		if (dragAnswer) {
-			setSelectedCoords(prev => {
-				// if already contains this cell, ignore
-				if (prev.some(c => c.x===x && c.y===y)) return prev;
-				const forward = dragAnswer.coords;
-				const reverse = forward.slice().reverse();
-				let nextIndex = prev.length;
-				// choose direction if not chosen yet
-				if (!dragAnswerDirRef.current) {
-					if (coordsEqual({x,y}, forward[0])) {
-						dragAnswerDirRef.current = "forward";
-					} else if (coordsEqual({x,y}, reverse[0])) {
-						dragAnswerDirRef.current = "reverse";
-					} else {
-						// invalid start for this answer; ignore the cell
-						return prev;
-					}
-					nextIndex = 0;
-				}
-				const dir = dragAnswerDirRef.current;
-				const expected = dir === "forward" ? forward[nextIndex] : reverse[nextIndex];
-				if (!expected) return prev;
-				if (coordsEqual(expected, {x,y})) {
-					const next = [...prev, {x,y}];
-					setSelectionValid(true);
-					return next;
-				}
-				// invalid continuation -> mark invalid but do not append
+			// if answer has no coords (decoy) we cannot form a valid selection
+			if (!dragAnswer.coords) {
 				setSelectionValid(false);
-				return prev;
-			});
-			return;
-		}
+				return;
+			}
+ 			setSelectedCoords(prev => {
+ 				// if already contains this cell, ignore
+ 				if (prev.some(c => c.x===x && c.y===y)) return prev;
+ 				const forward = dragAnswer.coords;
+ 				const reverse = forward.slice().reverse();
+ 				let nextIndex = prev.length;
+ 				// choose direction if not chosen yet
+ 				if (!dragAnswerDirRef.current) {
+ 					if (coordsEqual({x,y}, forward[0])) {
+ 						dragAnswerDirRef.current = "forward";
+ 					} else if (coordsEqual({x,y}, reverse[0])) {
+ 						dragAnswerDirRef.current = "reverse";
+ 					} else {
+ 						// invalid start for this answer; ignore the cell
+ 						return prev;
+ 					}
+ 					nextIndex = 0;
+ 				}
+ 				const dir = dragAnswerDirRef.current;
+ 				const expected = dir === "forward" ? forward[nextIndex] : reverse[nextIndex];
+ 				if (!expected) return prev;
+ 				if (coordsEqual(expected, {x,y})) {
+ 					const next = [...prev, {x,y}];
+ 					setSelectionValid(true);
+ 					return next;
+ 				}
+ 				// invalid continuation -> mark invalid but do not append
+ 				setSelectionValid(false);
+ 				return prev;
+ 			});
+ 			return;
+ 		}
 
 		// --- previous behavior when dragging directly across grid (letters) ---
 		setSelectedCoords(prev => {
@@ -291,7 +341,8 @@ export default function ASG_53() {
 		dragAnswerDirRef.current = null;
 		setSelectedCoords([]);
 		try { e.dataTransfer.setData("text/plain", item.word); } catch (err) {}
-		setSelectionValid(true);
+		// if it's a decoy (no coords) mark selection invalid until user drops (no match possible)
+		setSelectionValid(Boolean(item.coords));
 	}
 
 	function onDragEndAnswer() {
@@ -324,6 +375,8 @@ export default function ASG_53() {
       <BackToHome />
       <h1 className="assignment-title">Assignment-53</h1>
       <hr />
+      <br />
+      {loadError && <div className="load-error" role="alert">{loadError}</div>}
       <br />
 
       <div className="container-asg53">
@@ -370,8 +423,8 @@ export default function ASG_53() {
         </div>
         <div className="options-asg53" >
           <div className="answers-asg53">
-			{ /* show added words list as draggable items (visible text) */ }
-			{addedWords.map((item, idx) => {
+			{ /* show 10 answers (placed + decoys) */ }
+			{answers.map((item, idx) => {
 				const found = foundWords.has(item.word);
 				return (
 					<div
@@ -382,13 +435,12 @@ export default function ASG_53() {
 						onDragStart={(e)=> onDragStartAnswer(e, item)}
 						onDragEnd={onDragEndAnswer}
 					>
-						{/* show word text so user can drag it */}
 						{item.word}
 					</div>
 				);
 			})}
           </div>
-          <button className="button-asg53" onClick={restart}>Shuttle Words</button>
+          <button className="button-asg53" onClick={restart} disabled={!wordsList || wordsList.length === 0}>Shuttle Words</button>
         </div>
       </div>
 
