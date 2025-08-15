@@ -11,3 +11,111 @@
   align-items: center;
   padding-top: 20px;
 }
+
+.container-asg53 {
+  display: flex;
+  gap: 20px;
+  background-color: #333;
+  box-shadow: 0px 0px 20px #111;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.puzzle-asg53 {
+  width: 450px;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.puzzle-asg53-row {
+  display: flex;
+  flex-grow: 1;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.puzzle-asg53-letter {
+  width: calc(450px / 8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF1;
+  transition: all 0.1s;
+  border-radius: 6px;
+  color: #FFF8;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.puzzle-asg53-letter.selected {
+  outline: 2px solid #ffd54f;
+  transform: scale(1.02);
+  background-color: rgba(255, 213, 79, 0.12);
+  color: #fff;
+}
+
+.puzzle-asg53-letter.found {
+  background-color: #4caf50;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(76,175,80,0.5) inset;
+}
+
+.puzzle-asg53-letter.invalid {
+  outline: 2px solid rgba(255,80,80,0.9);
+  background-color: rgba(255, 80, 80, 0.10);
+  color: #ffdede;
+  transform: scale(1.01);
+}
+
+.options-asg53 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.answers-asg53 {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 10px;
+}
+
+.answer-asg53-item {
+  color: #FFFA;
+  font-weight: 600;
+  background-color: #0005;
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 5px 12px;
+  text-align: center;
+  letter-spacing: 2px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: element;
+}
+
+.answer-asg53-item[data-found="true"] {
+  background-color: rgba(76,175,80,0.14);
+  color: #fff;
+  font-weight: 800;
+  cursor: default;
+  opacity: 1;
+}
+
+.answer-asg53-item:not([data-found="true"]) {
+  opacity: 0.95;
+}
+
+.button-asg53 {
+  height: 35px;
+  background-color: #06c;
+  border-radius: 8px;
+  color: #FFF;
+  padding: 0px 12px;
+  margin: 0px;
+  border: none;
+  width: 120px;
+  font-weight: 500;
+}
