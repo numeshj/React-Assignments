@@ -59,11 +59,11 @@
 .puzzle-asg53-letter.found {
   background-color: #4caf50;
   color: #fff;
-  box-shadow: 0 0 8px rgba(76,175,80,0.5) inset;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5) inset;
 }
 
 .puzzle-asg53-letter.invalid {
-  outline: 2px solid rgba(255,80,80,0.9);
+  outline: 2px solid rgba(255, 80, 80, 0.9);
   background-color: rgba(255, 80, 80, 0.10);
   color: #ffdede;
   transform: scale(1.01);
@@ -97,11 +97,8 @@
 }
 
 .answer-asg53-item[data-found="true"] {
-  background-color: rgba(76,175,80,0.14);
-  color: #fff;
-  font-weight: 800;
-  cursor: default;
-  opacity: 1;
+  text-decoration: line-through;
+  opacity: 0.5;
 }
 
 .answer-asg53-item:not([data-found="true"]) {
@@ -123,9 +120,9 @@
 .load-error {
   margin: 8px 0;
   padding: 8px 12px;
-  background: rgba(255,80,80,0.08);
+  background: rgba(255, 80, 80, 0.08);
   color: #ffb3b3;
-  border: 1px solid rgba(255,80,80,0.18);
+  border: 1px solid rgba(255, 80, 80, 0.18);
   border-radius: 6px;
   font-size: 13px;
 }
