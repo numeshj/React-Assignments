@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 export default function ASG_53() {
 
 	const GRID_SIZE = 8;
+	const ANSWER_COUNT = 10;
 
 	// words loaded from public/asg53/word-jumble.json
 	const [wordsList, setWordsList] = useState(null);
@@ -64,7 +65,8 @@ export default function ASG_53() {
 		const added = [];
 		let direction = Math.random() < 0.5 ? "horizontal" : "vertical";
 		let attempts = 0;
-		while (added.length < 8 && attempts < 2000 && pool.length > 0) {
+		// place ANSWER_COUNT words (so answers list contains only placed words)
+		while (added.length < ANSWER_COUNT && attempts < 2000 && pool.length > 0) {
 			attempts++;
 			let startX, startY, maxLen, minLen = 3;
 			if (direction === "horizontal") {
@@ -123,7 +125,7 @@ export default function ASG_53() {
 
 	// load words JSON on mount
 	useEffect(() => {
-		fetch("/asg53/word-jumble.json")
+		fetch("./asg53/word-jumble.json")
 			.then(res => res.json())
 			.then(obj => {
 				// JSON is object with numeric keys; convert to unique uppercase array
@@ -133,11 +135,9 @@ export default function ASG_53() {
 				setLoadError(null);
 			})
 			.catch((err) => {
-				// Make this fully dynamic: do NOT inject a hard-coded fallback.
-				// Surface the error and set an empty list so generation is skipped.
 				console.error("Failed to load word list:", err);
 				setWordsList([]);
-				setLoadError("Failed to load word list. Check network or /asg53/word-jumble.json");
+				setLoadError("Failed to load word list. Check network or ./asg53/word-jumble.json");
 			});
 	}, []);
 
@@ -150,18 +150,13 @@ export default function ASG_53() {
 			setAddedWords(added);
 			setFoundWords(new Set());
 			setSelectedCoords([]);
-			// Build answers array with 10 entries: placed words + decoys
-			{
-				const placedWords = added.map(a => a.word);
-				const remainingPool = wordsList.filter(w => !placedWords.includes(w));
-				const need = Math.max(0, 10 - placedWords.length);
-				const decoys = pickNUnique(remainingPool, need).map(w => ({ word: w, coords: null }));
-				const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
-				setAnswers(shuffle([...placedItems, ...decoys]).slice(0, 10));
-			}
+			// Answers come directly from the placed words (no decoys)
+			const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
+			setAnswers(shuffle(placedItems).slice(0, ANSWER_COUNT));
  		}, [wordsList]);
 
 		function restart() {
+			// Only restart when word list is available
 			if (!wordsList || wordsList.length === 0) return;
  			const {grid: g, added} = generatePuzzleFromWords(wordsList);
  			setGrid(g);
@@ -169,15 +164,9 @@ export default function ASG_53() {
  			setFoundWords(new Set());
  			setSelectedCoords([]);
  			setSelectionValid(true);
-			// regenerate answers (10)
-			{
-				const placedWords = added.map(a => a.word);
-				const remainingPool = wordsList.filter(w => !placedWords.includes(w));
-				const need = Math.max(0, 10 - placedWords.length);
-				const decoys = pickNUnique(remainingPool, need).map(w => ({ word: w, coords: null }));
-				const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
-				setAnswers(shuffle([...placedItems, ...decoys]).slice(0, 10));
-			}
+			// Answers are the placed words (guaranteed to exist in the grid)
+			const placedItems = added.map(a => ({ word: a.word, coords: a.coords }));
+			setAnswers(shuffle(placedItems).slice(0, ANSWER_COUNT));
  		}
 
 	function coordsEqual(a, b) {
