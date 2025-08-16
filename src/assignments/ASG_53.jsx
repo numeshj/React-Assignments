@@ -170,6 +170,8 @@ export default function ASG_53() {
  		}
 
 	function coordsEqual(a, b) {
+		// guard against undefined/null coordinates
+		if (!a || !b) return false;
 		return a.x === b.x && a.y === b.y;
 	}
 
@@ -177,8 +179,10 @@ export default function ASG_53() {
 	function selectionIsPrefix(selection) {
 		if (!selection.length) return true;
 		for (const item of addedWords) {
+			// skip items without coordinates or with shorter coords than the current selection
+			if (!item || !Array.isArray(item.coords) || item.coords.length < selection.length) continue;
 			const forward = item.coords;
-			const reverse = item.coords.slice().reverse();
+			const reverse = forward.slice().reverse();
 			// check prefix forward
 			let okF = true;
 			for (let i = 0; i < selection.length; i++) {
@@ -269,7 +273,6 @@ export default function ASG_53() {
  					setSelectionValid(true);
  					return next;
  				}
- 				// invalid continuation -> mark invalid but do not append
  				setSelectionValid(false);
  				return prev;
  			});
