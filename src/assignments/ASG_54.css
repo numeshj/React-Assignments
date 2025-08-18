@@ -10,4 +10,95 @@
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  font-family: monospace;
+}
+
+/* Outer container */
+.container-asg54 {
+  display: flex;
+  flex-direction: column;
+  background-color: #2b2b2b;
+  box-shadow: 0px 0px 25px #111;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Output section */
+.outputs-asg54 {
+  width: 650px;
+  height: 450px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Placeholder message */
+.center-asg54 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 18px;
+  color: #ffffff88;
+  text-align: center;
+}
+
+/* Scrollable history */
+.listen-asg54 {
+  width: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Individual history item (command + output) */
+.item-asg54 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* Command bubble */
+.item-command-asg54 {
+  display: flex;
+  line-height: 18px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #ffffff33;
+  background-color: #11111155;
+  color: #ffffffcc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* Command icon (like > prompt) */
+.item-command-asg54-icon {
+  background-image: url(./scripts/custom-console.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 18px;
+  height: 18px;
+}
+
+/* Input box */
+.input-asg54 {
+  height: 48px;
+  padding: 0px 16px;
+  background-color: #ffffff11;
+  font-size: 15px;
+  color: #ffffffee;
+  border: none;
+  border-top: 1px solid #444;
+  outline: none;
+}
+
+.input-asg54::placeholder {
+  color: #bbbbbb88;
 }
