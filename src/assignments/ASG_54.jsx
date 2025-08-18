@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function ASG_54() {
   const [command, setCommand] = useState("");
-  const [history, setHistory] = useState([]); // each item: { cmd, output, type, isError }
+  const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1); // -1 means no history selected
   const outputRef = useRef(null);
 
@@ -86,13 +86,13 @@ export default function ASG_54() {
 
   // return background only for errors
   const getBgColor = (item) => {
-    if (item.isError) return "#d0434333"; // translucent red background for errors
-    return undefined; // keep default CSS background for non-errors
+    if (item.isError) return "#d0434333";
+    return undefined;
   };
 
   // return text color for non-error types
   const getTextColor = (item) => {
-    if (item.isError) return "#ffffffcc"; // white text on error background
+    if (item.isError) return "#ffffffcc";
     switch (item.type) {
       case "string":
         return "#fe8d59";
