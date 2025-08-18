@@ -47,11 +47,17 @@
 }
 
 /* Scrollable history */
+/* keep normal order so newest items appear at the bottom */
 .listen-asg54 {
   width: 100%;
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 8px;
+
+  display: flex;
+  flex-direction: column; /* normal vertical flow */
+  align-items: stretch;
+  gap: 6px;
 }
 
 /* Individual history item (command + output) */
@@ -80,11 +86,26 @@
 
 /* Command icon (like > prompt) */
 .item-command-asg54-icon {
-  background-image: url(./scripts/custom-console.svg);
   background-size: contain;
   background-repeat: no-repeat;
   width: 18px;
   height: 18px;
+}
+
+.item-command-asg54,
+.item-output-asg54 {
+  border: 1px solid #FFF3 !important;
+  background-color: #1112;
+  color: #FFFA;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.item-output-asg54 [data-type="error"] {
+  background-color: #d0434333;
+  border-color: #d04343;
+  color: #FFFE;
 }
 
 /* Input box */

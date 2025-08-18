@@ -4,61 +4,95 @@ import { useState, useEffect, useRef } from "react";
 
 export default function ASG_54() {
   const [command, setCommand] = useState("");
-  const [history, setHistory] = useState([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [history, setHistory] = useState([]); // each item: { cmd, output, type, isError }
+  const [historyIndex, setHistoryIndex] = useState(-1); // -1 means no history selected
   const outputRef = useRef(null);
 
-  useRef(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.scrollHeight;
-    }
+  // scroll to bottom when history changes (newest at bottom)
+  useEffect(() => {
+    if (!outputRef.current) return;
+    // ensure DOM updated first
+    requestAnimationFrame(() => {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    });
   }, [history]);
-
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      runCommand(command)
+      runCommand(command);
     } else if (e.key === "ArrowUp") {
-      if (historyIndex < history.length - 1) {
-        const newIndex = historyIndex + 1;
-        setHistoryIndex(newIndex);
-        setCommand(history[history.length - 1 - newIndex].cmd);
-      }
+      // navigate older commands
+      if (history.length === 0) return;
+      const nextIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1);
+      setHistoryIndex(nextIndex);
+      setCommand(history[nextIndex].cmd);
     } else if (e.key === "ArrowDown") {
-      if (historyIndex > 0) {
-        const newIndex = historyIndex - 1;
-        setHistoryIndex(newIndex);
-        setCommand(history[history.length - 1 - newIndex].cmd);
-      } else if (historyIndex === 0) {
+      // navigate newer commands or clear when beyond newest
+      if (history.length === 0) return;
+      if (historyIndex === -1) return;
+      if (historyIndex < history.length - 1) {
+        const nextIndex = historyIndex + 1;
+        setHistoryIndex(nextIndex);
+        setCommand(history[nextIndex].cmd);
+      } else {
+        // was at newest, go to empty input
         setHistoryIndex(-1);
-        setCommand("")
+        setCommand("");
       }
     }
   };
 
   const runCommand = (cmd) => {
-    if (!cmd.trim()) return;
+    if (!cmd || !cmd.trim()) return;
+
+    let outputValue;
+    let type;
+    let isError = false;
 
     try {
-      const result = new Function("return" + cmd());
-      let type = typeof result;
-      let display = result;
+      // Use Function constructor to evaluate expression and get result
+      const fn = new Function("return (" + cmd + ")");
+      const result = fn();
 
-      if (type === "object") {
-        displayValue = JSON.stringify(result);
+      if (result === null) {
+        type = "null";
+        outputValue = "null";
+      } else if (typeof result === "undefined") {
+        type = "undefined";
+        outputValue = "undefined";
+      } else {
+        type = typeof result;
+        if (type === "object") {
+          try {
+            outputValue = JSON.stringify(result);
+          } catch (e) {
+            outputValue = String(result);
+          }
+        } else {
+          outputValue = String(result);
+        }
       }
-
-      setHistory([...history, { cmd, output: displayValue, type, isError: false }]);
     } catch (err) {
-      setHistory([...history, { cmd, output: err.message, type: "error", isError: true }])
+      isError = true;
+      type = "error";
+      outputValue = err && err.message ? err.message : String(err);
     }
 
-    setCommand("")
-    setHistoryIndex(-1)
-  }
+    // push to history (use functional update)
+    setHistory((prev) => [...prev, { cmd, output: outputValue, type, isError }]);
+    setCommand("");
+    setHistoryIndex(-1);
+  };
 
-  const getColor = (item) => {
-    if (item.isError) return "red";
+  // return background only for errors
+  const getBgColor = (item) => {
+    if (item.isError) return "#d0434333"; // translucent red background for errors
+    return undefined; // keep default CSS background for non-errors
+  };
+
+  // return text color for non-error types
+  const getTextColor = (item) => {
+    if (item.isError) return "#ffffffcc"; // white text on error background
     switch (item.type) {
       case "string":
         return "#fe8d59";
@@ -66,14 +100,14 @@ export default function ASG_54() {
       case "boolean":
         return "#9980ff";
       case "object":
+      case "null":
         return "#5cd5fb";
       case "undefined":
         return "#888888";
       default:
         return "#ffffff";
     }
-  }
-
+  };
 
   return (
     <div className="asg54">
@@ -88,19 +122,28 @@ export default function ASG_54() {
             {history.length === 0 ? (
               <div className="center-asg54">Outputs will be displayed here</div>
             ) : (
-                history.map((item, index) => (
-                  <>
-                    <div className="item-asg54" key={index}>
-                      <span>&gt; {item.cmd}</span>
-                    </div>
-                    <div className="item-command-asg54" style={{color: getColor(item)}}>
-                        {string(item.output)}
-                    </div>
-                  </>
-                ))
+              history.map((item, index) => (
+                <div className="item-asg54" key={index}>
+                  <div className="item-command-asg54">
+                    <span>&gt; {item.cmd}</span>
+                  </div>
+                  {/* error -> colored background, success -> colored text */}
+                  <div
+                    className="item-command-asg54"
+                    style={{
+                      backgroundColor: getBgColor(item),
+                      color: getTextColor(item),
+                      borderColor: item.isError ? "#8b2f2f" : "#00000022",
+                    }}
+                  >
+                    {String(item.output)}
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </div>
+
         <input
           type="text"
           className="input-asg54"
@@ -111,7 +154,6 @@ export default function ASG_54() {
           onKeyDown={handleKeyDown}
         />
       </div>
-
     </div>
   );
 }
