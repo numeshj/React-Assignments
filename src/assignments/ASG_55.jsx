@@ -12,6 +12,10 @@ export default function ASG_55() {
       <hr />
       <br />
 
+      <div className="container-asg55">
+        <div className="textarea-asg55" aria-placeholder="Type your text here..."></div>
+      </div>
+
     </div>
   );
 }
