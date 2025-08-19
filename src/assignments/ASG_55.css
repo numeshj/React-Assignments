@@ -11,3 +11,61 @@
   align-items: center;
   padding-top: 20px;
 }
+
+.container-asg55 {
+  display: flex;
+  flex-direction: column;
+  background-color: #333;
+  box-shadow: 0px 0px 20px #111;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 20px;
+  gap: 20px;
+}
+
+.textarea-asg55 {
+  height: 180px;
+  resize: none;
+  font-size: 15px;
+  padding: 15px;
+  background-color: #FFFFFF12;
+  border-radius: 10px;
+  color: #FFFA;
+  border: 1px solid #FFF4;
+}
+
+.keyboard-asg55 {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #FFF2;
+  border-radius: 10px;
+  gap: 3px;
+  padding: 3px;
+}
+
+.keyboard-row-asg55 {
+  display: flex;
+  gap: 3px;
+}
+
+.keyboard-key-asg55 {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #FFF2;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #FFF6;
+  transition: all 0.1s;
+}
+
+.keyboard-key-asg55.active {
+  background-color: #4caf50;
+  /* green highlight */
+  color: white;
+  transform: scale(1.1);
+  /* slight zoom effect */
+  box-shadow: 0px 0px 10px #4caf50aa;
+}
