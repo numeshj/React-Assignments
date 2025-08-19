@@ -1,24 +1,63 @@
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_55.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ASG_55() {
+  const [isShift, setIsShift] = useState(false);
+
+  // map shifted symbols / uppercase to base data-key values
+  const normalizeKey = (k) => {
+    if (!k) return k;
+    // letters -> lowercase
+    if (/^[A-Z]$/.test(k)) return k.toLowerCase();
+    // common shifted symbol map -> base key
+    const map = {
+      '~': '`', '!': '1', '@': '2', '#': '3', '$': '4', '%': '5', '^': '6',
+      '&': '7', '*': '8', '(': '9', ')': '0', '_': '-', '+': '=', '{': '[',
+      '}': ']', '|': '\\', ':': ';', '"': "'", '<': ',', '>': '.', '?': '/'
+    };
+    if (map[k]) return map[k];
+    // keep space
+    if (k === ' ') return ' ';
+    // some browsers report "Backspace", "Tab", etc. keep as-is
+    return k;
+  };
+
+  // find element by comparing data-key attribute (avoids selector escaping issues)
+  const findKeyEl = (rawKey) => {
+    const key = normalizeKey(rawKey);
+    const els = Array.from(document.querySelectorAll(".keyboard-key-asg55"));
+    return els.find((el) => el.getAttribute("data-key") === key) || null;
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const keyElement = document.querySelector(
-        `.keyboard-key-asg55[data-key="${event.key}"]`
-      );
-      if (keyElement) {
-        keyElement.classList.add("active");
+      const keyName = normalizeKey(event.key);
+      const keyElement = findKeyEl(keyName);
+
+      if (keyElement) keyElement.classList.add("active");
+
+      // Handle Shift (both keys)
+      if (event.key === "Shift") {
+        document.querySelectorAll('[data-key="Shift"]').forEach(shiftKey => {
+          shiftKey.classList.add("active");
+        });
+        setIsShift(true);
       }
     };
 
     const handleKeyUp = (event) => {
-      const keyElement = document.querySelector(
-        `.keyboard-key-asg55[data-key="${event.key}"]`
-      );
-      if (keyElement) {
-        keyElement.classList.remove("active");
+      const keyName = normalizeKey(event.key);
+      const keyElement = findKeyEl(keyName);
+
+      if (keyElement) keyElement.classList.remove("active");
+
+      // Handle Shift release
+      if (event.key === "Shift") {
+        document.querySelectorAll('[data-key="Shift"]').forEach(shiftKey => {
+          shiftKey.classList.remove("active");
+        });
+        setIsShift(false);
       }
     };
 
@@ -30,6 +69,50 @@ export default function ASG_55() {
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
+  // add/remove active by normalized key
+  const addActive = (k) => {
+    const el = findKeyEl(k);
+    if (el) el.classList.add("active");
+  };
+  const removeActive = (k) => {
+    const el = findKeyEl(k);
+    if (el) el.classList.remove("active");
+  };
+
+  // virtual (mouse) key down/up handlers
+  const virtualKeyDown = (k) => {
+    if (k === "Shift") {
+      const next = !isShift;
+      setIsShift(next);
+      document.querySelectorAll('[data-key="Shift"]').forEach(shiftKey => {
+        if (next) shiftKey.classList.add("active");
+        else shiftKey.classList.remove("active");
+      });
+      return;
+    }
+    addActive(k);
+  };
+  const virtualKeyUp = (k) => {
+    if (k === "Shift") return;
+    removeActive(k);
+  };
+
+  // Helper: render a key with Shift behavior and mouse handlers
+  const renderKey = (normal, shifted = null) => {
+    const display = isShift ? (shifted || normal.toUpperCase()) : normal.toLowerCase();
+    return (
+      <div
+        data-key={normal}
+        className="keyboard-key-asg55"
+        onMouseDown={() => virtualKeyDown(normal)}
+        onMouseUp={() => virtualKeyUp(normal)}
+        onMouseLeave={() => virtualKeyUp(normal)}
+      >
+        {display}
+      </div>
+    );
+  };
 
   return (
     <div className="asg55">
@@ -48,80 +131,164 @@ export default function ASG_55() {
         <div className="keyboard-asg55">
           {/* Row 1 */}
           <div className="keyboard-row-asg55">
-            <div data-key="~" className="keyboard-key-asg55">~</div>
-            <div data-key="!" className="keyboard-key-asg55">!</div>
-            <div data-key="@" className="keyboard-key-asg55">@</div>
-            <div data-key="#" className="keyboard-key-asg55">#</div>
-            <div data-key="$" className="keyboard-key-asg55">$</div>
-            <div data-key="%" className="keyboard-key-asg55">%</div>
-            <div data-key="^" className="keyboard-key-asg55">^</div>
-            <div data-key="&" className="keyboard-key-asg55">&</div>
-            <div data-key="*" className="keyboard-key-asg55">*</div>
-            <div data-key="(" className="keyboard-key-asg55">(</div>
-            <div data-key=")" className="keyboard-key-asg55">)</div>
-            <div data-key="-" className="keyboard-key-asg55">-</div>
-            <div data-key="+" className="keyboard-key-asg55">+</div>
-            <div data-key="Backspace" className="keyboard-key-asg55">Backspace</div>
+            {renderKey("`", "~")} {/* backtick */}
+            {renderKey("1", "!")}
+            {renderKey("2", "@")}
+            {renderKey("3", "#")}
+            {renderKey("4", "$")}
+            {renderKey("5", "%")}
+            {renderKey("6", "^")}
+            {renderKey("7", "&")}
+            {renderKey("8", "*")}
+            {renderKey("9", "(")}
+            {renderKey("0", ")")}
+            {renderKey("-", "_")}
+            {renderKey("=", "+")}
+            <div
+              data-key="Backspace"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Backspace")}
+              onMouseUp={() => virtualKeyUp("Backspace")}
+              onMouseLeave={() => virtualKeyUp("Backspace")}
+            >
+              Backspace
+            </div>
           </div>
 
           {/* Row 2 */}
           <div className="keyboard-row-asg55">
-            <div data-key="Tab" className="keyboard-key-asg55">Tab</div>
-            <div data-key="q" className="keyboard-key-asg55">Q</div>
-            <div data-key="w" className="keyboard-key-asg55">W</div>
-            <div data-key="e" className="keyboard-key-asg55">E</div>
-            <div data-key="r" className="keyboard-key-asg55">R</div>
-            <div data-key="t" className="keyboard-key-asg55">T</div>
-            <div data-key="y" className="keyboard-key-asg55">Y</div>
-            <div data-key="u" className="keyboard-key-asg55">U</div>
-            <div data-key="i" className="keyboard-key-asg55">I</div>
-            <div data-key="o" className="keyboard-key-asg55">O</div>
-            <div data-key="p" className="keyboard-key-asg55">P</div>
-            <div data-key="{" className="keyboard-key-asg55">{`{`}</div>
-            <div data-key="}" className="keyboard-key-asg55">{`}`}</div>
-            <div data-key="|" className="keyboard-key-asg55">|</div>
+            <div
+              data-key="Tab"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Tab")}
+              onMouseUp={() => virtualKeyUp("Tab")}
+              onMouseLeave={() => virtualKeyUp("Tab")}
+            >
+              Tab
+            </div>
+            {renderKey("q")}
+            {renderKey("w")}
+            {renderKey("e")}
+            {renderKey("r")}
+            {renderKey("t")}
+            {renderKey("y")}
+            {renderKey("u")}
+            {renderKey("i")}
+            {renderKey("o")}
+            {renderKey("p")}
+            {renderKey("[", "{")}
+            {renderKey("]", "}")}
+            {renderKey("\\", "|")}
           </div>
 
           {/* Row 3 */}
           <div className="keyboard-row-asg55">
-            <div data-key="CapsLock" className="keyboard-key-asg55">CapsLock</div>
-            <div data-key="a" className="keyboard-key-asg55">A</div>
-            <div data-key="s" className="keyboard-key-asg55">S</div>
-            <div data-key="d" className="keyboard-key-asg55">D</div>
-            <div data-key="f" className="keyboard-key-asg55">F</div>
-            <div data-key="g" className="keyboard-key-asg55">G</div>
-            <div data-key="h" className="keyboard-key-asg55">H</div>
-            <div data-key="j" className="keyboard-key-asg55">J</div>
-            <div data-key="k" className="keyboard-key-asg55">K</div>
-            <div data-key="l" className="keyboard-key-asg55">L</div>
-            <div data-key=":" className="keyboard-key-asg55">:</div>
-            <div data-key="&quot;" className="keyboard-key-asg55">"</div>
-            <div data-key="Enter" className="keyboard-key-asg55">Enter</div>
+            <div
+              data-key="CapsLock"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("CapsLock")}
+              onMouseUp={() => virtualKeyUp("CapsLock")}
+              onMouseLeave={() => virtualKeyUp("CapsLock")}
+            >
+              CapsLock
+            </div>
+            {renderKey("a")}
+            {renderKey("s")}
+            {renderKey("d")}
+            {renderKey("f")}
+            {renderKey("g")}
+            {renderKey("h")}
+            {renderKey("j")}
+            {renderKey("k")}
+            {renderKey("l")}
+            {renderKey(";", ":")}
+            {renderKey("'", '"')}
+            <div
+              data-key="Enter"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Enter")}
+              onMouseUp={() => virtualKeyUp("Enter")}
+              onMouseLeave={() => virtualKeyUp("Enter")}
+            >
+              Enter
+            </div>
           </div>
 
           {/* Row 4 */}
           <div className="keyboard-row-asg55">
-            <div data-key="Shift" className="keyboard-key-asg55">Shift</div>
-            <div data-key="z" className="keyboard-key-asg55">Z</div>
-            <div data-key="x" className="keyboard-key-asg55">X</div>
-            <div data-key="c" className="keyboard-key-asg55">C</div>
-            <div data-key="v" className="keyboard-key-asg55">V</div>
-            <div data-key="b" className="keyboard-key-asg55">B</div>
-            <div data-key="n" className="keyboard-key-asg55">N</div>
-            <div data-key="m" className="keyboard-key-asg55">M</div>
-            <div data-key="<" className="keyboard-key-asg55">&lt;</div>
-            <div data-key=">" className="keyboard-key-asg55">&gt;</div>
-            <div data-key="?" className="keyboard-key-asg55">?</div>
-            <div data-key="Shift" className="keyboard-key-asg55">Shift</div>
+            <div
+              data-key="Shift"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Shift")}
+            >
+              Shift
+            </div>
+            {renderKey("z")}
+            {renderKey("x")}
+            {renderKey("c")}
+            {renderKey("v")}
+            {renderKey("b")}
+            {renderKey("n")}
+            {renderKey("m")}
+            {renderKey(",", "<")}
+            {renderKey(".", ">")}
+            {renderKey("/", "?")}
+            <div
+              data-key="Shift"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Shift")}
+            >
+              Shift
+            </div>
           </div>
 
           {/* Row 5 */}
           <div className="keyboard-row-asg55">
-            <div data-key="Control" className="keyboard-key-asg55">Ctrl</div>
-            <div data-key="Alt" className="keyboard-key-asg55">Alt</div>
-            <div data-key=" " className="keyboard-key-asg55 space">Space</div>
-            <div data-key="Alt" className="keyboard-key-asg55">Alt</div>
-            <div data-key="Control" className="keyboard-key-asg55">Ctrl</div>
+            <div
+              data-key="Control"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Control")}
+              onMouseUp={() => virtualKeyUp("Control")}
+              onMouseLeave={() => virtualKeyUp("Control")}
+            >
+              Ctrl
+            </div>
+            <div
+              data-key="Alt"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Alt")}
+              onMouseUp={() => virtualKeyUp("Alt")}
+              onMouseLeave={() => virtualKeyUp("Alt")}
+            >
+              Alt
+            </div>
+            <div
+              data-key=" "
+              className="keyboard-key-asg55 space"
+              onMouseDown={() => virtualKeyDown(" ")}
+              onMouseUp={() => virtualKeyUp(" ")}
+              onMouseLeave={() => virtualKeyUp(" ")}
+            >
+              Space
+            </div>
+            <div
+              data-key="Alt"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Alt")}
+              onMouseUp={() => virtualKeyUp("Alt")}
+              onMouseLeave={() => virtualKeyUp("Alt")}
+            >
+              Alt
+            </div>
+            <div
+              data-key="Control"
+              className="keyboard-key-asg55"
+              onMouseDown={() => virtualKeyDown("Control")}
+              onMouseUp={() => virtualKeyUp("Control")}
+              onMouseLeave={() => virtualKeyUp("Control")}
+            >
+              Ctrl
+            </div>
           </div>
         </div>
       </div>

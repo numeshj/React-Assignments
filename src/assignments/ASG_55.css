@@ -21,7 +21,6 @@
   overflow: hidden;
   padding: 20px;
   gap: 20px;
-  min-width: 800px;
 }
 
 .textarea-asg55 {
@@ -40,20 +39,17 @@
   flex-direction: column;
   border: 1px solid #FFF2;
   border-radius: 10px;
-  gap: 3px;
+  /* gap: 3px; */
   padding: 3px;
 }
 
 .keyboard-row-asg55 {
   display: flex;
   gap: 3px;
-  flex: 1;
-  /* ensures row stretches evenly */
 }
 
 .keyboard-key-asg55 {
-  flex: 1;
-  /* take equal space by default */
+  width: 50px;
   height: 50px;
   border: 1px solid #FFF2;
   border-radius: 8px;
@@ -62,52 +58,78 @@
   justify-content: center;
   font-size: 14px;
   color: #FFF6;
-  transition: all 0.1s;
-  min-width: 35px;
-  /* prevent from shrinking too much */
+  background-color: #222;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.keyboard-key-asg55.active {
+/* hover state (mouse hover) */
+.keyboard-key-asg55:hover {
+  background-color: #2d2d3f;
+  transform: translateY(-1px);
+}
+
+/* active state applied via JS (.active) or via native :active while pressing */
+.keyboard-key-asg55.active,
+.keyboard-key-asg55:active {
+  background-color: #FFF3;         /* visually highlighted background */
+  border: 1px solid #FFF6;
+  color: #111;                     /* dark text for contrast on light bg */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  transform: translateY(0);        /* reset hover lift when active */
+  z-index: 2;
+}
+
+/* keep Shift special active appearance but readable */
+.keyboard-key-asg55[data-key="Shift"].active {
   background-color: #FFF3;
   border: 1px solid #FFF6;
-  color: #FFFE;
+  color: #111;
 }
 
+/* Small press feedback for mouse/touch */
+.keyboard-key-asg55:active {
+  transform: translateY(1px);
+  transition: transform 0.08s ease;
+}
+
+/* ensure spacebar and special widths unchanged */
 .space {
   flex: 1;
   /* makes spacebar wide */
 }
 
 [data-key="Backspace"] {
-  flex: 2;
+  width: 100px;
 }
 
 [data-key="Tab"] {
-  flex: 1.5;
+  width: 85px;
 }
 
-[data-key="|"] {
-  flex: 1.3;
+[data-key="\\"] {
+  width: 65px;
 }
 
 [data-key="CapsLock"] {
-  flex: 2;
+  width: 100px;
 }
 
 [data-key="Enter"] {
-  flex: 2;
+  width: 105px;
 }
 
 [data-key="Shift"] {
-  flex: 2.5;
+  width: 130px;
 }
 
-.space {
-  flex: 6;
-  /* big spacebar */
-}
-
-[data-key="Control"],
-[data-key="Alt"] {
-  flex: 1.2;
+/* Shift pressed (highlight both shift keys when active) */
+.keyboard-key-asg55[data-key="Shift"].active {
+  /* keep same as .active for consistency */
+  background-color: #FFF3;
+  border: 1px solid #FFF6;
+  color: #111;
 }
