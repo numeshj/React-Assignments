@@ -66,40 +66,34 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* hover state (mouse hover) */
 .keyboard-key-asg55:hover {
   background-color: #2d2d3f;
   transform: translateY(-1px);
 }
 
-/* active state applied via JS (.active) or via native :active while pressing */
 .keyboard-key-asg55.active,
 .keyboard-key-asg55:active {
-  background-color: #FFF3;         /* visually highlighted background */
+  background-color: #FFF3;         
   border: 1px solid #FFF6;
-  color: #111;                     /* dark text for contrast on light bg */
+  color: #111;                     
   box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-  transform: translateY(0);        /* reset hover lift when active */
+  transform: translateY(0);       
   z-index: 2;
 }
 
-/* keep Shift special active appearance but readable */
 .keyboard-key-asg55[data-key="Shift"].active {
   background-color: #FFF3;
   border: 1px solid #FFF6;
   color: #111;
 }
 
-/* Small press feedback for mouse/touch */
 .keyboard-key-asg55:active {
   transform: translateY(1px);
   transition: transform 0.08s ease;
 }
 
-/* ensure spacebar and special widths unchanged */
 .space {
   flex: 1;
-  /* makes spacebar wide */
 }
 
 [data-key="Backspace"] {
@@ -126,9 +120,7 @@
   width: 130px;
 }
 
-/* Shift pressed (highlight both shift keys when active) */
 .keyboard-key-asg55[data-key="Shift"].active {
-  /* keep same as .active for consistency */
   background-color: #FFF3;
   border: 1px solid #FFF6;
   color: #111;
