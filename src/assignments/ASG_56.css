@@ -55,3 +55,8 @@
   background-repeat: no-repeat;
   border-radius: 6px;
 }
+
+.tile-asg56.empty {
+  background: none !important;
+  outline: 2px dashed #555;
+}
