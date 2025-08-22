@@ -6,7 +6,7 @@ export default function ASG_57() {
   const boardSize = 400;
 
   const [size, setSize] = useState(3);                 // 3x3, 4x4, ...
-  const [image, setImage] = useState("./asg57/sliding-puzzle.jpg");
+  const [image, setImage] = useState(""); // start with no image
   const [grid, setGrid] = useState([]);
   const [empty, setEmpty] = useState([size - 1, size - 1]);
   const [solved, setSolved] = useState(false);
@@ -150,15 +150,17 @@ export default function ASG_57() {
 
       <div className="asg57-puzzle" data-solved={solved} style={{ width: boardSize, height: boardSize }}>
         {solved ? (
-          <div
-            style={{
-              width: `${boardSize}px`,
-              height: `${boardSize}px`,
-              backgroundImage: `url(${image})`,
-              backgroundSize: `${boardSize}px ${boardSize}px`,   // 🔧 fixed
-              borderRadius: "10px",
-            }}
-          />
+          image ? (
+            <div
+              style={{
+                width: `${boardSize}px`,
+                height: `${boardSize}px`,
+                backgroundImage: `url(${image})`,
+                backgroundSize: `${boardSize}px ${boardSize}px`,
+                borderRadius: "10px",
+              }}
+            />
+          ) : null
         ) : (
           grid.map((row, r) => (
             <div className="asg57-row" key={`row-${r}`}>
@@ -179,8 +181,8 @@ export default function ASG_57() {
                     style={{
                       width: tileSize,
                       height: tileSize,
-                      backgroundImage: isEmpty ? "none" : `url(${image})`,
-                      backgroundSize: `${boardSize}px ${boardSize}px`,       // 🔧 fixed
+                      backgroundImage: isEmpty || !image ? "none" : `url(${image})`,
+                      backgroundSize: image ? `${boardSize}px ${boardSize}px` : "initial",
                       backgroundPosition: bgPos,
                       cursor: isEmpty ? "default" : "pointer",
                     }}
@@ -209,10 +211,12 @@ export default function ASG_57() {
         )}
       </div>
 
-      <div className="asg57-preview">
-        <h3>Preview Image</h3>
-        <img src={image} alt="Puzzle preview" />
-      </div>
+      {image && (
+        <div className="asg57-preview">
+          <h3>Preview Image</h3>
+          <img src={image} alt="Puzzle preview" />
+        </div>
+      )}
 
       {solved && (
         <button className="asg57-restart" onClick={initialize}>
