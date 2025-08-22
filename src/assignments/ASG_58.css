@@ -104,21 +104,36 @@
 
 .animations-asg58 {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   position: absolute;
   bottom: 10px;
   left: 10px;
+  flex-wrap: wrap;
+  /* allows wrapping if many buttons */
 }
 
 .animation-item-asg58 {
-  height: 20px;
-  border-radius: 20px;
-  border: 2px solid #0008;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px;
+  /* vertical + horizontal padding */
+  min-height: 26px;
   font-size: 12px;
-  line-height: 20px;
-  cursor: pointer;
-  padding: 0px 10px;
   font-weight: 600;
+  border: 2px solid #0008;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  /* remove if you want wrapping inside a pill */
+  background: #2228;
+  transition: background .15s, color .15s, border-color .15s;
+}
+
+
+
+.animation-item-asg58:hover {
+  background: #fff2;
 }
 
 .start-asg58 {
@@ -155,12 +170,19 @@
 .listing-asg58-item[data-active="true"] {
   outline: 3px solid #fff8;
 }
+
 .background-item-asg58[data-active="true"] {
   box-shadow: 0 0 0 3px #fff8;
 }
+
 .animation-item-asg58[data-active="true"] {
-  background: #fff;
-  color: #222;
+  border: 2px solid #FFF;
+  background-color: #FFF2;
+  color: #FFF;
+}
+
+.background-item-asg58[data-active="true"] {
+  border: 2px solid #FFF;
 }
 
 /* Optional cursor hint on inactive backgrounds / animations */
@@ -168,7 +190,113 @@
 .animation-item-asg58 {
   transition: transform .15s, box-shadow .15s, background .15s;
 }
+
 .background-item-asg58:hover,
 .animation-item-asg58:hover {
   transform: scale(1.15);
 }
+
+/* Fullscreen show mode */
+.show-asg58 {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  perspective: 1000px;
+  z-index: 999;
+  overflow: hidden;
+}
+.show-slide-asg58 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0; top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.show-text-asg58 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  font-size: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  text-align: center;
+  padding: 40px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.show-exit-asg58,
+.show-next-asg58,
+.show-prev-asg58 {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 40px;
+  cursor: pointer;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 26px auto;
+  background-color: #FFFFFF22;
+  backdrop-filter: blur(4px);
+  transition: background-color .15s;
+}
+.show-exit-asg58:hover,
+.show-next-asg58:hover,
+.show-prev-asg58:hover {
+  background-color: #FFFFFF44;
+}
+.show-exit-asg58 {
+  top: 14px;
+  right: 14px;
+  background-image: url(./asg58/slide-show-editor-exit.svg);
+}
+.show-next-asg58 {
+  bottom: 14px;
+  right: 14px;
+  background-image: url(./asg58/slide-show-editor-next.svg);
+}
+.show-prev-asg58 {
+  bottom: 14px;
+  left: 14px;
+  background-image: url(./asg58/slide-show-editor-next.svg);
+  transform: scaleX(-1);
+}
+
+/* Playback animations */
+.play-anim-instant { animation: none; }
+.play-anim-fade { animation: asg58-fade .6s ease both; }
+.play-anim-up { animation: asg58-up .6s cubic-bezier(.25,.9,.25,1) both; }
+.play-anim-down { animation: asg58-down .6s cubic-bezier(.25,.9,.25,1) both; }
+.play-anim-rotate { animation: asg58-rotate .7s ease-out both; }
+.play-anim-blur { animation: asg58-blur .6s ease both; }
+
+@keyframes asg58-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes asg58-up {
+  from { opacity:0; transform: translateY(60px); }
+  to { opacity:1; transform: translateY(0); }
+}
+@keyframes asg58-down {
+  from { opacity:0; transform: translateY(-60px); }
+  to { opacity:1; transform: translateY(0); }
+}
+@keyframes asg58-rotate {
+  from { opacity:0; transform: scale(.4) rotateY(-120deg); }
+  to { opacity:1; transform: scale(1) rotateY(0deg); }
+}
+@keyframes asg58-blur {
+  from { opacity:0; filter: blur(20px); transform: scale(1.08); }
+  to { opacity:1; filter: blur(0); transform: scale(1); }
+}
+
+/* Optional: bump editor above background when show hidden */
+.asg58 .editor-asg58 { position: relative; z-index: 1; }
