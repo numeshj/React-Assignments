@@ -3,18 +3,17 @@ import "../assignments/ASG_57.css";
 import { useState, useEffect } from "react";
 
 export default function ASG_57() {
-  const [size, setSize] = useState(3);
-  const [boardSize, setBoardSize] = useState(400);
-  const [tileSize, setTileSize] = useState(boardSize / size);
+  const boardSize = 400;
+
+  const [size, setSize] = useState(3);                 // 3x3, 4x4, ...
+  const [image, setImage] = useState("./asg57/sliding-puzzle.jpg");
   const [grid, setGrid] = useState([]);
   const [empty, setEmpty] = useState([size - 1, size - 1]);
   const [solved, setSolved] = useState(false);
-  const [image, setImage] = useState("./asg57/sliding-puzzle.jpg");
 
-  useEffect(() => {
-    setTileSize(boardSize / size);
-  }, [size]);
+  const tileSize = boardSize / size;
 
+  // Build solved grid
   function createGrid() {
     const initial = [];
     let n = 1;
@@ -29,6 +28,7 @@ export default function ASG_57() {
     return initial;
   }
 
+  // Initialize + shuffle
   function initialize() {
     const initial = createGrid();
     setGrid(initial);
@@ -37,11 +37,12 @@ export default function ASG_57() {
 
     setTimeout(() => {
       shuffle(initial, [size - 1, size - 1]);
-    }, 100);
+    }, 50);
   }
 
+  // Shuffle via valid random moves (keeps puzzle solvable)
   function shuffle(startGrid, startEmpty) {
-    let moves = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+    const moves = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
     let g = startGrid.map(row => [...row]);
     let e = [...startEmpty];
 
@@ -60,11 +61,11 @@ export default function ASG_57() {
         e = [nr, nc];
       }
     }
-
     setGrid(g);
     setEmpty(e);
   }
 
+  // Check solved
   function checkSolved(g) {
     let count = 1;
     for (let r = 0; r < size; r++) {
@@ -80,6 +81,7 @@ export default function ASG_57() {
     setSolved(true);
   }
 
+  // Keyboard movement (Arrow / WASD)
   function moveTile(key) {
     let [er, ec] = empty;
     let nr = er, nc = ec;
@@ -98,9 +100,10 @@ export default function ASG_57() {
     }
   }
 
+  // Listeners + init on size/image changes
   useEffect(() => {
     initialize();
-  }, [size]);
+  }, [size, image]);
 
   useEffect(() => {
     function handleKey(e) {
@@ -111,12 +114,12 @@ export default function ASG_57() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [grid, empty, solved]);
 
+  // File upload
   function handleImageUpload(e) {
     const file = e.target.files[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      setImage(url);
-      initialize();
+      setImage(url);           // initialize will rerun via dependency
     }
   }
 
@@ -124,23 +127,19 @@ export default function ASG_57() {
     <div className="asg57">
       <BackToHome />
       <h1 className="asg57-title">Assignment-57</h1>
-      <hr />
 
       <div className="asg57-controls">
         <label>
-          Puzzle Size:
-          <select
-            value={size}
-            onChange={(e) => setSize(Number(e.target.value))}
-          >
-            <option value={3}>3 x 3</option>
-            <option value={4}>4 x 4</option>
-            <option value={5}>5 x 5</option>
+          Puzzle Size
+          <select value={size} onChange={(e) => setSize(Number(e.target.value))}>
+            <option value={3}>3 × 3</option>
+            <option value={4}>4 × 4</option>
+            <option value={5}>5 × 5</option>
+            <option value={6}>6 × 6</option>
           </select>
         </label>
 
         <label className="asg57-upload">
-          Upload Image:
           <input type="file" accept="image/*" onChange={handleImageUpload} />
         </label>
       </div>
@@ -149,15 +148,15 @@ export default function ASG_57() {
         Use <b>Arrow Keys / WASD</b> or <b>Click</b> tiles to move
       </p>
 
-      <div className="asg57-puzzle" data-solved={solved}>
+      <div className="asg57-puzzle" data-solved={solved} style={{ width: boardSize, height: boardSize }}>
         {solved ? (
           <div
             style={{
               width: `${boardSize}px`,
               height: `${boardSize}px`,
               backgroundImage: `url(${image})`,
-              backgroundSize: `${boardSize}px`,
-              borderRadius: "8px",
+              backgroundSize: `${boardSize}px ${boardSize}px`,   // 🔧 fixed
+              borderRadius: "10px",
             }}
           />
         ) : (
@@ -171,34 +170,35 @@ export default function ASG_57() {
                     ? "none"
                     : `-${colIndex * tileSize}px -${rowIndex * tileSize}px`;
 
+                const isEmpty = val === 0;
+
                 return (
                   <div
                     key={`tile-${r}-${c}`}
-                    className="asg57-tile"
+                    className={`asg57-tile${isEmpty ? " empty" : ""}`}
                     style={{
-                      width: `${tileSize}px`,
-                      height: `${tileSize}px`,
-                      backgroundImage: val === 0 ? "none" : `url(${image})`,
-                      backgroundSize: `${boardSize}px`,
+                      width: tileSize,
+                      height: tileSize,
+                      backgroundImage: isEmpty ? "none" : `url(${image})`,
+                      backgroundSize: `${boardSize}px ${boardSize}px`,       // 🔧 fixed
                       backgroundPosition: bgPos,
-                      cursor: val === 0 ? "default" : "pointer",
+                      cursor: isEmpty ? "default" : "pointer",
                     }}
                     onClick={() => {
-                      if (val !== 0) {
-                        const [er, ec] = empty;
-                        if (
-                          (r === er && Math.abs(c - ec) === 1) ||
-                          (c === ec && Math.abs(r - er) === 1)
-                        ) {
-                          const newGrid = grid.map(row => [...row]);
-                          [newGrid[er][ec], newGrid[r][c]] = [
-                            newGrid[r][c],
-                            newGrid[er][ec],
-                          ];
-                          setGrid(newGrid);
-                          setEmpty([r, c]);
-                          checkSolved(newGrid);
-                        }
+                      if (isEmpty) return;
+                      const [er, ec] = empty;
+                      const adjacent =
+                        (r === er && Math.abs(c - ec) === 1) ||
+                        (c === ec && Math.abs(r - er) === 1);
+                      if (adjacent) {
+                        const newGrid = grid.map(row => [...row]);
+                        [newGrid[er][ec], newGrid[r][c]] = [
+                          newGrid[r][c],
+                          newGrid[er][ec],
+                        ];
+                        setGrid(newGrid);
+                        setEmpty([r, c]);
+                        checkSolved(newGrid);
                       }
                     }}
                   />
@@ -215,10 +215,7 @@ export default function ASG_57() {
       </div>
 
       {solved && (
-        <button
-          className="asg57-restart"
-          onClick={initialize}
-        >
+        <button className="asg57-restart" onClick={initialize}>
           Restart
         </button>
       )}

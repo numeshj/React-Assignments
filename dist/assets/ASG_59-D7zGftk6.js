@@ -1,0 +1,1 @@
+import{j as s}from"./index-Cgf9ICqp.js";import{B as r}from"./BackToHome-Oog-Mpyz.js";/* empty css               *//* empty css                   */function a(){return s.jsxs("div",{className:"asg59",children:[s.jsx(r,{}),s.jsx("h1",{className:"assignment-title",children:"Assignment-59"}),s.jsx("hr",{}),s.jsx("br",{})]})}export{a as default};
