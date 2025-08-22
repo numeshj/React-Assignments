@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
-  top: 0;
+  top: 150px;
   left: 0;
   background-color: #1e1e2f !important;
   overflow: auto;
@@ -49,10 +49,30 @@
 
 .listing-asg58-item-add {
   background-color: #0002;
-  background-image: url(./scripts/slide-show-editor-add.svg);
+  /* If SVGs live beside this CSS in ./asg58 use this path; if in public/asg58 use: url(/asg58/slide-show-editor-add.svg) */
+  background-image: url(./asg58/slide-show-editor-add.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px auto;
+}
+
+.listing-asg58-item-add:hover {
+  background-color: #0004;
+}
+
+.slide-asg58-input {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 36px;
+  background-color: transparent;
+  color: #FFF;
 }
 
 .slide-asg58 {
@@ -109,7 +129,7 @@
   width: 30px;
   height: 30px;
   border-radius: 40px;
-  background-image: url(./scripts/slide-show-editor-start.svg);
+  background-image: url(./asg58/slide-show-editor-start.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 22px auto;
@@ -124,9 +144,31 @@
   width: 30px;
   height: 30px;
   border-radius: 40px;
-  background-image: url(./scripts/slide-show-editor-delete.svg);
+  background-image: url(./asg58/slide-show-editor-delete.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px auto;
   background-color: #FFF2;
+}
+
+/* Active states */
+.listing-asg58-item[data-active="true"] {
+  outline: 3px solid #fff8;
+}
+.background-item-asg58[data-active="true"] {
+  box-shadow: 0 0 0 3px #fff8;
+}
+.animation-item-asg58[data-active="true"] {
+  background: #fff;
+  color: #222;
+}
+
+/* Optional cursor hint on inactive backgrounds / animations */
+.background-item-asg58,
+.animation-item-asg58 {
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+.background-item-asg58:hover,
+.animation-item-asg58:hover {
+  transform: scale(1.15);
 }
