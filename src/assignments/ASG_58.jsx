@@ -112,18 +112,19 @@ export default function ASG_58() {
           </div>
 
           {/* Slide */}
-          <div
-            key={activeSlide.id} // forces re-render & retrigger animation
-            className={`slide-asg58 anim-${activeSlide.animation.toLowerCase()}`}
-            style={{ background: activeSlide.background }}
-          >
-            <input
-              className="slide-asg58-input"
-              spellCheck="false"
-              value={activeSlide.text}
-              onChange={updateText}
-            />
-
+          <div className="slide-asg58">
+            <div
+              key={activeSlide.id}
+              className={`slide-card-asg58 anim-${activeSlide.animation.toLowerCase()}`}
+              style={{ background: activeSlide.background }}
+            >
+              <input
+                className="slide-asg58-input"
+                spellCheck="false"
+                value={activeSlide.text}
+                onChange={updateText}
+              />
+            </div>
             {/* Background choices */}
             <div className="background-asg58">
               {[
@@ -168,16 +169,17 @@ export default function ASG_58() {
       {/* Fullscreen show overlay */}
       {isPlaying && (
         <div
-          className={`show-asg58`}
+          className="show-asg58"
           data-open="true"
-          style={{ background: playingSlide.background }}
         >
-          <div
-            key={playingSlide.id}
-            className={`show-slide-asg58 play-anim-${playingSlide.animation.toLowerCase()}`}
-            style={{ background: playingSlide.background }}
-          >
-            <div className="show-text-asg58">{playingSlide.text}</div>
+          <div className="show-slide-asg58">
+            <div
+              key={playingSlide.id}
+              className={`show-card-asg58 play-anim-${playingSlide.animation.toLowerCase()}`}
+              style={{ background: playingSlide.background }}
+            >
+              <div className="show-text-asg58">{playingSlide.text}</div>
+            </div>
             <div className="show-exit-asg58" onClick={exitShow}></div>
             <div className="show-prev-asg58" onClick={prevShow}></div>
             <div className="show-next-asg58" onClick={nextShow}></div>

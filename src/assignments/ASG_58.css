@@ -82,25 +82,58 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 0; /* card holds radius */
+  box-shadow: none;
+  background: transparent; /* removed color responsibility; card handles background */
 }
 
-.background-asg58 {
-  display: flex;
-  gap: 10px;
+/* Card inside editor */
+.slide-card-asg58 {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px -4px #0009, 0 0 0 1px #ffffff10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  will-change: transform, opacity;
 }
 
-.background-item-asg58 {
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  border: 2px solid #0008;
-  cursor: pointer;
+/* Input stays full inside card */
+.slide-card-asg58 .slide-asg58-input {
+  /* inherits existing input rules */
 }
+
+/* Fullscreen structure */
+.show-slide-asg58 {
+  position: relative;
+}
+.show-card-asg58 {
+  position: absolute;
+  inset: 0;              /* removed margin inset */
+  border-radius: 0;       /* full screen */
+  box-shadow: none;       /* optional; remove shadow for true fullscreen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity, filter;
+}
+
+/* Adapt text inside card */
+.show-card-asg58 .show-text-asg58 {
+  position: absolute;
+  inset: 0;
+}
+
+/* Editor animation classes (redefine for clarity) */
+.anim-instant { animation: none; }
+.anim-fade { animation: asg58-fade-in .55s ease both; }
+.anim-up { animation: asg58-move-up-in .6s cubic-bezier(.25,.9,.25,1) both; }
+.anim-down { animation: asg58-move-down-in .6s cubic-bezier(.25,.9,.25,1) both; }
+.anim-rotate { animation: asg58-rotate-in .7s ease-out both; }
+.anim-blur { animation: asg58-blur-in .6s ease both; }
 
 .animations-asg58 {
   display: flex;
@@ -116,17 +149,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 14px;
+  padding: 2px 10px;
   /* vertical + horizontal padding */
   min-height: 26px;
   font-size: 12px;
   font-weight: 600;
-  border: 2px solid #0008;
+  border: 1.5px solid #0008;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
   /* remove if you want wrapping inside a pill */
-  background: #2228;
+  /* background: #2228; */
   transition: background .15s, color .15s, border-color .15s;
 }
 
@@ -253,7 +286,7 @@
   background-color: #FFFFFF44;
 }
 .show-exit-asg58 {
-  top: 14px;
+  top: 74px;
   right: 14px;
   background-image: url(./asg58/slide-show-editor-exit.svg);
 }
@@ -269,33 +302,45 @@
   transform: scaleX(-1);
 }
 
-/* Playback animations */
-.play-anim-instant { animation: none; }
-.play-anim-fade { animation: asg58-fade .6s ease both; }
-.play-anim-up { animation: asg58-up .6s cubic-bezier(.25,.9,.25,1) both; }
-.play-anim-down { animation: asg58-down .6s cubic-bezier(.25,.9,.25,1) both; }
-.play-anim-rotate { animation: asg58-rotate .7s ease-out both; }
-.play-anim-blur { animation: asg58-blur .6s ease both; }
+/* Performance tweaks for cards */
+.slide-card-asg58,
+.show-card-asg58 {
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
 
-@keyframes asg58-fade {
+/* Fullscreen play animation classes (added) */
+.play-anim-instant { animation: none; }
+.play-anim-fade { animation: asg58-fade-in .55s ease both; }
+.play-anim-up { animation: asg58-move-up-in .6s cubic-bezier(.25,.9,.25,1) both; }
+.play-anim-down { animation: asg58-move-down-in .6s cubic-bezier(.25,.9,.25,1) both; }
+.play-anim-rotate { animation: asg58-rotate-in .7s ease-out both; }
+.play-anim-blur { animation: asg58-blur-in .6s ease both; }
+
+/* Keyframes (old ones replaced) */
+@keyframes asg58-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes asg58-up {
-  from { opacity:0; transform: translateY(60px); }
-  to { opacity:1; transform: translateY(0); }
+@keyframes asg58-move-up-in {
+  0% { opacity: 0; transform: translateY(120px) scale(.96); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes asg58-down {
-  from { opacity:0; transform: translateY(-60px); }
-  to { opacity:1; transform: translateY(0); }
+@keyframes asg58-move-down-in {
+  0% { opacity: 0; transform: translateY(-120px) scale(.96); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes asg58-rotate {
-  from { opacity:0; transform: scale(.4) rotateY(-120deg); }
-  to { opacity:1; transform: scale(1) rotateY(0deg); }
+@keyframes asg58-rotate-in {
+  0% { opacity:0; transform: scale(.4) rotateY(-140deg); filter: blur(6px); }
+  70% { filter: blur(0); }
+  100% { opacity:1; transform: scale(1) rotateY(0deg); filter: blur(0); }
 }
-@keyframes asg58-blur {
-  from { opacity:0; filter: blur(20px); transform: scale(1.08); }
-  to { opacity:1; filter: blur(0); transform: scale(1); }
+@keyframes asg58-blur-in {
+  0% { opacity:0; filter: blur(22px); transform: scale(1.12); }
+  60% { opacity:1; }
+  100% { opacity:1; filter: blur(0); transform: scale(1); }
 }
 
 /* Optional: bump editor above background when show hidden */
