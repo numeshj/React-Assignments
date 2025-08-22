@@ -57,6 +57,31 @@ export default function ASG_56() {
     setEmpty(e);
   }
 
+  function initialize() {
+    const initial = [];
+    let n = 1;
+    for (let r = 0; r < size; r++) {
+      const row = [];
+      for (let c = 0; c < size; c++) {
+        row.push(n < size * size ? n : 0);
+        n++;
+      }
+      initial.push(row);
+    }
+    setGrid(initial);
+    setEmpty([size - 1, size - 1]);
+    setSolved(false);
+
+    setTimeout(() => {
+      shuffle(initial, [size - 1, size - 1]);
+    }, 100);
+  }
+
+  // useEffect on mount → call initialize once
+  useEffect(() => {
+    initialize();
+  }, []);
+  
   // Listen for keyboard input
   useEffect(() => {
     function handleKey(e) {
@@ -106,7 +131,7 @@ export default function ASG_56() {
 
   // Restart button
   function restart() {
-    window.location.reload(); // simple refresh
+    initialize();
   }
 
   return (
