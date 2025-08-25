@@ -2,21 +2,36 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
-  top: 150px;
   left: 0;
   background-color: #1e1e2f !important;
   overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px;
+
+  /* Global perf hints */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --asg58-dur-out: 520ms;
+  --asg58-dur-in: 520ms;
+  --asg58-dur-single: 420ms;
+  --asg58-ease-out: cubic-bezier(.33, .01, .18, 1);
+  --asg58-ease-in: cubic-bezier(.16, .84, .36, 1);
+  --asg58-ease-single: cubic-bezier(.3, .9, .25, 1);
+  --asg58-dist: 96vh;
+  /* travel distance for slide pages */
+  --asg58-depth: 1200px;
+  /* perspective depth */
 }
 
 .container-asg58 {
+  margin-top: 150px;
   display: flex;
   gap: 20px;
   flex-direction: column;
-  background-color: #333;
   box-shadow: 0px 0px 20px #111;
   border-radius: 10px;
   overflow: hidden;
@@ -49,8 +64,6 @@
 
 .listing-asg58-item-add {
   background-color: #0002;
-  /* If SVGs live beside this CSS in ./asg58 use this path; if in public/asg58 use: url(/asg58/slide-show-editor-add.svg) */
-  background-image: url(./asg58/slide-show-editor-add.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40px auto;
@@ -82,12 +95,10 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 0; /* card holds radius */
-  box-shadow: none;
-  background: transparent; /* removed color responsibility; card handles background */
+  background: transparent;
 }
 
-/* Card inside editor */
+/* Card (editor preview) */
 .slide-card-asg58 {
   position: absolute;
   inset: 0;
@@ -97,43 +108,51 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(2px);
+  /* backdrops are expensive – keep tiny & disable while animating below */
+  backdrop-filter: blur(1px);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  contain: paint layout size style;
+}
+
+/* While the editor card is animating, reduce heavy paints */
+.slide-card-asg58[class*="anim-"] {
+  box-shadow: 0 4px 14px -2px #0007, 0 0 0 1px #ffffff08;
+  backdrop-filter: none;
+}
+
+/* Perf & stability */
+.show-card-asg58,
+.slide-card-asg58 {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   will-change: transform, opacity;
 }
 
-/* Input stays full inside card */
-.slide-card-asg58 .slide-asg58-input {
-  /* inherits existing input rules */
+/* Editor animations (editor preview, short + crisp) */
+.anim-instant {
+  animation: none;
 }
 
-/* Fullscreen structure */
-.show-slide-asg58 {
-  position: relative;
-}
-.show-card-asg58 {
-  position: absolute;
-  inset: 0;              /* removed margin inset */
-  border-radius: 0;       /* full screen */
-  box-shadow: none;       /* optional; remove shadow for true fullscreen */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  will-change: transform, opacity, filter;
+.anim-fade {
+  animation: asg58-fade-in var(--asg58-dur-single) ease both;
 }
 
-/* Adapt text inside card */
-.show-card-asg58 .show-text-asg58 {
-  position: absolute;
-  inset: 0;
+.anim-up {
+  animation: asg58-move-up-in var(--asg58-dur-single) var(--asg58-ease-single) both;
 }
 
-/* Editor animation classes (redefine for clarity) */
-.anim-instant { animation: none; }
-.anim-fade { animation: asg58-fade-in .55s ease both; }
-.anim-up { animation: asg58-move-up-in .6s cubic-bezier(.25,.9,.25,1) both; }
-.anim-down { animation: asg58-move-down-in .6s cubic-bezier(.25,.9,.25,1) both; }
-.anim-rotate { animation: asg58-rotate-in .7s ease-out both; }
-.anim-blur { animation: asg58-blur-in .6s ease both; }
+.anim-down {
+  animation: asg58-move-down-in var(--asg58-dur-single) var(--asg58-ease-single) both;
+}
+
+.anim-rotate {
+  animation: asg58-rotate-in 480ms ease-out both;
+}
+
+.anim-blur {
+  animation: asg58-blur-in 460ms ease both;
+}
 
 .animations-asg58 {
   display: flex;
@@ -142,7 +161,6 @@
   bottom: 10px;
   left: 10px;
   flex-wrap: wrap;
-  /* allows wrapping if many buttons */
 }
 
 .animation-item-asg58 {
@@ -150,7 +168,6 @@
   align-items: center;
   justify-content: center;
   padding: 2px 10px;
-  /* vertical + horizontal padding */
   min-height: 26px;
   font-size: 12px;
   font-weight: 600;
@@ -158,45 +175,31 @@
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
-  /* remove if you want wrapping inside a pill */
-  /* background: #2228; */
-  transition: background .15s, color .15s, border-color .15s;
+  transition: background .15s, color .15s, border-color .15s, transform .15s;
 }
-
-
 
 .animation-item-asg58:hover {
   background: #fff2;
+  transform: translateZ(0) scale(1.05);
 }
 
-.start-asg58 {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  border-radius: 40px;
-  background-image: url(./asg58/slide-show-editor-start.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 22px auto;
-  background-color: #FFF2;
-}
-
+.start-asg58,
 .delete-asg58 {
   position: absolute;
   top: 10px;
-  left: 10px;
   cursor: pointer;
   width: 30px;
   height: 30px;
   border-radius: 40px;
-  background-image: url(./asg58/slide-show-editor-delete.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 16px auto;
   background-color: #FFF2;
+}
+
+.start-asg58 {
+  right: 10px;
+}
+
+.delete-asg58 {
+  left: 10px;
 }
 
 /* Active states */
@@ -205,7 +208,7 @@
 }
 
 .background-item-asg58[data-active="true"] {
-  box-shadow: 0 0 0 3px #fff8;
+  border: 2px solid #FFF;
 }
 
 .animation-item-asg58[data-active="true"] {
@@ -214,11 +217,7 @@
   color: #FFF;
 }
 
-.background-item-asg58[data-active="true"] {
-  border: 2px solid #FFF;
-}
-
-/* Optional cursor hint on inactive backgrounds / animations */
+/* Hover transitions */
 .background-item-asg58,
 .animation-item-asg58 {
   transition: transform .15s, box-shadow .15s, background .15s;
@@ -226,30 +225,48 @@
 
 .background-item-asg58:hover,
 .animation-item-asg58:hover {
-  transform: scale(1.15);
+  transform: scale(1.12);
 }
 
-/* Fullscreen show mode */
+/* Fullscreen mode */
 .show-asg58 {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   background-color: #000;
-  perspective: 1000px;
+  perspective: var(--asg58-depth);
   z-index: 999;
   overflow: hidden;
 }
+
 .show-slide-asg58 {
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 0; top: 0;
-  z-index: 1;
+  left: 0;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform-style: preserve-3d;
 }
+
+.show-card-asg58 {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  contain: strict;
+  /* strong isolation */
+  filter: none !important;
+  /* keep fullscreen ultra-light */
+}
+
 .show-text-asg58 {
   width: 100%;
   height: 100%;
@@ -264,7 +281,11 @@
   padding: 40px;
   font-weight: 700;
   letter-spacing: 2px;
+  transform: translateZ(0.01px);
+  /* keep on GPU */
 }
+
+/* Controls */
 .show-exit-asg58,
 .show-next-asg58,
 .show-prev-asg58 {
@@ -279,69 +300,130 @@
   background-color: #FFFFFF22;
   backdrop-filter: blur(4px);
   transition: background-color .15s;
+  will-change: background-color;
 }
+
 .show-exit-asg58:hover,
 .show-next-asg58:hover,
 .show-prev-asg58:hover {
   background-color: #FFFFFF44;
 }
+
 .show-exit-asg58 {
   top: 74px;
   right: 14px;
-  background-image: url(./asg58/slide-show-editor-exit.svg);
 }
+
 .show-next-asg58 {
   bottom: 14px;
   right: 14px;
-  background-image: url(./asg58/slide-show-editor-next.svg);
 }
+
 .show-prev-asg58 {
   bottom: 14px;
   left: 14px;
-  background-image: url(./asg58/slide-show-editor-next.svg);
   transform: scaleX(-1);
 }
 
-/* Performance tweaks for cards */
-.slide-card-asg58,
-.show-card-asg58 {
-  backface-visibility: hidden;
-  will-change: transform, opacity, filter;
+/* --- Background selector (editor) --- */
+.background-asg58 {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 3;
+}
+.background-item-asg58 {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.35);
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.background-item-asg58[data-active="true"] {
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+  border-color: #fff;
+  transform: scale(1.08);
+}
+.background-item-asg58:hover { transform: scale(1.12); }
+
+/* ===== Simplified & smoother two‑phase animations =====
+   Use short, consistent transform+opacity animations.
+   Outgoing moves a bit and scales down; incoming comes from opposite side and scales up.
+*/
+
+/* standard variables earlier still apply (durations / easings) */
+
+/* UP */
+.play-anim-up-out-phase {
+  animation: out-up var(--asg58-dur-out) var(--asg58-ease-out) both;
+  z-index: 3;
+}
+.play-anim-up-in-phase {
+  animation: in-up var(--asg58-dur-in) var(--asg58-ease-in) both;
+  z-index: 2;
+}
+@keyframes out-up {
+  0%   { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+  100% { opacity: 0; transform: translate3d(0,-40vh,0) scale(.72); }
+}
+@keyframes in-up {
+  0%   { opacity: 0; transform: translate3d(0,40vh,0) scale(.72); }
+  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
 }
 
-/* Fullscreen play animation classes (added) */
-.play-anim-instant { animation: none; }
-.play-anim-fade { animation: asg58-fade-in .55s ease both; }
-.play-anim-up { animation: asg58-move-up-in .6s cubic-bezier(.25,.9,.25,1) both; }
-.play-anim-down { animation: asg58-move-down-in .6s cubic-bezier(.25,.9,.25,1) both; }
-.play-anim-rotate { animation: asg58-rotate-in .7s ease-out both; }
-.play-anim-blur { animation: asg58-blur-in .6s ease both; }
-
-/* Keyframes (old ones replaced) */
-@keyframes asg58-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* DOWN */
+.play-anim-down-out-phase { animation: out-down var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
+.play-anim-down-in-phase  { animation: in-down  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
+@keyframes out-down {
+  0%   { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+  100% { opacity: 0; transform: translate3d(0,40vh,0) scale(.72); }
 }
-@keyframes asg58-move-up-in {
-  0% { opacity: 0; transform: translateY(120px) scale(.96); }
-  60% { opacity: 1; }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes asg58-move-down-in {
-  0% { opacity: 0; transform: translateY(-120px) scale(.96); }
-  60% { opacity: 1; }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes asg58-rotate-in {
-  0% { opacity:0; transform: scale(.4) rotateY(-140deg); filter: blur(6px); }
-  70% { filter: blur(0); }
-  100% { opacity:1; transform: scale(1) rotateY(0deg); filter: blur(0); }
-}
-@keyframes asg58-blur-in {
-  0% { opacity:0; filter: blur(22px); transform: scale(1.12); }
-  60% { opacity:1; }
-  100% { opacity:1; filter: blur(0); transform: scale(1); }
+@keyframes in-down {
+  0%   { opacity: 0; transform: translate3d(0,-40vh,0) scale(.72); }
+  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
 }
 
-/* Optional: bump editor above background when show hidden */
-.asg58 .editor-asg58 { position: relative; z-index: 1; }
+/* FADE (subtle scale) */
+.play-anim-fade-out-phase { animation: out-fade var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
+.play-anim-fade-in-phase  { animation: in-fade  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
+@keyframes out-fade { 0%{opacity:1; transform:scale(1);} 100%{opacity:0; transform:scale(.86);} }
+@keyframes in-fade  { 0%{opacity:0; transform:scale(.86);} 100%{opacity:1; transform:scale(1);} }
+
+/* ROTATE (gentle Y-rotation + scale) */
+.play-anim-rotate-out-phase { animation: out-rotate var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
+.play-anim-rotate-in-phase  { animation: in-rotate  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
+@keyframes out-rotate { 0%{opacity:1; transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);} 100%{opacity:0; transform:perspective(var(--asg58-depth)) rotateY(40deg) scale(.78);} }
+@keyframes in-rotate  { 0%{opacity:0; transform:perspective(var(--asg58-depth)) rotateY(-40deg) scale(.78);} 100%{opacity:1; transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);} }
+
+/* BLUR -> reuse fade (keeps perf) */
+.play-anim-blur-out-phase { animation: out-fade var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
+.play-anim-blur-in-phase  { animation: in-fade  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
+
+/* Single-phase fallbacks remain (no change) */
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  .play-anim-up-out-phase,
+  .play-anim-up-in-phase,
+  .play-anim-down-out-phase,
+  .play-anim-down-in-phase,
+  .play-anim-rotate-out-phase,
+  .play-anim-rotate-in-phase,
+  .play-anim-fade-out-phase,
+  .play-anim-fade-in-phase,
+  .play-anim-blur-out-phase,
+  .play-anim-blur-in-phase,
+  [class*="play-anim-"],
+  [class*="anim-"] {
+    animation: none !important;
+    filter: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
