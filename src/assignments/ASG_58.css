@@ -325,86 +325,267 @@
   transform: scaleX(-1);
 }
 
-/* --- Background selector (editor) --- */
-.background-asg58 {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+/* ===== Editor preview keyframes (short) ===== */
+@keyframes asg58-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes asg58-move-up-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 60vh, 0) scale(.96);
+  }
+
+  60% {
+    opacity: .98;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes asg58-move-down-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -60vh, 0) scale(.96);
+  }
+
+  60% {
+    opacity: .98;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes asg58-rotate-in {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(-60deg) scale(.92);
+  }
+
+  65% {
+    opacity: .98;
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0) scale(1);
+  }
+}
+
+@keyframes asg58-blur-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+
+  70% {
+    opacity: .98;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== Fullscreen two-phase (ultra smooth, transform+opacity only) ===== */
+.play-anim-up-out-phase,
+.play-anim-down-out-phase,
+.play-anim-rotate-out-phase,
+.play-anim-fade-out-phase,
+.play-anim-blur-out-phase {
+  animation-duration: var(--asg58-dur-out);
+  animation-fill-mode: forwards;
+  animation-timing-function: var(--asg58-ease-out);
   z-index: 3;
 }
-.background-item-asg58 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid rgba(0,0,0,0.35);
-  cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset;
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.background-item-asg58[data-active="true"] {
-  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
-  border-color: #fff;
-  transform: scale(1.08);
-}
-.background-item-asg58:hover { transform: scale(1.12); }
 
-/* ===== Simplified & smoother two‑phase animations =====
-   Use short, consistent transform+opacity animations.
-   Outgoing moves a bit and scales down; incoming comes from opposite side and scales up.
-*/
-
-/* standard variables earlier still apply (durations / easings) */
-
-/* UP */
-.play-anim-up-out-phase {
-  animation: out-up var(--asg58-dur-out) var(--asg58-ease-out) both;
-  z-index: 3;
-}
-.play-anim-up-in-phase {
-  animation: in-up var(--asg58-dur-in) var(--asg58-ease-in) both;
+.play-anim-up-in-phase,
+.play-anim-down-in-phase,
+.play-anim-rotate-in-phase,
+.play-anim-fade-in-phase,
+.play-anim-blur-in-phase {
+  animation-duration: var(--asg58-dur-in);
+  animation-fill-mode: forwards;
+  animation-timing-function: var(--asg58-ease-in);
   z-index: 2;
 }
-@keyframes out-up {
-  0%   { opacity: 1; transform: translate3d(0,0,0) scale(1); }
-  100% { opacity: 0; transform: translate3d(0,-40vh,0) scale(.72); }
-}
-@keyframes in-up {
-  0%   { opacity: 0; transform: translate3d(0,40vh,0) scale(.72); }
-  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+
+/* UP two-phase */
+.play-anim-up-out-phase {
+  animation-name: smooth-up-out;
 }
 
-/* DOWN */
-.play-anim-down-out-phase { animation: out-down var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
-.play-anim-down-in-phase  { animation: in-down  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
-@keyframes out-down {
-  0%   { opacity: 1; transform: translate3d(0,0,0) scale(1); }
-  100% { opacity: 0; transform: translate3d(0,40vh,0) scale(.72); }
-}
-@keyframes in-down {
-  0%   { opacity: 0; transform: translate3d(0,-40vh,0) scale(.72); }
-  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+.play-anim-up-in-phase {
+  animation-name: smooth-up-in;
 }
 
-/* FADE (subtle scale) */
-.play-anim-fade-out-phase { animation: out-fade var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
-.play-anim-fade-in-phase  { animation: in-fade  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
-@keyframes out-fade { 0%{opacity:1; transform:scale(1);} 100%{opacity:0; transform:scale(.86);} }
-@keyframes in-fade  { 0%{opacity:0; transform:scale(.86);} 100%{opacity:1; transform:scale(1);} }
+@keyframes smooth-up-out {
+  0%   {opacity:1; transform:translate3d(0,0,0) scale(1);}
+  35%  {opacity:.94; transform:translate3d(0,-28vh,0) scale(.97);}
+  70%  {opacity:.55; transform:translate3d(0,-60vh,0) scale(.95);}
+  100% {opacity:0;  transform:translate3d(0,-80vh,0) scale(.93);}
+}
+@keyframes smooth-up-in {
+  0%   {opacity:0;  transform:translate3d(0,80vh,0) scale(.93);}
+  45%  {opacity:.9; transform:translate3d(0,18vh,0) scale(.985);}
+  70%  {opacity:1;  transform:translate3d(0,6vh,0)  scale(.998);}
+  100% {opacity:1;  transform:translate3d(0,0,0)   scale(1);}
+}
 
-/* ROTATE (gentle Y-rotation + scale) */
-.play-anim-rotate-out-phase { animation: out-rotate var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
-.play-anim-rotate-in-phase  { animation: in-rotate  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
-@keyframes out-rotate { 0%{opacity:1; transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);} 100%{opacity:0; transform:perspective(var(--asg58-depth)) rotateY(40deg) scale(.78);} }
-@keyframes in-rotate  { 0%{opacity:0; transform:perspective(var(--asg58-depth)) rotateY(-40deg) scale(.78);} 100%{opacity:1; transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);} }
+/* DOWN two-phase */
+.play-anim-down-out-phase {
+  animation-name: smooth-down-out;
+}
 
-/* BLUR -> reuse fade (keeps perf) */
-.play-anim-blur-out-phase { animation: out-fade var(--asg58-dur-out) var(--asg58-ease-out) both; z-index:3; }
-.play-anim-blur-in-phase  { animation: in-fade  var(--asg58-dur-in)  var(--asg58-ease-in)  both; z-index:2; }
+.play-anim-down-in-phase {
+  animation-name: smooth-down-in;
+}
 
-/* Single-phase fallbacks remain (no change) */
+@keyframes smooth-down-out {
+  0%   {opacity:1; transform:translate3d(0,0,0) scale(1);}
+  35%  {opacity:.94; transform:translate3d(0,28vh,0) scale(.97);}
+  70%  {opacity:.55; transform:translate3d(0,60vh,0) scale(.95);}
+  100% {opacity:0;  transform:translate3d(0,80vh,0) scale(.93);}
+}
+@keyframes smooth-down-in {
+  0%   {opacity:0;  transform:translate3d(0,-80vh,0) scale(.93);}
+  45%  {opacity:.9; transform:translate3d(0,-18vh,0) scale(.985);}
+  70%  {opacity:1;  transform:translate3d(0,-6vh,0)  scale(.998);}
+  100% {opacity:1;  transform:translate3d(0,0,0)    scale(1);}
+}
+
+/* ROTATE two-phase */
+.play-anim-rotate-out-phase {
+  animation-name: smooth-rotate-out;
+}
+
+.play-anim-rotate-in-phase {
+  animation-name: smooth-rotate-in;
+}
+
+@keyframes smooth-rotate-out {
+  0%   {opacity:1; transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);}
+  65%  {opacity:.55; transform:perspective(var(--asg58-depth)) rotateY(45deg) scale(.975);}
+  100% {opacity:0;  transform:perspective(var(--asg58-depth)) rotateY(65deg) scale(.96);}
+}
+@keyframes smooth-rotate-in {
+  0%   {opacity:0;  transform:perspective(var(--asg58-depth)) rotateY(-65deg) scale(.96);}
+  55%  {opacity:.9; transform:perspective(var(--asg58-depth)) rotateY(-18deg) scale(.992);}
+  100% {opacity:1;  transform:perspective(var(--asg58-depth)) rotateY(0deg) scale(1);}
+}
+
+/* FADE two-phase */
+.play-anim-fade-out-phase {
+  animation-name: smooth-fade-out;
+}
+
+.play-anim-fade-in-phase {
+  animation-name: smooth-fade-in;
+}
+
+@keyframes smooth-fade-out {
+  0%   {opacity:1; transform:scale(1);}
+  60%  {opacity:.42; transform:scale(.992);}
+  100% {opacity:0; transform:scale(.988);}
+}
+@keyframes smooth-fade-in {
+  0%   {opacity:0; transform:scale(.988);}
+  55%  {opacity:.9; transform:scale(.997);}
+  100% {opacity:1; transform:scale(1);}
+}
+
+/* BLUR two-phase (visual name only; no CSS blur for perf) */
+.play-anim-blur-out-phase {
+  animation-name: smooth-fade-out;
+}
+
+.play-anim-blur-in-phase {
+  animation-name: smooth-fade-in;
+}
+
+/* Single-phase fallbacks */
+.play-anim-instant {
+  animation: none;
+}
+
+.play-anim-up {
+  animation: slide-up-in-fallback var(--asg58-dur-single) var(--asg58-ease-single) both;
+}
+
+.play-anim-down {
+  animation: slide-down-in-fallback var(--asg58-dur-single) var(--asg58-ease-single) both;
+}
+
+.play-anim-rotate {
+  animation: slide-rotate-in-fallback 420ms ease-out both;
+}
+
+.play-anim-fade {
+  animation: slide-fade-in-fallback 320ms ease both;
+}
+
+.play-anim-blur {
+  animation: slide-fade-in-fallback 360ms ease both;
+}
+
+@keyframes slide-up-in-fallback {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 60vh, 0) scale(.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes slide-down-in-fallback {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -60vh, 0) scale(.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes slide-rotate-in-fallback {
+  0% {
+    opacity: 0;
+    transform: perspective(var(--asg58-depth)) rotateY(-50deg) scale(.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(var(--asg58-depth)) rotateY(0) scale(1);
+  }
+}
+
+@keyframes slide-fade-in-fallback {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {

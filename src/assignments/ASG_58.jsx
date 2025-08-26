@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_58.css";
 
@@ -13,33 +13,29 @@ const icon = {
 };
 
 const initialSlides = [
-  { id: 1, text: "THIS IS", background: "rgb(51, 102, 204)", animation: "Up" },
-  { id: 2, text: "A SLIDE SHOW", background: "rgb(204, 0, 68)", animation: "Fade" },
-  { id: 3, text: "ONLINE EDITOR", background: "rgb(45, 134, 89)", animation: "Down" },
-  { id: 4, text: "CREATED FROM", background: "rgb(219, 94, 10)", animation: "Rotate" },
-  { id: 5, text: "REACT JS", background: "rgb(138, 0, 230)", animation: "Instant" },
+  { id: 1, text: "THIS IS",       background: "rgb(51, 102, 204)", animation: "Up" },
+  { id: 2, text: "A SLIDE SHOW",  background: "rgb(204, 0, 68)",   animation: "Fade" },
+  { id: 3, text: "ONLINE EDITOR", background: "rgb(45, 134, 89)",  animation: "Down" },
+  { id: 4, text: "CREATED FROM",  background: "rgb(219, 94, 10)",  animation: "Rotate" },
+  { id: 5, text: "REACT JS",      background: "rgb(138, 0, 230)",  animation: "Instant" },
 ];
 
 export default function ASG_58() {
   const [slides, setSlides] = useState(initialSlides);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Fullscreen playback state
-  const [isPlaying, setIsPlaying] = useState(false);
+  // playIndex = current slide being shown
+  // prevPlayIndex = previous slide that should remain visible until incoming finishes
   const [playIndex, setPlayIndex] = useState(0);
   const [prevPlayIndex, setPrevPlayIndex] = useState(null);
 
-  // Two-phase control
-  const twoPhaseAnimations = useMemo(
-    () => new Set(["Up", "Down", "Rotate", "Fade", "Blur"]),
-    []
-  );
-  const [isTransitioning, setIsTransitioning] = useState(false); // outgoing phase
-  const [enteringPhase, setEnteringPhase] = useState(false);     // incoming phase
+  // incoming animation flag (used when the incoming slide should run its in-phase animation)
+  const [enteringUp, setEnteringUp] = useState(false);
 
-  const [staticSlideId, setStaticSlideId] = useState(null); // NEW: prevent re-animation after two-phase
+  // NEW: mark when incoming finished so we don't replay fallback animation
+  const [incomingCompleted, setIncomingCompleted] = useState(false);
 
-  const isBusy = isTransitioning || enteringPhase; // prevent mid-flight changes
+  const twoPhaseAnimations = new Set(["Up","Down","Rotate","Fade","Blur"]);
 
   const activeSlide = slides[activeIndex];
   const playingSlide = slides[playIndex];
@@ -53,8 +49,8 @@ export default function ASG_58() {
       background: "rgb(45, 134, 89)",
       animation: "Instant",
     };
-    setSlides((s) => [...s, newSlide]);
-    setActiveIndex(slides.length);
+    setSlides([...slides, newSlide]);
+    setActiveIndex(slides.length); 
   };
 
   // Delete current slide
@@ -66,96 +62,83 @@ export default function ASG_58() {
     }
   };
 
-  // Update text/background/animation
+  // Update text
   const updateText = (e) => {
-    setSlides((s) => {
-      const next = s.slice();
-      next[activeIndex] = { ...next[activeIndex], text: e.target.value };
-      return next;
-    });
+    const updated = [...slides];
+    updated[activeIndex].text = e.target.value;
+    setSlides(updated);
   };
+
+  // Change background
   const changeBackground = (color) => {
-    setSlides((s) => {
-      const next = s.slice();
-      next[activeIndex] = { ...next[activeIndex], background: color };
-      return next;
-    });
+    const updated = [...slides];
+    updated[activeIndex].background = color;
+    setSlides(updated);
   };
+
+  // Change animation
   const changeAnimation = (anim) => {
-    setSlides((s) => {
-      const next = s.slice();
-      next[activeIndex] = { ...next[activeIndex], animation: anim };
-      return next;
-    });
+    const updated = [...slides];
+    updated[activeIndex].animation = anim;
+    setSlides(updated);
   };
 
-  // Safe navigation: use prevPlayIndex + playIndex as requested
+  // Navigate to a slide: make the current slide the previous, set new current,
+  // and if incoming animation is two-phase, mark enteringUp to run incoming animation.
   const goToPlayIndex = (target) => {
-    if (isBusy || target === playIndex) return;
-
-    const incomingAnim = slides[target].animation;
-    const twoPhase = twoPhaseAnimations.has(incomingAnim);
-
-    // put current slide into "previous" so it stays on screen
+    // preserve the current on screen as "previous"
     setPrevPlayIndex(playIndex);
-    setStaticSlideId(null); // reset static marker (we are navigating)
+    const incomingAnim = slides[target].animation;
+    const isTwoPhase = twoPhaseAnimations.has(incomingAnim);
 
-    // set the new current
+    // reset incomingCompleted when starting a new navigation
+    setIncomingCompleted(false);
     setPlayIndex(target);
-
-    // enable transition flags only for two-phase animations
-    if (twoPhase) {
-      setIsTransitioning(true);
-      setEnteringPhase(true);
-    } else {
-      // single-phase: ensure no two-phase flags set
-      setIsTransitioning(false);
-      setEnteringPhase(false);
-    }
+    setEnteringUp(isTwoPhase);
+    // For single-phase fallback, prevPlayIndex will be cleared on animation end handler
   };
 
   const startShow = () => {
+    // initial fullscreen: previous is null so incoming loads on black screen
     setPrevPlayIndex(null);
-    setIsTransitioning(false);
-    setEnteringPhase(false);
-    setStaticSlideId(null);
+    const incomingAnim = slides[activeIndex].animation;
     setPlayIndex(activeIndex);
+    setEnteringUp(twoPhaseAnimations.has(incomingAnim));
+    setIncomingCompleted(false); // NEW: reset
     setIsPlaying(true);
   };
 
   const exitShow = () => {
     setIsPlaying(false);
     setPrevPlayIndex(null);
-    setIsTransitioning(false);
-    setEnteringPhase(false);
-    setStaticSlideId(null);
+    setEnteringUp(false);
+    setIncomingCompleted(false); // NEW: reset
   };
 
+  // Hooked up to keyboard when playing
   const nextShow = useCallback(() => {
-    if (isBusy) return;
     goToPlayIndex((playIndex + 1) % slides.length);
-  }, [playIndex, slides.length, isBusy]);
+  }, [playIndex, slides.length]);
 
   const prevShow = useCallback(() => {
-    if (isBusy) return;
     goToPlayIndex((playIndex - 1 + slides.length) % slides.length);
-  }, [playIndex, slides.length, isBusy]);
+  }, [playIndex, slides.length]);
 
-  // Incoming phase finished -> clear previous and mark static to avoid replays
-  const handleInEnd = () => {
+  // Incoming finished: clear previous and mark incoming complete
+  const handleUpInEnd = () => {
     setPrevPlayIndex(null);
-    setIsTransitioning(false);
-    setEnteringPhase(false);
-    setStaticSlideId(playIndex);
+    setEnteringUp(false);
+    setIncomingCompleted(true); // NEW: avoid rendering fallback animation
   };
 
-  // Single-phase finished -> mark static
-  const handleSingleEnd = () => {
+  // Generic animation end (single-phase fallback): clear previous and mark complete
+  const handleGenericAnimEnd = () => {
     setPrevPlayIndex(null);
-    setStaticSlideId(playIndex);
+    setIncomingCompleted(true); // NEW: so element becomes static after its run
   };
 
-  // Keyboard
+  // keyboard nav
+  const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
     if (!isPlaying) return;
     const handler = (e) => {
@@ -166,13 +149,6 @@ export default function ASG_58() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [isPlaying, nextShow, prevShow]);
-
-  const shouldRenderStaticTwoPhase =
-    isPlaying &&
-    !isTransitioning &&
-    !enteringPhase &&
-    twoPhaseAnimations.has(playingSlide.animation) &&
-    staticSlideId !== playingSlide.id;
 
   return (
     <div className="asg58">
@@ -190,7 +166,7 @@ export default function ASG_58() {
                 style={{ background: slide.background }}
                 onClick={() => setActiveIndex(i)}
               >
-                {slide.text[0]}
+                {slide.text[0] /* first letter */}
               </div>
             ))}
             <div
@@ -202,10 +178,10 @@ export default function ASG_58() {
                 backgroundPosition: "center",
               }}
               onClick={addSlide}
-            />
+            ></div>
           </div>
 
-          {/* Slide editor preview */}
+          {/* Slide */}
           <div className="slide-asg58">
             <div
               key={activeSlide.id}
@@ -219,7 +195,6 @@ export default function ASG_58() {
                 onChange={updateText}
               />
             </div>
-
             {/* Background choices */}
             <div className="background-asg58">
               {[
@@ -235,22 +210,24 @@ export default function ASG_58() {
                   data-active={color === activeSlide.background}
                   style={{ background: color }}
                   onClick={() => changeBackground(color)}
-                />
+                ></div>
               ))}
             </div>
 
             {/* Animations */}
             <div className="animations-asg58">
-              {["Instant", "Fade", "Up", "Down", "Blur", "Rotate"].map((anim) => (
-                <div
-                  key={anim}
-                  className="animation-item-asg58"
-                  data-active={anim === activeSlide.animation}
-                  onClick={() => changeAnimation(anim)}
-                >
-                  {anim}
-                </div>
-              ))}
+              {["Instant", "Fade", "Up", "Down", "Blur", "Rotate"].map(
+                (anim) => (
+                  <div
+                    key={anim}
+                    className="animation-item-asg58"
+                    data-active={anim === activeSlide.animation}
+                    onClick={() => changeAnimation(anim)}
+                  >
+                    {anim}
+                  </div>
+                )
+              )}
             </div>
 
             <div
@@ -262,7 +239,7 @@ export default function ASG_58() {
                 backgroundPosition: "center",
               }}
               onClick={startShow}
-            />
+            ></div>
             <div
               className="delete-asg58"
               style={{
@@ -272,76 +249,48 @@ export default function ASG_58() {
                 backgroundPosition: "center",
               }}
               onClick={deleteSlide}
-            />
+            ></div>
           </div>
         </div>
       </div>
 
-      {/* Fullscreen show */}
+      {/* Fullscreen show overlay */}
       {isPlaying && (
         <div className="show-asg58" data-open="true">
           <div className="show-slide-asg58">
-            {/* If we have a previous slide (previous/current pair) render both simultaneously */}
-            {prevPlayIndex != null && (
-              <>
-                {/* outgoing (previous) uses its own animation out-phase */}
-                <div
-                  key={`out-${slides[prevPlayIndex].id}`}
-                  className={`show-card-asg58 play-anim-${slides[prevPlayIndex].animation.toLowerCase()}-out-phase`}
-                  style={{ background: slides[prevPlayIndex].background }}
-                >
-                  <div className="show-text-asg58">{slides[prevPlayIndex].text}</div>
-                </div>
-
-                {/* incoming (current) uses its in-phase animation and clears prev on end */}
-                <div
-                  key={`in-${playingSlide.id}`}
-                  className={`show-card-asg58 play-anim-${playingSlide.animation.toLowerCase()}-in-phase`}
-                  style={{ background: playingSlide.background }}
-                  onAnimationEnd={handleInEnd}
-                >
-                  <div className="show-text-asg58">{playingSlide.text}</div>
-                </div>
-              </>
+            {/* Previous slide remains visible underneath while current (playingSlide) animates in */}
+            {prevPlayingSlide && (
+              <div
+                key={`prev-${prevPlayingSlide.id}`}
+                className="show-card-asg58 show-card-prev"
+                style={{ background: prevPlayingSlide.background }}
+              >
+                <div className="show-text-asg58">{prevPlayingSlide.text}</div>
+              </div>
             )}
 
-            {/* No prev slide active: either render static two-phase initial, single-phase anim, or static post animation */}
-            {prevPlayIndex == null && (
-              <>
-                {/* static for two-phase slides when not transitioning yet */}
-                {shouldRenderStaticTwoPhase && (
-                  <div
-                    key={`static-initial-${playingSlide.id}`}
-                    className="show-card-asg58"
-                    style={{ background: playingSlide.background }}
-                  >
-                    <div className="show-text-asg58">{playingSlide.text}</div>
-                  </div>
-                )}
+            {/* Incoming two-phase (in-phase animation) */}
+            {enteringUp && twoPhaseAnimations.has(playingSlide.animation) && (
+              <div
+                key={`in-${playingSlide.id}`}
+                className={`show-card-asg58 play-anim-${playingSlide.animation.toLowerCase()}-in-phase`}
+                style={{ background: playingSlide.background }}
+                onAnimationEnd={handleUpInEnd}
+              >
+                <div className="show-text-asg58">{playingSlide.text}</div>
+              </div>
+            )}
 
-                {/* single-phase animations (non two-phase) */}
-                {!shouldRenderStaticTwoPhase && !twoPhaseAnimations.has(playingSlide.animation) && (
-                  <div
-                    key={`single-${playingSlide.id}`}
-                    className={`show-card-asg58 play-anim-${playingSlide.animation.toLowerCase()}`}
-                    style={{ background: playingSlide.background }}
-                    onAnimationEnd={handleSingleEnd}
-                  >
-                    <div className="show-text-asg58">{playingSlide.text}</div>
-                  </div>
-                )}
-
-                {/* static after finished */}
-                {staticSlideId === playingSlide.id && (
-                  <div
-                    key={`static-${playingSlide.id}`}
-                    className="show-card-asg58"
-                    style={{ background: playingSlide.background }}
-                  >
-                    <div className="show-text-asg58">{playingSlide.text}</div>
-                  </div>
-                )}
-              </>
+            {/* Single-phase or settled incoming: play once if not completed, otherwise render static */}
+            {!enteringUp && (
+              <div
+                key={`single-${playingSlide.id}`}
+                className={`show-card-asg58 ${incomingCompleted ? "" : `play-anim-${playingSlide.animation.toLowerCase()}`}`}
+                style={{ background: playingSlide.background }}
+                onAnimationEnd={incomingCompleted ? undefined : handleGenericAnimEnd}
+              >
+                <div className="show-text-asg58">{playingSlide.text}</div>
+              </div>
             )}
 
             {/* Controls */}
@@ -354,7 +303,7 @@ export default function ASG_58() {
                 backgroundPosition: "center",
               }}
               onClick={exitShow}
-            />
+            ></div>
             <div
               className="show-prev-asg58"
               style={{
@@ -365,7 +314,7 @@ export default function ASG_58() {
                 transform: "scaleX(-1)",
               }}
               onClick={prevShow}
-            />
+            ></div>
             <div
               className="show-next-asg58"
               style={{
@@ -375,11 +324,10 @@ export default function ASG_58() {
                 backgroundPosition: "center",
               }}
               onClick={nextShow}
-            />
+            ></div>
           </div>
         </div>
       )}
     </div>
   );
 }
-                

@@ -1,0 +1,1 @@
+import{q as t,j as a}from"./index-FEnvVhV8.js";/* empty css                   */function s(){const o=t();return a.jsx("button",{className:"back-to-home-btn",onClick:()=>o("/"),children:"Back to Home"})}export{s as B};
