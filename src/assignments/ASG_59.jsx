@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 
 export default function ASG_59() {
   const itemCount = 64;
-  // colors loaded from public/asg59/zoom-in-list.json (hex strings)
   const [colors, setColors] = useState([]);
   const fallback = [
     "#FB2C36","#FF692A","#FE9A37","#F0B13B","#7CCF35","#31C950","#37BC7D","#36BBA7"
@@ -21,7 +20,6 @@ export default function ASG_59() {
           setColors(Array.from({ length: itemCount }, (_, i) => fallback[i % fallback.length]));
           return;
         }
-        // ensure result has itemCount entries by repeating if necessary
         setColors(Array.from({ length: itemCount }, (_, i) => data[i % data.length]));
       })
       .catch(() => {
@@ -30,7 +28,7 @@ export default function ASG_59() {
   }, []);
 
   const itemsRef = useRef([]);
-  const containerRef = useRef(null); // added ref for container
+  const containerRef = useRef(null);
   const overlayRef = useRef(null);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -55,7 +53,6 @@ export default function ASG_59() {
     setOverlayStyle(initial);
     setOverlayVisible(true);
 
-    // animate to container size (not fullscreen)
     requestAnimationFrame(() => {
       const containerRect = containerRef.current?.getBoundingClientRect();
       if (containerRect) {
@@ -141,7 +138,6 @@ export default function ASG_59() {
           onTransitionEnd={onOverlayTransitionEnd}
         >
           <div className="overlay-inner-asg59">
-            {/* background-image removed from CSS; using text "✕" as close icon */}
             <button
               className="overlay-close-asg59"
               onClick={closeOverlay}

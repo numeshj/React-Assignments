@@ -57,7 +57,6 @@
 
 /* overlay styles */
 .overlay-asg59 {
-  /* many positioning props are set inline by React to animate from item -> container */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,8 +89,7 @@
   right: 15px;
   width: 36px;
   height: 36px;
-  /* background-image removed (use text icon in JSX) */
-  background-color: rgba(255,255,255,0.08); /* subtle background */
+  background-color: rgba(255,255,255,0.08); 
   cursor: pointer;
   border-radius: 8px;
   display: flex;
@@ -103,7 +101,7 @@
   border: none;
   outline: none;
   user-select: none;
-  opacity: 0; /* hidden by default */
+  opacity: 0; 
   pointer-events: none;
   transition: opacity 220ms ease, transform 0.12s;
 }
