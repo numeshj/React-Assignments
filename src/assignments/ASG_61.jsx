@@ -1,14 +1,14 @@
 import BackToHome from "../component/BackToHome";
-import "../assignments/ASG_60.css";
+import "../assignments/ASG_61.css";
 import { useState, useEffect } from "react";
 
-export default function ASG_60() {
+export default function ASG_61() {
   
 
   return (
-    <div className="asg60">
+    <div className="asg61">
       <BackToHome />
-      <h1 className="assignment-title">Assignment-60</h1>
+      <h1 className="assignment-title">Assignment-61</h1>
       <hr />
       <br />
 

@@ -1,0 +1,1 @@
+import{j as s}from"./index-B4FPEP-E.js";import{B as r}from"./BackToHome-Cl1jcJFj.js";/* empty css                   */function i(){return s.jsxs("div",{className:"asg60",children:[s.jsx(r,{}),s.jsx("h1",{className:"assignment-title",children:"Assignment-60"}),s.jsx("hr",{}),s.jsx("br",{})]})}export{i as default};
