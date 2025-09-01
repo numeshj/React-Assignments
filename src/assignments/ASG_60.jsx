@@ -1,44 +1,106 @@
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_60.css";
+import { useState, useRef, useEffect } from "react";
 
 export default function ASG_60() {
-  const colors = [
-    "rgb(251, 44, 54)",
-    "rgb(255, 105, 42)",
-    "rgb(254, 154, 55)",
-    "rgb(240, 177, 59)",
-    "rgb(124, 207, 53)",
-    "rgb(49, 201, 80)",
-    "rgb(55, 188, 125)",
-    "rgb(54, 187, 167)",
-    "rgb(59, 184, 219)",
-    "rgb(52, 166, 244)",
-    "rgb(43, 127, 255)",
-    "rgb(97, 95, 255)",
-    "rgb(142, 81, 255)",
-    "rgb(173, 70, 255)",
-    "rgb(225, 42, 251)",
-    "rgb(246, 51, 154)",
-    "rgb(255, 32, 86)",
-  ];
+  const [colors, setColors] = useState([]);              // changed
+  const [currentColor, setCurrentColor] = useState(null); // changed
+  const [brushSize, setBrushSize] = useState(5);                    
+  const canvasRef = useRef(null);                                      
+  const ctxRef = useRef(null);                                         
+  const drawingRef = useRef(false);                                   
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctxRef.current = ctx;
+  }, []); 
+
+  useEffect(() => {
+    // fetch colors JSON from public
+    const base =
+      (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL) ||
+      "/";
+    fetch(`${base}asg60/colors-asg60.json`) // changed (removed process.env)
+      .then(r => (r.ok ? r.json() : Promise.reject()))
+      .then(data => {
+        if (Array.isArray(data) && data.length) {
+          setColors(data);
+          setCurrentColor(data[0]);
+        }
+      })
+      .catch(() => {
+        // silent
+      });
+  }, []); // unchanged logic minus process.env
+
+  const getPos = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }; 
+
+  const handlePointerDown = (e) => {
+    if (!currentColor) return;            // guard
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+    drawingRef.current = true;
+    const { x, y } = getPos(e);
+    ctx.beginPath();
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = brushSize;
+    ctx.moveTo(x, y);
+  }; 
+
+  const handlePointerMove = (e) => {
+    if (!drawingRef.current) return;
+    const ctx = ctxRef.current;
+    const { x, y } = getPos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }; 
+
+  const stopDrawing = () => {
+    if (!drawingRef.current) return;
+    drawingRef.current = false;
+  }; 
+
+  const clearCanvas = () => {
+    const ctx = ctxRef.current;
+    const canvas = canvasRef.current;
+    if (!ctx || !canvas) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }; 
+
   return (
     <div className="asg60">
       <BackToHome />
       <h1 className="assignment-title">Assignment-60</h1>
       <hr />
       <br />
-
       <div className="container">
-        <canvas className="canvas" width="560" height="500"></canvas>
+        <canvas
+          ref={canvasRef}                               
+          className="canvas"
+          width="560"
+          height="500"
+          onPointerDown={handlePointerDown}             
+          onPointerMove={handlePointerMove}             
+          onPointerUp={stopDrawing}                     
+          onPointerLeave={stopDrawing}                  
+        ></canvas>
         <div className="options">
           <div className="style">
             <div className="colors">
-              {colors.map((c, i) => (
+              {colors.map(c => (
                 <div
                   key={c}
                   className="color"
-                  data-active={i === 0 ? "true" : "false"}
+                  data-active={c === currentColor ? "true" : "false"} 
                   style={{ background: c }}
+                  onClick={() => setCurrentColor(c)}                 
                 />
               ))}
             </div>
@@ -46,13 +108,14 @@ export default function ASG_60() {
               type="range"
               className="size"
               step="0.1"
-              min="4"
-              max="10"
-              defaultValue="5"
+              min="1"
+              max="40"
+              value={brushSize}                    
+              onChange={(e) => setBrushSize(parseFloat(e.target.value))} 
             />
           </div>
           <button className="record" data-active="false"></button>
-          <button className="reset"></button>
+          <button className="reset" onClick={clearCanvas}></button>   {/* added onClick */}
         </div>
       </div>
     </div>
