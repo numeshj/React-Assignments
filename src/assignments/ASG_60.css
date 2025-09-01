@@ -11,3 +11,103 @@
   align-items: center;
   padding-top: 20px;
 }
+
+.container {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  background-color: #333;
+  box-shadow: 0px 0px 20px #111;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.options {
+  display: flex;
+  gap: 15px;
+}
+
+.style {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.colors {
+  display: flex;
+  gap: 8px;
+}
+
+.color {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.record,
+.reset {
+  /* merged from .button (was unused) */
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px auto;
+  cursor: pointer;
+  transition: background-color .2s, transform .15s, box-shadow .2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record {
+  background-color: #0066cc;
+  background-image: url(./asg60/canvas-video-recorder-record.svg);
+}
+
+.reset {
+  background-color: #cc1122;
+  background-image: url(./asg60/canvas-video-recorder-reset.svg);
+}
+
+.record[data-active="true"] {
+  background-color: #cc1122;
+  box-shadow: 0 0 0 3px rgba(204, 17, 34, 0.35);
+}
+
+.record:hover,
+.reset:hover {
+  background-color: #1d7fe0;
+  transform: scale(1.05);
+}
+
+.record:active,
+.reset:active {
+  transform: scale(.92);
+}
+
+.record:focus-visible,
+.reset:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 140, 255, 0.55);
+}
+
+.canvas {
+  background-color: #FFF;
+  border-radius: 8px;
+  cursor: crosshair;
+}
+
+.size {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 18px;
+  background: #555;
+  outline: none;
+  margin: 0px;
+  border-radius: 4px;
+}
