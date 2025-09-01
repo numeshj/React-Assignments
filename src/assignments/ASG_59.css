@@ -75,7 +75,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(48px, 8vw, 140px);
+  font-size: clamp(48px, 8vw, 120px);
   height: 100%;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
@@ -89,7 +89,7 @@
   right: 15px;
   width: 36px;
   height: 36px;
-  background-color: rgba(255,255,255,0.08); 
+  background-color: rgba(255, 255, 255, 0.08);
   cursor: pointer;
   border-radius: 8px;
   display: flex;
@@ -101,9 +101,9 @@
   border: none;
   outline: none;
   user-select: none;
-  opacity: 0; 
+  opacity: 0;
   pointer-events: none;
-  transition: opacity 220ms ease, transform 0.12s;
+  transition: opacity 120ms ease, transform 0.12s;
 }
 
 /* when overlay is fully opened, show close button */
@@ -111,7 +111,19 @@
   opacity: 1;
   pointer-events: auto;
 }
+
+.overlay-open-asg59 {
+  width: 100%;
+  height: 100%;
+  font-size: 120px;
+  box-shadow: 0px 0px 30px #000A;
+  position: absolute;
+  transition: all 0.4s;
+  left: 0px;
+  top: 0px;
+}
+
 .overlay-close-asg59:hover {
-  background-color: rgba(255,255,255,0.14);
+  background-color: rgba(255, 255, 255, 0.14);
   transform: translateY(-1px);
 }
