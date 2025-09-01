@@ -3,9 +3,10 @@ import "../assignments/ASG_60.css";
 import { useState, useRef, useEffect } from "react";
 
 export default function ASG_60() {
-  const [colors, setColors] = useState([]);              // changed
-  const [currentColor, setCurrentColor] = useState(null); // changed
+  const [colors, setColors] = useState([]);             
+  const [currentColor, setCurrentColor] = useState(null); 
   const [brushSize, setBrushSize] = useState(5);                    
+  const [recording, setRecording] = useState(false); 
   const canvasRef = useRef(null);                                      
   const ctxRef = useRef(null);                                         
   const drawingRef = useRef(false);                                   
@@ -24,7 +25,7 @@ export default function ASG_60() {
     const base =
       (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL) ||
       "/";
-    fetch(`${base}asg60/colors-asg60.json`) // changed (removed process.env)
+    fetch(`${base}asg60/colors-asg60.json`) 
       .then(r => (r.ok ? r.json() : Promise.reject()))
       .then(data => {
         if (Array.isArray(data) && data.length) {
@@ -35,7 +36,7 @@ export default function ASG_60() {
       .catch(() => {
         // silent
       });
-  }, []); // unchanged logic minus process.env
+  }, []);
 
   const getPos = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -43,7 +44,7 @@ export default function ASG_60() {
   }; 
 
   const handlePointerDown = (e) => {
-    if (!currentColor) return;            // guard
+    if (!currentColor) return;           
     const ctx = ctxRef.current;
     if (!ctx) return;
     drawingRef.current = true;
@@ -114,8 +115,14 @@ export default function ASG_60() {
               onChange={(e) => setBrushSize(parseFloat(e.target.value))} 
             />
           </div>
-          <button className="record" data-active="false"></button>
-          <button className="reset" onClick={clearCanvas}></button>   {/* added onClick */}
+          <button
+            className="record"
+            data-active={recording ? "true" : "false"}
+            onClick={() => setRecording(r => !r)}
+            aria-pressed={recording}
+            title={recording ? "Stop Recording" : "Start Recording"}
+          ></button>
+          <button className="reset" onClick={clearCanvas}></button>
         </div>
       </div>
     </div>
