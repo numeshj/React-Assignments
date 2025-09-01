@@ -1,179 +1,117 @@
+import { useState, useRef, useEffect } from "react";
 import BackToHome from "../component/BackToHome";
 import "../assignments/ASG_60.css";
-import { useState, useRef, useEffect } from "react";
 
-export default function ASG_60() {
-  const [colors, setColors] = useState([]);             
-  const [currentColor, setCurrentColor] = useState(null); 
-  const [brushSize, setBrushSize] = useState(5);                    
-  const [recording, setRecording] = useState(false); 
-  const recorderRef = useRef(null);         
-  const chunksRef = useRef([]);             
-  const canvasRef = useRef(null);                                      
-  const ctxRef = useRef(null);                                         
-  const drawingRef = useRef(false);                                   
-  const lastPosRef = useRef(null);               
+export default function ASG_60_Simple() {
+  const [colors, setColors] = useState([]);
+  const [currentColor, setCurrentColor] = useState(null);
+  const [brushSize, setBrushSize] = useState(5);
+  const [recording, setRecording] = useState(false);
 
-  const publicBase =
-    (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL) ||
-    "/"; 
+  const canvasRef = useRef(null);
+  const ctxRef = useRef(null);
+  const drawingRef = useRef(false);
+  const recorderRef = useRef(null);
+  const chunksRef = useRef([]);
 
+  // setup canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctxRef.current = ctx;
-  }, []); 
+  }, []);
 
+  // load colors.json
   useEffect(() => {
-    // fetch colors JSON from public
-    fetch(`./asg60/colors-asg60.json`) 
-      .then(r => (r.ok ? r.json() : Promise.reject()))
+    fetch("./asg60/colors-asg60.json")
+      .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data) && data.length) {
-          setColors(data);
-          setCurrentColor(data[0]);
-        }
-      })
-      .catch(() => {
-        // silent
+        setColors(data);
+        setCurrentColor(data[0]);
       });
-  }, [publicBase]);
+  }, []);
 
-  const getPos = (e) => {
+  // position helper
+  const getPos = e => {
     const rect = canvasRef.current.getBoundingClientRect();
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }; 
+  };
 
-  const handlePointerDown = (e) => {
+  // drawing handlers
+  const startDraw = e => {
     if (!currentColor) return;
-    const ctx = ctxRef.current;
-    if (!ctx) return;
     drawingRef.current = true;
     const { x, y } = getPos(e);
-    lastPosRef.current = { x, y };                
+    const ctx = ctxRef.current;
     ctx.beginPath();
     ctx.strokeStyle = currentColor;
     ctx.lineWidth = brushSize;
     ctx.moveTo(x, y);
-    ctx.beginPath();                 
-    ctx.fillStyle = currentColor;                
-    ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);  
-    ctx.fill();                                    
-    ctx.beginPath();                               
-    ctx.moveTo(x, y);                              
-  }; 
-
-  const handlePointerMove = (e) => {
-    if (!drawingRef.current) return;
-    const ctx = ctxRef.current;
-    const { x, y } = getPos(e);
     ctx.lineTo(x, y);
     ctx.stroke();
-    lastPosRef.current = { x, y };         
-  }; 
+  };
 
-  const stopDrawing = () => {
+  const draw = e => {
     if (!drawingRef.current) return;
-    drawingRef.current = false;
-    lastPosRef.current = null;             
-  }; 
+    const { x, y } = getPos(e);
+    const ctx = ctxRef.current;
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
 
+  const stopDraw = () => (drawingRef.current = false);
+
+  // clear canvas
   const clearCanvas = () => {
     const ctx = ctxRef.current;
-    const canvas = canvasRef.current;
-    if (!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }; 
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  };
 
-  const startRecording = () => {
-    if (recording || recorderRef.current) return;
-    if (typeof MediaRecorder === "undefined") {
-      alert("MediaRecorder not supported in this browser.");
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (!canvas || !canvas.captureStream) {
-      alert("Canvas captureStream not supported.");
-      return;
-    }
-    const stream = canvas.captureStream(60); 
-    const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
-      ? "video/webm;codecs=vp9"
-      : MediaRecorder.isTypeSupported("video/webm;codecs=vp8")
-      ? "video/webm;codecs=vp8"
-      : "video/webm";
-    const mr = new MediaRecorder(stream, { mimeType: mime });
+  // recording
+  const startRec = () => {
+    const stream = canvasRef.current.captureStream(30);
+    const mr = new MediaRecorder(stream, { mimeType: "video/webm" });
     chunksRef.current = [];
-    mr.ondataavailable = (e) => {
-      if (e.data && e.data.size) chunksRef.current.push(e.data);
-    };
+    mr.ondataavailable = e => chunksRef.current.push(e.data);
     mr.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: mime });
+      const blob = new Blob(chunksRef.current, { type: "video/webm" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      const ts = new Date().toISOString().replace(/[:.]/g, "-");
       a.href = url;
-      a.download = `canvas-recording-${ts}.webm`;
-      document.body.appendChild(a);
+      a.download = "drawing.webm";
       a.click();
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        a.remove();
-      }, 2000);
-      recorderRef.current = null;
     };
     mr.start();
     recorderRef.current = mr;
     setRecording(true);
   };
 
-  const stopRecording = () => {
-    const mr = recorderRef.current;
-    if (!mr) return;
-    if (mr.state !== "inactive") mr.stop();
-    // stop tracks
-    mr.stream.getTracks().forEach(t => t.stop());
+  const stopRec = () => {
+    recorderRef.current.stop();
     setRecording(false);
   };
-
-  const toggleRecording = () => {
-    if (recorderRef.current && recorderRef.current.state === "inactive") {
-      recorderRef.current = null;                  
-    }
-    if (recording) stopRecording();
-    else startRecording();
-  };
-
-  useEffect(() => {
-    return () => {
-      // cleanup on unmount
-      if (recorderRef.current && recorderRef.current.state !== "inactive") {
-        recorderRef.current.stop();
-        recorderRef.current.stream.getTracks().forEach(t => t.stop());
-      }
-    };
-  }, []);
 
   return (
     <div className="asg60">
       <BackToHome />
       <h1 className="assignment-title">Assignment-60</h1>
-      <hr />
-      <br />
       <div className="container">
         <canvas
-          ref={canvasRef}                               
+          ref={canvasRef}
           className="canvas"
           width="560"
           height="500"
-          onPointerDown={handlePointerDown}             
-          onPointerMove={handlePointerMove}             
-          onPointerUp={stopDrawing}                     
-          onPointerLeave={stopDrawing}                  
+          onPointerDown={startDraw}
+          onPointerMove={draw}
+          onPointerUp={stopDraw}
+          onPointerLeave={stopDraw}
         ></canvas>
+
         <div className="options">
           <div className="style">
             <div className="colors">
@@ -181,42 +119,36 @@ export default function ASG_60() {
                 <div
                   key={c}
                   className="color"
-                  data-active={c === currentColor ? "true" : "false"} 
+                  data-active={c === currentColor ? "true" : "false"}
                   style={{ background: c }}
-                  onClick={() => setCurrentColor(c)}                 
+                  onClick={() => setCurrentColor(c)}
                 />
               ))}
             </div>
             <input
               type="range"
               className="size"
-              step="0.1"
               min="1"
               max="40"
-              value={brushSize}                    
-              onChange={(e) => setBrushSize(parseFloat(e.target.value))} 
+              value={brushSize}
+              onChange={e => setBrushSize(+e.target.value)}
             />
           </div>
+
           <button
             className="record"
-            data-active={recording ? "true" : "false"}
-            onClick={toggleRecording}
-            aria-pressed={recording}
-            title={recording ? "Stop Recording" : "Start Recording"}
-            disabled={!currentColor || !colors.length}
+            data-active={recording}
+            onClick={recording ? stopRec : startRec}
           >
             <img
               src={`./asg60/canvas-video-recorder-${recording ? "stop" : "record"}.svg`}
               alt={recording ? "Stop recording" : "Start recording"}
             />
           </button>
-          <button
-            className="reset"
-            onClick={clearCanvas}
-            title="Clear Canvas"
-          >
+
+          <button className="reset" onClick={clearCanvas}>
             <img
-              src={`./asg60/canvas-video-recorder-reset.svg`}
+              src="./asg60/canvas-video-recorder-reset.svg"
               alt="Clear canvas"
             />
           </button>
