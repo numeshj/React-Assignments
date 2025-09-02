@@ -19,20 +19,18 @@ const assignmentEntries = Object.entries(assignmentModules)
   .sort((a, b) => a.num - b.num);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Provider store={store}>
-      <HashRouter>
-        <Suspense fallback={<div style={{ color: "#fff", padding: 20 }}>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<App />} />
-            {assignmentEntries.map(({ num, Component }) => (
-              <Route key={num} path={`/asg-${num}`} element={<Component />} />
-            ))}
-            <Route path="*" element={<div style={{ padding: 40, color: "#fff" }}>Not Found</div>} />
-          </Routes>
-        </Suspense>
-      </HashRouter>
-    </Provider>
-  </StrictMode>
+  <Provider store={store}>
+    <HashRouter>
+      <Suspense fallback={<div style={{ color: "#fff", padding: 20 }}>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<App />} />
+          {assignmentEntries.map(({ num, Component }) => (
+            <Route key={num} path={`/asg-${num}`} element={<Component />} />
+          ))}
+          <Route path="*" element={<div style={{ padding: 40, color: "#fff" }}>Not Found</div>} />
+        </Routes>
+      </Suspense>
+    </HashRouter>
+  </Provider>
 );
       
