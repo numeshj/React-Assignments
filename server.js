@@ -1,18 +1,35 @@
 import { WebSocketServer } from 'ws';
 
-const wss = new WebSocketServer({ port: 3080 });
+const wss = new WebSocketServer({ port: 3000 });
 
 wss.on('connection', (ws) => {
   console.log('New client connected');
 
   ws.on('message', (message) => {
-    console.log('Received:', message.toString());
+    const messageStr = message.toString();
+    console.log('Received:', messageStr);
 
-    // Broadcast to all clients except sender
+    // Skip ping/pong messages
+    if (messageStr.startsWith('{') && messageStr.includes('"type"')) {
+      try {
+        const parsed = JSON.parse(messageStr);
+        if (parsed.type === 'ping' || parsed.type === 'pong') {
+          // Respond to ping with pong
+          if (parsed.type === 'ping') {
+            ws.send(JSON.stringify({ type: 'pong' }));
+          }
+          return;
+        }
+      } catch (e) {
+        // Not a JSON control message, continue processing
+      }
+    }
+
+    // Broadcast actual chat messages to all clients except sender
     wss.clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         try {
-          client.send(message.toString());
+          client.send(messageStr);
         } catch (error) {
           console.error('Error sending message:', error);
         }
@@ -33,6 +50,4 @@ wss.on('error', (error) => {
   console.error('Server error:', error);
 });
 
-console.log('WebSocket server running on ws://localhost:3080');
-
-console.log('WebSocket server running on ws://localhost:3080');
+console.log('WebSocket server running on ws://localhost:3000');

@@ -13,7 +13,7 @@ export default function ASG_61() {
   // connect to the server (wss)
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:3080');
+    const socket = new WebSocket('ws://localhost:3000');
 
     socket.onopen = () => {
       console.log("Connected to the server");
@@ -28,12 +28,36 @@ export default function ASG_61() {
         const reader = new FileReader()
         reader.onload = () => {
           const text = reader.result.toString();
+          
+          // Filter out WebSocket control messages (ping, pong, etc.)
+          if (text.startsWith('{') && text.includes('"type"')) {
+            try {
+              const parsed = JSON.parse(text);
+              if (parsed.type === 'ping' || parsed.type === 'pong') {
+                return; // Don't display control messages
+              }
+            } catch (e) {
+              // Not a JSON control message, continue processing
+            }
+          }
+          
           const time = new Date().toLocaleTimeString();
-
           setMessages((prevMessage) => [...prevMessage, { text, type: 'received', time }])
         }
         reader.readAsText(event.data)
       } else if (typeof event.data === "string") {
+        // Filter out WebSocket control messages (ping, pong, etc.)
+        if (event.data.startsWith('{') && event.data.includes('"type"')) {
+          try {
+            const parsed = JSON.parse(event.data);
+            if (parsed.type === 'ping' || parsed.type === 'pong') {
+              return; // Don't display control messages
+            }
+          } catch (e) {
+            // Not a JSON control message, continue processing
+          }
+        }
+        
         const time = new Date().toLocaleTimeString();
         setMessages((prevMessage) => [...prevMessage, { text: event.data, type: 'received', time }])
       }
