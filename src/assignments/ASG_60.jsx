@@ -85,6 +85,8 @@ export default function ASG_60_Simple() {
       a.href = url;
       a.download = "drawing.webm";
       a.click();
+
+      URL.revokeObjectURL(url);
     };
     mr.start();
     recorderRef.current = mr;
